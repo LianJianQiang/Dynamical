@@ -1,0 +1,43 @@
+/*
+    重写element-ui样式
+*/
+
+.ctx-menu-container{
+    z-index: 2147483647;
+}
+
+body {
+  .el-input__inner {
+    height: 32px;
+    line-height: 30px;
+  }
+  .el-input-number {
+    width: 100%;
+  }
+  input {
+    padding: 0 $input-pad-default;
+  }
+  .el-checkbox {
+    font-weight: normal;
+  }
+
+  // table
+  .el-table {
+    height: auto !important;
+    .el-table__body-wrapper {
+      height: auto !important;
+    }
+    table,
+    .el-table__empty-block {
+      width: 100% !important;
+    }
+    td,
+    th {
+      padding: 0;
+    }
+   
+    .el-input__inner {
+      border: none !important;
+    }
+  }
+}
