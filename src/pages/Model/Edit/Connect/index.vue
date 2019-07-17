@@ -180,9 +180,10 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import Img from "assets/images";
 import { MODEL_TREE_TYPE } from "common/constants";
 
+import Foldedcollapse from "./FoldedCollapse";
+
 import Diy from "./Diy";
 import RubberBearing from "./RubberBearing";
-import Foldedcollapse from "./FoldedCollapse";
 import Damper from "./Damper";
 import Anticreeper from "./Anticreeper";
 import OverloadProtection from "./OverloadProtection";

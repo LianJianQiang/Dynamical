@@ -21,6 +21,11 @@
                 :dataSource="dataSource"
                 :key="curTreeNodeId"
             />
+             <Args
+                v-if="curTreeNodeType === modelTreetype.args"
+                :dataSource="dataSource"
+                :key="curTreeNodeId"
+            />
         </div>
     </div>
 </template>
@@ -34,6 +39,7 @@ import BasicInfo from "./Basic";
 import Vehicle from "./Vehicle";
 import Connect from "./Connect";
 import Circuit from "./Circuit";
+import Args from "./Args";
 
 export default {
     name: "Home",
@@ -41,7 +47,8 @@ export default {
         BasicInfo,
         Vehicle,
         Connect,
-        Circuit
+        Circuit,
+        Args
     },
     data() {
         return {
@@ -88,7 +95,6 @@ export default {
             };
         }
     },
-    mounted() {
-    }
+    mounted() {}
 };
 </script>

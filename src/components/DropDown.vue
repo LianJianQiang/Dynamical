@@ -80,8 +80,9 @@ $height: 32px;
     position: relative;
 
     &.mini {
-        height: 20px;
-        line-height: 20px;
+        height: 18px;
+        line-height: 18px;
+        font-size: 12px;
         :global {
             .link {
                 padding: 0 $input-pad-s;

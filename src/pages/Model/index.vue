@@ -5,7 +5,7 @@
                 <Tree />
             </div>
         </div>
-        <div :class="$style.right">
+        <div :class="$style.right" ref="rightWrap">
             <div :class="$style.btnWrap">
                 <el-button class="btn-xl" @click="openModel">打开模型</el-button>
                 <el-button class="btn-xl" @click="newModel">新建模型</el-button>
@@ -35,7 +35,15 @@ export default {
     },
     props: {},
     computed: {
-        ...mapGetters("models", ["isRepeat", "getModelTree"])
+        ...mapGetters("models", ["isRepeat", "getModelTree"]),
+        curTreeNodeId() {
+            return this.$route.query.id;
+        }
+    },
+    watch: {
+        curTreeNodeId() {
+            this.$refs.rightWrap.scrollTop = 0;
+        }
     },
     methods: {
         ...mapActions("models", ["createModel"]),
