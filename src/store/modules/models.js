@@ -59,8 +59,8 @@ const getTreeNodeList = (tree = {}, type) => {
 
 // state
 const state = {
-    modelsData: {},
-    modelsTree: []
+    modelsData: {},     // 每个元件的数据{ id: data }
+    modelsTree: []      // 模型树数据
 }
 
 // getters
@@ -90,6 +90,66 @@ const getters = {
         return ({ modelName, type }) => {
             let curTree = getters.getModelTree({ name: modelName })[0];
             return getTreeNodeList(curTree, type);
+        }
+    },
+
+    // 获取车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
+    getCarListData(state, getters) {
+        return ({ modelName }) => {
+            let vehicleList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['vehicle'] });
+            // console.log(vehicleList);
+            let connectList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['connect'] });
+            // console.log(connectList);
+
+            let result = {};
+            let row = null;
+            vehicleList.map((item) => {
+                for (let i = 0; i < connectList.length; i++) {
+                    let curConnect = connectList[i];
+                    if (row !== item.row) row = item.row;
+                    if (item.row === curConnect.row && item.col === curConnect.col) {
+                        if (!result[row]) result[row] = [];
+                        result[row].push({
+                            row: item.row,
+                            col: item.col,
+                            label: item.label,
+                            vehicleId: item.id,
+                            connectId: curConnect.id,
+                            vehicleData: item,
+                            connectData: curConnect
+                        });
+                        connectList.splice(i, 1);
+                    }
+                }
+            });
+
+            return Object.entries(result);
+        }
+    },
+
+    // 获取单个车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
+    getCarData(state, getter) {
+        return ({ row, col, modelName }) => {
+            row = String(row);
+            col = String(col);
+
+            const list = getter.getCarListData({ modelName });
+
+            for (let i = 0; i < list.length; i++) {
+                const curLi = list[i];
+                const curRow = String(curLi[0]);
+                const curCol = curLi[1];
+
+                if (curRow === row) {
+                    for (let j = 0; j < curCol.length; j++) {
+                        if (String(curCol[j]['col']) === col) {
+                            return curCol[j];
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
     },
 

@@ -1,18 +1,18 @@
 <template>
     <div :class="$style.root">
-        <CarBody />
+       模型参数
     </div>
 </template>
 
 <script>
 // import { mapState, mapGetters } from "vuex";
 // import { MODEL_TREE_TYPE } from "common/constants";
-import CarBody from "./CarBody";
+// import CarBody from "./CarBody";
 
 export default {
     name: "Args",
     components: {
-        CarBody
+        // CarBody
     },
     data() {
         return {};

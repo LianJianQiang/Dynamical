@@ -11,7 +11,7 @@ module.exports = {
                 modules: true,
                 camelCase: true,
                 localIdentName: '[name]-[hash]',
-                data: `@import "~styles/core/variables.scss";`
+                data: `@import "~styles/core/index.scss";`
             }
         }
     },

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import Icon from "assets/icon";
 
 export default {
@@ -32,6 +32,8 @@ export default {
     },
     computed: {
         ...mapState("models", ["modelsTree"]),
+        ...mapGetters("models", ["getCarData"]),
+
         getQueryId() {
             let { id = "" } = this.$route.query || {};
             return id;
@@ -39,13 +41,16 @@ export default {
     },
     methods: {
         nodeClick(nodeData) {
-            let { type, modelName, id } = nodeData;
+            let { type, modelName, id, col, row } = nodeData;
             if (nodeData.children) return;
             if (type && modelName) {
                 this.$router.push({
                     path: "/model/edit",
                     query: { type, name: modelName, id }
                 });
+
+                const carDetail = this.getCarData({ modelName, row, col });
+                this.$store.dispatch("pageState/saveCurCarDetail", carDetail);
             }
         }
     }

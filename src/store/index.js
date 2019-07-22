@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 import createPersistedState from "vuex-persistedstate"
 
 import models from './modules/models'
+import pageState from './modules/pageState'
 
 
 Vue.use(Vuex)
@@ -17,7 +18,7 @@ const createPersisted = createPersistedState({
 
 export default new Vuex.Store({
     modules: {
-        models
+        models, pageState
     },
     strict: debug,
     // plugins: debug ? [createLogger(), createPersisted] : [createPersisted]

@@ -1,13 +1,13 @@
 import Icon from 'assets/icon';
 
 export const MENU_LIST = [
-    {
-        name: '首页',
-        key: 'home',
-        icon: Icon['home'],
-        activeIcon: Icon['homeActive'],
-        url: '/home'
-    },
+    // {
+    //     name: '首页',
+    //     key: 'home',
+    //     icon: Icon['home'],
+    //     activeIcon: Icon['homeActive'],
+    //     url: '/home'
+    // },
     {
         name: '模型建设',
         key: 'model',

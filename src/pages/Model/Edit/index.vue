@@ -1,6 +1,9 @@
 <template>
-    <div>
+    <div :class="$style.root">
         <div v-if="curModelData.length>0">
+            <div :class="$style.close" class="cursor-p" @click="onClickClose">
+                <img :src="closeIcon" alt />
+            </div>
             <BasicInfo
                 v-if="curTreeNodeType === modelTreetype.basic"
                 :dataSource="dataSource"
@@ -21,7 +24,7 @@
                 :dataSource="dataSource"
                 :key="curTreeNodeId"
             />
-             <Args
+            <Args
                 v-if="curTreeNodeType === modelTreetype.args"
                 :dataSource="dataSource"
                 :key="curTreeNodeId"
@@ -34,6 +37,7 @@
 import { mapState, mapGetters } from "vuex";
 
 import { MODEL_TREE_TYPE } from "common/constants";
+import Img from "assets/icon";
 
 import BasicInfo from "./Basic";
 import Vehicle from "./Vehicle";
@@ -52,12 +56,15 @@ export default {
     },
     data() {
         return {
-            modelTreetype: MODEL_TREE_TYPE
+            modelTreetype: MODEL_TREE_TYPE,
+            closeIcon: Img["close"]
         };
     },
     props: {},
     methods: {
-        onChange(value) {}
+        onClickClose() {
+            this.$router.push("/model/open");
+        }
     },
     computed: {
         ...mapState("models", ["modelsData", "modelTree"]),
@@ -98,3 +105,17 @@ export default {
     mounted() {}
 };
 </script>
+
+<style module lang="scss">
+.root {
+    position: relative;
+    .close {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+}
+</style>
+
