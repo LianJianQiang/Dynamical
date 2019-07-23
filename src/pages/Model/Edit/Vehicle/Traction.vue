@@ -2,62 +2,57 @@
 <template>
     <DropDown :save="save">
         <div :class="$style.root">
-            <el-checkbox-group v-model="checkboxGroup" :max="1">
-                <el-row :class="$style.curveWrap">
-                    <el-checkbox label="check1">特征曲线定义</el-checkbox>
-                    <el-form
-                        ref="form"
-                        :class="$style.form"
-                        label-position="left"
-                        :model="check1Data"
-                        label-width="120px"
-                    >
-                        <el-form-item label="牵引电机数量">
-                            <el-input-number :controls="false" v-model="check1Data.elec" :min="0"></el-input-number>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-                <el-row :class="$style.curveWrap">
-                    <el-checkbox label="check2">牵引力参数设置</el-checkbox>
-                    <el-form
-                        ref="form"
-                        :class="$style.form"
-                        label-position="left"
-                        :model="check2Data"
-                        label-width="120px"
-                    >
-                        <el-form-item label="牵引力">
-                            <el-input-number
-                                :controls="false"
-                                v-model="check2Data.traction"
-                                :min="0"
-                            ></el-input-number>
-                        </el-form-item>
-                        <el-form-item label="延迟时间">
-                            <el-input-number :controls="false" v-model="check2Data.delay" :min="0"></el-input-number>
-                        </el-form-item>
-                        <el-form-item label="牵引力加载时间">
-                            <el-input-number
-                                :controls="false"
-                                v-model="check2Data.loadtime"
-                                :min="0"
-                            ></el-input-number>
-                        </el-form-item>
-                    </el-form>
-                </el-row>
-                <el-row :class="$style.curveWrap" class="clearfix">
-                    <el-checkbox label="check3" class="fll">制动力用户自定义</el-checkbox>
-                    <Diy
-                        size="mini"
-                        field="check3Data"
-                        :saveData="saveDropDownData"
-                        :class="$style.brakeDiyDown"
-                    />
-                </el-row>
-                <!-- <el-row :class="$style.curveWrap">
+            <!-- <el-checkbox-group v-model="checkboxGroup" :max="1"> -->
+            <el-row :class="$style.curveWrap">
+                <el-radio v-model="radioValue" label="check1">特征曲线定义</el-radio>
+                <el-form
+                    ref="form"
+                    :class="$style.form"
+                    label-position="left"
+                    :model="check1Data"
+                    label-width="120px"
+                >
+                    <el-form-item label="牵引电机数量">
+                        <el-input-number :controls="false" v-model="check1Data.elec" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <el-row :class="$style.curveWrap">
+                <!-- <el-checkbox label="check2">牵引力参数设置</el-checkbox> -->
+                <el-radio v-model="radioValue" label="check2">牵引力参数设置</el-radio>
+
+                <el-form
+                    ref="form"
+                    :class="$style.form"
+                    label-position="left"
+                    :model="check2Data"
+                    label-width="120px"
+                >
+                    <el-form-item label="牵引力">
+                        <el-input-number :controls="false" v-model="check2Data.traction" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="延迟时间">
+                        <el-input-number :controls="false" v-model="check2Data.delay" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="牵引力加载时间">
+                        <el-input-number :controls="false" v-model="check2Data.loadtime" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <el-row :class="$style.curveWrap" class="clearfix">
+                <!-- <el-checkbox label="check3" class="fll">制动力用户自定义</el-checkbox> -->
+                <el-radio v-model="radioValue" label="check3">制动力用户自定义</el-radio>
+                <Diy
+                    size="mini"
+                    field="check3Data"
+                    :saveData="saveDropDownData"
+                    :class="$style.brakeDiyDown"
+                />
+            </el-row>
+            <!-- <el-row :class="$style.curveWrap">
                     <el-checkbox label="check3">制动控制力定义</el-checkbox>
-                </el-row>-->
-            </el-checkbox-group>
+            </el-row>-->
+            <!-- </el-checkbox-group> -->
         </div>
     </DropDown>
 </template>
@@ -76,7 +71,7 @@ export default {
         let check1Data = {},
             check2Data = {},
             check3Data = [],
-            checkboxGroup = [checked];
+            radioValue = checked;
 
         if (checked === "checked1") {
             check1Data = data || {};
@@ -85,14 +80,14 @@ export default {
         } else if (checked === "checked3") {
             check3Data = data || [];
         } else {
-            checkboxGroup = [];
+            radioValue = "";
         }
 
         return {
             check1Data,
             check2Data,
             check3Data,
-            checkboxGroup
+            radioValue
         };
     },
     components: {
@@ -119,12 +114,12 @@ export default {
     methods: {
         // 保存数据
         save() {
-            let { check1Data, check2Data, checkboxGroup } = this;
+            let { check1Data, check2Data, radioValue } = this;
 
             let data = {};
-            if (checkboxGroup[0] === "check1") {
+            if (radioValue === "check1") {
                 data = { ...check1Data };
-            } else if (checkboxGroup[0] === "check2") {
+            } else if (radioValue === "check2") {
                 data = check2Data;
             }
 

@@ -9,7 +9,7 @@
                 <div :class="$style.title">前端面</div>
                 <el-form ref="frontForm" :model="frontData" label-width="120px">
                     <el-form-item label="缓冲器:">
-                        <Diy
+                        <Buffer
                             field="buffer"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
                             :dataSource="frontData.buffer"
@@ -183,6 +183,7 @@ import { MODEL_TREE_TYPE } from "common/constants";
 import Foldedcollapse from "./FoldedCollapse";
 
 import Diy from "./Diy";
+import Buffer from "./Buffer";
 import RubberBearing from "./RubberBearing";
 import Damper from "./Damper";
 import Anticreeper from "./Anticreeper";
@@ -198,7 +199,8 @@ export default {
         Anticreeper,
         OverloadProtection,
         Windshield,
-        Diy
+        Diy,
+        Buffer
     },
     data() {
         /**

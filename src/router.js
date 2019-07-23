@@ -6,8 +6,8 @@ import { MENU_LIST } from 'common/constants';
 
 // 引入组件
 import Home from 'pages/Home.vue';
-import Argument from 'pages/Argument.vue';
-import Model from 'pages/Model/index.vue';
+import Argument from 'pages/Argument';
+import Model from 'pages/Model';
 import Report from 'pages/Report.vue';
 import NotFound from 'pages/NotFound.vue';
 

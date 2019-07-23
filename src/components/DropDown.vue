@@ -109,7 +109,7 @@ $height: 32px;
 :global {
     .drop-down-popover {
         min-width: 250px !important;
-        max-height: 200px !important;
+        max-height: 220px !important;
         overflow: auto;
         .subBtnWrap {
             margin-top: 10px;

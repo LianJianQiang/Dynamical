@@ -20,7 +20,8 @@
                 </el-form-item>
             </el-form>
             <el-row :class="$style.curveWrap">
-                <el-checkbox v-model="checked1" label="牵引力曲线自定义1" @change="checkChange1" />
+                <el-radio v-model="radioValue" label="check1">牵引力曲线自定义1</el-radio>
+
                 <ul :class="$style.curveInfo">
                     <el-form :model="curveData1">
                         <li>
@@ -118,7 +119,8 @@
                 </ul>
             </el-row>
             <el-row :class="$style.curveWrap">
-                <el-checkbox v-model="checked2" label="牵引力曲线自定义2" @change="checkChange2" />
+                <el-radio v-model="radioValue" label="check2">牵引力曲线自定义2</el-radio>
+
                 <div :class="$style.curveInfo">
                     <EditTable ref="editTable" />
                     <!-- <div :class="$style.btnGroup">
@@ -157,8 +159,9 @@ export default {
             data: {},
             curveData1: {},
             traction: [],
-            checked1: false,
-            checked2: false
+            // checked1: false,
+            // checked2: false,
+            radioValue: ""
         };
     },
     components: {
@@ -175,14 +178,6 @@ export default {
         }
     },
     methods: {
-        checkChange1(bool) {
-            this.checked1 = bool;
-            this.checked2 = !bool;
-        },
-        checkChange2(bool) {
-            this.checked2 = bool;
-            this.checked1 = !bool;
-        },
         // // table中插入一行
         // tableAdd() {
         //     let { tableData } = this;
@@ -223,9 +218,9 @@ export default {
             };
 
             // TODO 根据不同条件将curveData1 或tableData处理成后端需要的格式
-            if (this.checked1) {
+            if (this.radioValue === "check1") {
                 data.curveData = this.curveData1;
-            } else if (this.checked2) {
+            } else if (this.radioValue === "checked2") {
                 let tableData = this.$refs.editTable.save();
                 data.curveData = tableData;
             }

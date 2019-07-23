@@ -24,7 +24,7 @@ const actions = {
 const mutations = {
     // 保存当前选中的车辆信息
     [OPEN_CAR_DETAIL](state, { data }) {
-        state.carDetail = data;
+        state.carDetail = data || {};
     }
 }
 

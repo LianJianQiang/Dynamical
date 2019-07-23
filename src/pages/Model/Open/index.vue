@@ -37,7 +37,7 @@ export default {
     },
     props: {},
     methods: {
-        ...mapActions("pageState", ["saveCurCarDetail"]),
+        ...mapActions("uiState", ["saveCurCarDetail"]),
 
         onClickList(info) {
             this.saveCurCarDetail(info);
@@ -45,8 +45,8 @@ export default {
     },
     computed: {
         ...mapGetters("models", ["getCarListData"]),
-        ...mapGetters("pageState", ["isOpenCarDetail"]),
-        ...mapState("pageState", ["carDetail"]),
+        ...mapGetters("uiState", ["isOpenCarDetail"]),
+        ...mapState("uiState", ["carDetail"]),
 
         listData() {
             return this.getCarListData({ modelName: "ces" });

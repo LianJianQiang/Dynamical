@@ -2,8 +2,8 @@
     重写element-ui样式
 */
 
-.ctx-menu-container{
-    z-index: 2147483647;
+.ctx-menu-container {
+  z-index: 2147483647;
 }
 
 body {
@@ -35,9 +35,17 @@ body {
     th {
       padding: 0;
     }
-   
+
     .el-input__inner {
       border: none !important;
     }
+  }
+
+  .el-checkbox-button__inner,
+  .el-radio {
+    font-weight: normal;
+  }
+  .el-radio__input.is-checked + .el-radio__label {
+    color: $highlight-color_1;
   }
 }

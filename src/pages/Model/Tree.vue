@@ -50,7 +50,7 @@ export default {
                 });
 
                 const carDetail = this.getCarData({ modelName, row, col });
-                this.$store.dispatch("pageState/saveCurCarDetail", carDetail);
+                this.$store.dispatch("uiState/saveCurCarDetail", carDetail);
             }
         }
     }
