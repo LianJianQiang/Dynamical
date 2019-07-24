@@ -1,21 +1,31 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.btnGroup">
-            <el-button class="btn-mini" @click="tableAdd">+</el-button>
-            <el-button class="btn-mini" @click="tableDel">-</el-button>
-            <el-button class="btn-mini" @click="tableOpen">打开</el-button>
-            <el-button class="btn-mini" @click="tableSave">保存</el-button>
+            <el-button v-if="showAdd" class="btn-mini" @click="tableAdd">+</el-button>
+            <el-button v-if="showDel" class="btn-mini" @click="tableDel">-</el-button>
+            <el-button v-if="showOpen" class="btn-mini" @click="tableOpen">打开</el-button>
+            <el-button v-if="showSave" class="btn-mini" @click="tableSave">保存</el-button>
         </div>
-        <el-table :data="tableData" height="85" border size="mini">
+        <el-table :data="tableData" :height="height" border size="mini">
             <el-table-column prop="order" label="序号" align="center" width="75" />
             <el-table-column prop="x" label="x" align="center" width="75">
                 <template slot-scope="scope">
-                    <el-input-number :controls="false" v-model="scope.row.x" :min="0"></el-input-number>
+                    <el-input-number
+                        :controls="false"
+                        v-model="scope.row.x"
+                        :min="0"
+                        @change="dataChange"
+                    ></el-input-number>
                 </template>
             </el-table-column>
             <el-table-column prop="fx" label="f(x)" align="center" width="75">
                 <template slot-scope="scope">
-                    <el-input-number v-model="scope.row.fx" :controls="false" :min="0"></el-input-number>
+                    <el-input-number
+                        v-model="scope.row.fx"
+                        :controls="false"
+                        :min="0"
+                        @change="dataChange"
+                    ></el-input-number>
                 </template>
             </el-table-column>
         </el-table>
@@ -36,6 +46,30 @@ export default {
             default: () => {
                 return [];
             }
+        },
+        tableDataChange: {
+            type: Function,
+            default: () => {}
+        },
+        height: {
+            type: String,
+            default: "85"
+        },
+        showOpen: {
+            type: Boolean,
+            default: true
+        },
+        showAdd: {
+            type: Boolean,
+            default: true
+        },
+        showDel: {
+            type: Boolean,
+            default: true
+        },
+        showSave: {
+            type: Boolean,
+            default: true
         }
     },
     computed: {
@@ -43,11 +77,20 @@ export default {
         //     return [...this.dataSource];
         // }
     },
+    watch: {
+        // tableData() {
+        //     this.tableDataChange(this.tableData);
+        // }
+    },
     methods: {
+        // 单元格里到值发生变化时回调
+        dataChange() {
+            this.tableDataChange(this.tableData);
+        },
         // table中插入一行
         tableAdd() {
             let { tableData } = this;
-            tableData.push({ order: tableData.length + 1, x: "", fx: "" });
+            tableData.unshift({ order: tableData.length + 1, x: "", fx: "" });
             this.tableData = tableData;
         },
 

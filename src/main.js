@@ -6,10 +6,11 @@ import router from './router.js'
 import store from './store'
 
 
+import './plugins/element.js';
+// import './plugins/echarts';
+
 // 全局样式
 import 'styles/index.scss';
-
-import './plugins/element.js'
 
 Vue.config.productionTip = false;
 

@@ -26,5 +26,9 @@ module.exports = {
             .set('assets', resolve('src/assets'))
             .set('utils', resolve('src/utils'))
             .set('store', resolve('src/store'));
-    }
+    },
+    transpileDependencies: [
+        'vue-echarts',
+        'resize-detector'
+    ]
 }
