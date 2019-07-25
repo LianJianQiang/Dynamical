@@ -39,10 +39,28 @@ export const validateField = (rules) => (rule, value, cb) => {
     cb();
 };
 
+export const isNull = (value) => {
+    if (!value && typeof (value) !== 'undefined' && value !== 0) return true;
+    return false;
+}
+
+export const isUndefined = (value) => {
+    if (typeof (value) === "undefined") return true;
+    return false;
+}
+
+
+export const isNil = (value) => {
+    if (isNull(value) || isUndefined(value)) return true;
+    return false;
+}
 
 export default {
     isNumber,
     isNumZhEn,
     validateNum,
+    isNull,
+    isUndefined,
+    isNil,
     validateField
 }

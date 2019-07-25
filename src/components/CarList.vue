@@ -1,6 +1,12 @@
 <template>
     <div :class="$style.root" class="clearfix">
-        <div v-for="(item,idx) in list" :key="idx" class="fll" @click="clickList(item)">
+        <div
+            :class="$style.carWrap"
+            v-for="(item,idx) in list"
+            :key="idx"
+            class="fll"
+            @click="clickList(item)"
+        >
             <Car
                 :class="[$style[`car_${getCarType(idx)}`]]"
                 :type="getCarType(idx)"
@@ -59,6 +65,9 @@ export default {
     width: 100%;
     height: 100%;
     margin: 0 5px;
+    .carWrap {
+        margin-bottom: 20px;
+    }
     .car_head,
     .car_trail {
         width: 120px;

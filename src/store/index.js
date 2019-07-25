@@ -5,6 +5,7 @@ import createPersistedState from "vuex-persistedstate"
 
 import models from './modules/models'
 import uiState from './modules/uiState'
+import argCfg from './modules/argCfg'
 
 
 Vue.use(Vuex)
@@ -18,7 +19,7 @@ const createPersisted = createPersistedState({
 
 export default new Vuex.Store({
     modules: {
-        models, uiState
+        models, uiState, argCfg
     },
     strict: debug,
     // plugins: debug ? [createLogger(), createPersisted] : [createPersisted]

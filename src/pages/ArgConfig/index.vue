@@ -6,10 +6,6 @@
             </div>
         </div>
         <div :class="$style.right" ref="rightWrap">
-            <div :class="$style.btnWrap">
-                <el-button class="btn-xl" @click="openModel">打开模型</el-button>
-                <el-button class="btn-xl" @click="newModel">新建模型</el-button>
-            </div>
             <div class="rightCont">
                 <router-view></router-view>
             </div>
@@ -143,6 +139,15 @@ $left-width: 222px;
         bottom: 0;
         .btnWrap {
             margin-bottom: 20px;
+        }
+        :global {
+            .rightCont {
+                width: 100%;
+                height: 100%;
+                background-color: #fff;
+                padding: 20px;
+                overflow: auto;
+            }
         }
     }
 }

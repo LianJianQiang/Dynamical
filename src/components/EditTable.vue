@@ -73,14 +73,8 @@ export default {
         }
     },
     computed: {
-        // tableData() {
-        //     return [...this.dataSource];
-        // }
     },
     watch: {
-        // tableData() {
-        //     this.tableDataChange(this.tableData);
-        // }
     },
     methods: {
         // 单元格里到值发生变化时回调
@@ -90,8 +84,13 @@ export default {
         // table中插入一行
         tableAdd() {
             let { tableData } = this;
-            tableData.unshift({ order: tableData.length + 1, x: "", fx: "" });
+            tableData.unshift({
+                order: tableData.length + 1,
+                x: 0,
+                fx: 0
+            });
             this.tableData = tableData;
+            this.tableDataChange(this.tableData);
         },
 
         // table中删除一行
@@ -99,6 +98,7 @@ export default {
             let { tableData } = this;
             tableData.pop();
             this.tableData = tableData;
+            this.tableDataChange(this.tableData);
         },
 
         // TODO 打开和保存功能需后端支持

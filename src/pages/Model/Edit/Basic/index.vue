@@ -152,7 +152,7 @@ import Traction from "./Traction";
 
 // 自定义验证规则
 const rules = {
-    num: { max: 10, isInt: true, min: 2 },
+    num: { max: 18, isInt: true, min: 2 },
     length: {},
     speed: {},
     brakes: {},

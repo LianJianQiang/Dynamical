@@ -7,12 +7,17 @@ import { MENU_LIST } from 'common/constants';
 // 引入组件
 import Home from 'pages/Home.vue';
 import Argument from 'pages/Argument';
+import ArgConfig from 'pages/ArgConfig';
 import Model from 'pages/Model';
 import Report from 'pages/Report.vue';
 import NotFound from 'pages/NotFound.vue';
+import Waiting from 'pages/Waiting.vue';
 
 import EditModel from 'pages/Model/Edit';
 import OpenModel from 'pages/Model/Open';
+
+import BufferCurve from 'pages/ArgConfig/BufferCurve';
+import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
 
 let redirectUrl = MENU_LIST[0].url || '';
 
@@ -25,6 +30,21 @@ const routes = [
     { path: '/home', component: Home },
     { path: '/arg', component: Argument },
     {
+        path: '/arg-cfg',
+        component: ArgConfig,
+        children: [
+            {
+                path: 'buffer-curve',
+                component: BufferCurve
+            },
+            {
+                path: 'buffer-piecewise',
+                component: BufferPiecewise
+            },
+            { path: '*', component: Waiting }
+        ]
+    },
+    {
         path: '/model',
         component: Model,
         children: [
@@ -35,7 +55,8 @@ const routes = [
             {
                 path: 'open',
                 component: OpenModel
-            }
+            },
+            { path: '*', component: Waiting }
         ]
     },
     { path: '/report', component: Report },

@@ -93,6 +93,15 @@ const getters = {
         }
     },
 
+
+    // 根据id获取数据
+    getNodeArgs(state) {
+        return (id) => {
+            let datas = state['modelsData'][id] || {};
+            return datas;
+        }
+    },
+
     // 获取车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
     getCarListData(state, getters) {
         return ({ modelName }) => {

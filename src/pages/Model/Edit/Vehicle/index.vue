@@ -106,7 +106,8 @@ import Diy from "./Diy";
 
 // 自定义验证规则
 const rules = {
-    mass: { max: 10, isInt: true, min: 2 },
+    // mass: { max: 10, isInt: true, min: 2 },
+    mass: {},
     k_car: {},
     q_car: {}
 };

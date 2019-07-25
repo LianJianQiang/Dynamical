@@ -4,22 +4,6 @@
         <div :class="$style.root">
             <el-row :class="$style.curveWrap">
                 <el-radio v-model="radioValue" label="check1">锚点法设置</el-radio>
-
-                <div :class="$style.typeWrap">
-                    <div class="clearfix">
-                        <div class="fll">型号选择</div>
-                        <el-select v-model="value" placeholder="请选择" class="m-l-5 fll">
-                            <el-option
-                                v-for="item in options"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value"
-                            ></el-option>
-                        </el-select>
-                        <div class="flr" :class="$style.lineSet" @click="setLine('1')">曲线设置</div>
-                    </div>
-                    <el-checkbox label="check1">自定义</el-checkbox>
-                </div>
                 <el-form
                     class="clearfix"
                     ref="form"
@@ -28,6 +12,16 @@
                     :model="check1Data"
                     label-width="120px"
                 >
+                    <el-form-item label="型号选择">
+                        <el-select v-model="value" placeholder="请选择">
+                            <el-option
+                                v-for="item in options"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="行程">
                         <el-input-number :controls="false" v-model="check1Data.brake" :min="0"></el-input-number>
                     </el-form-item>
@@ -46,7 +40,7 @@
                 <div :class="$style.typeWrap">
                     <div class="clearfix">
                         <div class="fll">型号选择</div>
-                        <el-select v-model="value" placeholder="请选择" class="m-l-5 fll">
+                        <el-select v-model="value" placeholder="请选择" class="flr">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -54,9 +48,7 @@
                                 :value="item.value"
                             ></el-option>
                         </el-select>
-                        <div class="flr" :class="$style.lineSet" @click="setLine('2')">曲线设置</div>
                     </div>
-                    <el-checkbox label="check1">自定义</el-checkbox>
                 </div>
             </el-row>
             <el-row :class="$style.curveWrap" class="clearfix">
