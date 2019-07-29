@@ -65,6 +65,7 @@
 </template>
 
 <script>
+
 import Chart from "./Charts";
 
 import Cascader from "./Cascader";
@@ -79,6 +80,7 @@ const IEVersion = window.__IEVersion__;
 //     { x: 0, y: 12, w: 6, h: 8, i: "2", static: false },
 //     { x: 6, y: 12, w: 6, h: 8, i: "3", static: false }
 // ];
+
 
 export default {
     name: "Report",

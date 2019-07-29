@@ -25,6 +25,8 @@ export default {
     data() {
         return {
             chart: null
+            // chartWidth: 600,
+            // chartHeight: 300
         };
     },
     created() {},
@@ -43,6 +45,14 @@ export default {
         this.chart = null;
     },
     methods: {
+        // initSize() {
+        //     if (this.width && this.height) return;
+        //     let wrap = this.$refs.chartWrap;
+
+        //     this.chartWidth = wrap.offsetWidth;
+        //     this.chartHeight = wrap.offsetHeight;
+        //     this.chart && this.chart.resize();
+        // },
         initChart() {
             // 获取chart的容器
             this.chart = echarts.init(this.$refs.myEchart);
