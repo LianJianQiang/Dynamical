@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root" class="clearfix">
         <div :class="$style.chartWrap" class="fll">
-            <LineCharts width="500" height="450" :options="chartsOptions" />
+            <LineCharts  :options="chartsOptions" />
         </div>
         <div :class="$style.rightWrap" class="flr">
             <div :class="$style.typeWrap" v-if="type">{{type}}</div>
@@ -60,11 +60,6 @@ import EditTable from "components/EditTable";
 import LineCharts from "components/Charts";
 
 let chartsOptions = {
-    title: {
-        text: "曲线图",
-        top: 5,
-        left: "center"
-    },
     xAxis: {
         type: "category",
         data: []
@@ -133,9 +128,8 @@ export default {
 <style module lang="scss">
 .root {
     .chartWrap {
-        width: 500px;
-        height: 500px;
-        padding-top: 50px;
+        width: 450px;
+        height: 450px;
     }
 
     .rightWrap {

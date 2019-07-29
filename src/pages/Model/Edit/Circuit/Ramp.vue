@@ -103,7 +103,7 @@
                             </el-table>
                         </div>
                         <div class="rampDrawerChart">
-                            <LineCharts width="400" height="300" :options="chartsOptions" />
+                            <LineCharts :options="chartsOptions" />
                         </div>
                         <div></div>
                     </div>
@@ -265,6 +265,11 @@ export default {
 
             .drawerFooter {
                 text-align: center;
+            }
+
+            .rampDrawerChart{
+                width: 100%;
+                height: 300px;
             }
         }
         .el-input__icon {
