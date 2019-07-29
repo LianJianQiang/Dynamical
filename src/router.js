@@ -9,9 +9,9 @@ import Home from 'pages/Home.vue';
 import Argument from 'pages/Argument';
 import ArgConfig from 'pages/ArgConfig';
 import Model from 'pages/Model';
-import Report from 'pages/Report.vue';
-import NotFound from 'pages/NotFound.vue';
-import Waiting from 'pages/Waiting.vue';
+import Report from 'pages/Report';
+import NotFound from 'pages/NotFound';
+import Waiting from 'pages/Waiting';
 
 import EditModel from 'pages/Model/Edit';
 import OpenModel from 'pages/Model/Open';

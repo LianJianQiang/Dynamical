@@ -50,7 +50,11 @@ body {
     color: $highlight-color_1;
   }
 
-//   .el-table__body-wrapper.is-scrolling-middle {
-//     padding-bottom: 18px;
-//   }
+  //   .el-table__body-wrapper.is-scrolling-middle {
+  //     padding-bottom: 18px;
+  //   }
+
+  .el-drawer__body {
+    overflow: auto;
+  }
 }

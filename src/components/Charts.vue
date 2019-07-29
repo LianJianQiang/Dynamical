@@ -1,5 +1,12 @@
 <template>
-    <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart"></div>
+    <div :class="$style.root" ref="chartWrap">
+        <div
+            :class="className"
+            :id="id"
+            :style="{width:`${width}px`,height:`${height}px`}"
+            ref="myEchart"
+        ></div>
+    </div>
 </template>
 
 <script>
@@ -16,12 +23,10 @@ export default {
             default: ""
         },
         width: {
-            type: String,
-            default: "400px"
+            type: String
         },
         height: {
-            type: String,
-            default: "400px"
+            type: String
         },
         options: {
             type: Object,
@@ -31,11 +36,17 @@ export default {
     data() {
         return {
             chart: null
+            // chartWidth: 600,
+            // chartHeight: 300
         };
     },
+    created() {},
     mounted() {
-        this.initChart();
-        this.initOptionsWatcher();
+        this.$nextTick(() => {
+            // 使用nextTick为了保证dom元素都已经渲染完毕
+            this.initChart();
+            this.initOptionsWatcher();
+        });
     },
     beforeDestroy() {
         if (!this.chart) {
@@ -45,6 +56,14 @@ export default {
         this.chart = null;
     },
     methods: {
+        // initSize() {
+        //     if (this.width && this.height) return;
+        //     let wrap = this.$refs.chartWrap;
+
+        //     this.chartWidth = wrap.offsetWidth;
+        //     this.chartHeight = wrap.offsetHeight;
+        //     this.chart && this.chart.resize();
+        // },
         initChart() {
             this.chart = echarts.init(this.$refs.myEchart);
             // 把配置和数据放这里
@@ -72,3 +91,11 @@ export default {
     }
 };
 </script>
+
+<style module lang="scss">
+.root {
+    width: 100%;
+    height: 100%;
+}
+</style>
+
