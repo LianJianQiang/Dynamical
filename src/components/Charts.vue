@@ -1,9 +1,11 @@
 <template>
-    <div :class="className" :id="id" :style="{height:height,width:width}" ref="myEchart"></div>
+    <div :class="[className,$style.root]" :id="id" ref="myEchart"></div>
 </template>
 
 <script>
 import echarts from "src/lib/echarts.js";
+import EleResize from "src/lib/esresize";
+
 export default {
     name: "Charts",
     props: {
@@ -15,14 +17,6 @@ export default {
             type: String,
             default: ""
         },
-        width: {
-            type: String,
-            default: "400px"
-        },
-        height: {
-            type: String,
-            default: "400px"
-        },
         options: {
             type: Object,
             default: () => ({})
@@ -33,9 +27,13 @@ export default {
             chart: null
         };
     },
+    created() {},
     mounted() {
-        this.initChart();
-        this.initOptionsWatcher();
+        this.$nextTick(() => {
+            // 使用nextTick为了保证dom元素都已经渲染完毕
+            this.initChart();
+            this.initOptionsWatcher();
+        });
     },
     beforeDestroy() {
         if (!this.chart) {
@@ -46,10 +44,30 @@ export default {
     },
     methods: {
         initChart() {
+            // 获取chart的容器
             this.chart = echarts.init(this.$refs.myEchart);
-            // 把配置和数据放这里
+
+            // 设置chart的options
             this.chart.setOption(this.options);
+
+            this.chart.on("contextmenu", this.showCtxMenu);
+            this.chart.on("dbclick", this.dbclick);
+
+            // chart根据容器自适应
+            let listener = () => {
+                console.log("resize");
+                this.chart.resize();
+            };
+            EleResize.on(this.$refs.myEchart, listener);
         },
+
+        dbclick(ev) {
+            console.log(ev);
+        },
+        showCtxMenu(ev) {
+            console.log(ev);
+        },
+        // 深度监听options的变化
         initOptionsWatcher() {
             if (this.__unwatchOptions) {
                 this.__unwatchOptions();
@@ -72,3 +90,11 @@ export default {
     }
 };
 </script>
+
+<style module lang="scss">
+.root {
+    width: 100%;
+    height: 100%;
+}
+</style>
+

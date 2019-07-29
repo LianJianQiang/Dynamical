@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root" class="clearfix">
         <div :class="$style.chartWrap" class="fll">
-            <LineCharts width="500px" height="450px" :options="chartsOptions" />
+            <LineCharts width="500" height="450" :options="chartsOptions" />
         </div>
         <div :class="$style.rightWrap" class="flr">
             <div :class="$style.typeWrap" v-if="type">{{type}}</div>

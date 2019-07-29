@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root">
         <div v-if="curModelData.length>0">
-            <div :class="$style.close" class="cursor-p" @click="onClickClose" v-if="curTreeNodeType !== modelTreetype.args">
+            <div :class="$style.close" class="cursor-p" @click="onClickClose" v-if="curTreeNodeType !== modelTreetype.args && curTreeNodeType !== modelTreetype.circuit">
                 <img :src="closeIcon" alt />
             </div>
             <BasicInfo
