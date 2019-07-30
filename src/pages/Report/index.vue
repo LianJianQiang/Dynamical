@@ -55,6 +55,7 @@
         <div :class="$style.charts">
             <div :class="$style.chartsCont">
                 <Chart />
+                <Chart />
                 <!-- <DragResize /> -->
                 <!-- <GridLayout v-if="IEVersion<0" :layout="chartsLayout"> -->
                 <!-- <Chart /> -->
@@ -103,7 +104,7 @@ export default {
 <style module lang="scss">
 .root {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     padding: 20px;
 
     // .content {

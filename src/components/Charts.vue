@@ -50,9 +50,6 @@ export default {
             // 设置chart的options
             this.chart.setOption(this.options);
 
-            this.chart.on("contextmenu", this.showCtxMenu);
-            this.chart.on("dbclick", this.dbclick);
-
             // chart根据容器自适应
             let listener = () => {
                 console.log("resize");
@@ -61,12 +58,6 @@ export default {
             EleResize.on(this.$refs.myEchart, listener);
         },
 
-        dbclick(ev) {
-            console.log(ev);
-        },
-        showCtxMenu(ev) {
-            console.log(ev);
-        },
         // 深度监听options的变化
         initOptionsWatcher() {
             if (this.__unwatchOptions) {

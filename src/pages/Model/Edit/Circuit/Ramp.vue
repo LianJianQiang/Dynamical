@@ -236,6 +236,7 @@ export default {
     :global {
         .el-drawer__header {
             font-size: 20px;
+            margin-bottom: 20px;
         }
         .rampDrawContent {
             padding: 0 20px 20px;
@@ -267,7 +268,7 @@ export default {
                 text-align: center;
             }
 
-            .rampDrawerChart{
+            .rampDrawerChart {
                 width: 100%;
                 height: 300px;
             }

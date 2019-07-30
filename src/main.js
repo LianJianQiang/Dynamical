@@ -8,7 +8,7 @@ import store from './store'
 
 import './plugins/element.js';
 import './plugins/vueGridLayout';
-// import './plugins/vueDragResize';
+import './plugins/vueDragResize';
 // import './plugins/echarts';
 
 // 全局样式

@@ -25,6 +25,7 @@ module.exports = {
             .set('styles', resolve('src/styles'))
             .set('assets', resolve('src/assets'))
             .set('utils', resolve('src/utils'))
+            .set('lib', resolve('src/lib'))
             .set('store', resolve('src/store'));
     },
     transpileDependencies: [
