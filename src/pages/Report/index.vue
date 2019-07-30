@@ -56,23 +56,22 @@
             <div :class="$style.chartsCont">
                 <Chart />
                 <!-- <DragResize /> -->
-                <!-- <GridLayout v-if="IEVersion<0" :layout="chartsLayout">
-                    <LineCharts :options="chartsOptions" />
-                </GridLayout>-->
+                <!-- <GridLayout v-if="IEVersion<0" :layout="chartsLayout"> -->
+                <!-- <Chart /> -->
+                <!-- </GridLayout> -->
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
 import Chart from "./Charts";
 
 import Cascader from "./Cascader";
 // import GridLayout from "./GridLayout";
 // import DragResize from "./DragResize";
 
-const IEVersion = window.__IEVersion__;
+// const IEVersion = window.__IEVersion__;
 
 // const testLayout = [
 //     { x: 0, y: 0, w: 6, h: 8, i: "0", static: false },
@@ -80,7 +79,6 @@ const IEVersion = window.__IEVersion__;
 //     { x: 0, y: 12, w: 6, h: 8, i: "2", static: false },
 //     { x: 6, y: 12, w: 6, h: 8, i: "3", static: false }
 // ];
-
 
 export default {
     name: "Report",
@@ -92,10 +90,10 @@ export default {
     },
     data() {
         return {
-            IEVersion,
+            // IEVersion,
             searchForm: {}
 
-            // chartsLayout: testLayout,
+            // chartsLayout: testLayout
         };
     },
     props: {}

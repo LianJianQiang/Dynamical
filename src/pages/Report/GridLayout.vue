@@ -29,8 +29,8 @@
                 @resized="resizedEvent"
                 @moved="movedEvent"
             >
-                <!-- <div :class="$style.gridContent">{{itemTitle(item)}}</div> -->
-                <slot></slot>
+                <div :class="$style.gridContent">{{itemTitle(item)}}</div>
+                <!-- <slot></slot> -->
             </grid-item>
         </grid-layout>
     </div>
