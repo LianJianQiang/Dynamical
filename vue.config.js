@@ -16,6 +16,8 @@ module.exports = {
         }
     },
     chainWebpack: (config) => {
+        config.entry('main').add('babel-polyfill'); // main是入口js文件
+
         config.resolve.alias
             .set('src', resolve('src'))
             .set('pages', resolve('src/pages'))
