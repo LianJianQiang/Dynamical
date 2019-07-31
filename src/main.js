@@ -1,6 +1,6 @@
-// import 'babel-polyfill';
+import '@babel/polyfill';
+import Es6Promise from 'es6-promise'
 import Vue from 'vue';
-// import ElementUI from 'element-ui';
 
 import App from './App.vue';
 import router from './router.js'
@@ -15,10 +15,16 @@ import './plugins/vueDragResize';
 // 全局样式
 import 'styles/index.scss';
 
+Es6Promise.polyfill();
+
 Vue.config.productionTip = false;
 
-new Vue({
-    store,
-    router,
-    render: h => h(App)
-}).$mount('#app')
+window.onload = function () {
+    new Vue({
+        store,
+        router,
+        render: h => h(App)
+    }).$mount('#app')
+}
+
+

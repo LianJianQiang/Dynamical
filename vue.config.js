@@ -1,10 +1,29 @@
 const path = require('path')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const CompressionWebpackPlugin = require('compression-webpack-plugin');
+
+const IS_PROD = ['production', 'prod'].includes(process.env.NODE_ENV)
+
+const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 function resolve(dir) {
     return path.join(__dirname, dir)
 }
 
 module.exports = {
+
+    // 基本路径
+    // baseUrl: './',
+    publicPath: './',
+    // 输出文件目录
+    outputDir: 'dist',
+    // eslint-loader 是否在保存的时候检查
+    lintOnSave: false,
+    assetsDir: '', // 相对于outputDir的静态资源(js、css、img、fonts)目录
+    runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
+    // 生产环境是否生成 sourceMap 文件
+    productionSourceMap: false,
+
     css: {
         loaderOptions: {
             sass: {
@@ -15,9 +34,17 @@ module.exports = {
             }
         }
     },
-    chainWebpack: (config) => {
-        config.entry('main').add('babel-polyfill'); // main是入口js文件
 
+    chainWebpack: (config) => {
+        config.entry.app = ['babel-polyfill', './src/main.js'];
+
+        // 修复HMR
+        config.resolve.symlinks(true);
+        // 修复 Lazy loading routes Error
+        config.plugin('html').tap(args => {
+            args[0].chunksSortMode = 'none';
+            return args;
+        });
         config.resolve.alias
             .set('src', resolve('src'))
             .set('pages', resolve('src/pages'))
@@ -29,9 +56,64 @@ module.exports = {
             .set('utils', resolve('src/utils'))
             .set('lib', resolve('src/lib'))
             .set('store', resolve('src/store'));
+
+
+        // 压缩图片 ie9不兼容
+        // config.module
+        //     .rule("images")
+        //     .use("image-webpack-loader")
+        //     .loader("image-webpack-loader")
+        //     .options({
+        //         mozjpeg: { progressive: true, quality: 65 },
+        //         optipng: { enabled: false },
+        //         pngquant: { quality: "65-90", speed: 4 },
+        //         gifsicle: { interlaced: false },
+        //         webp: { quality: 75 }
+        //     });
+
+        // 打包分析
+        if (process.env.IS_ANALYZ) {
+            config.plugin('webpack-report')
+                .use(BundleAnalyzerPlugin, [{
+                    analyzerMode: 'static'
+                }]);
+        }
     },
     transpileDependencies: [
         'vue-echarts',
-        'resize-detector'
-    ]
+        'resize-detector',
+        'webpack-dev-server/client'
+    ],
+
+    configureWebpack: config => {
+        if (IS_PROD) {
+            const plugins = [];
+            // 开启 gzip 压缩
+            plugins.push(
+                new CompressionWebpackPlugin({
+                    filename: '[path].gz[query]',
+                    algorithm: 'gzip',
+                    test: productionGzipExtensions,
+                    threshold: 10240,
+                    minRatio: 0.8
+                })
+            );
+            config.plugins = [
+                ...config.plugins,
+                ...plugins
+            ];
+        }
+    },
+    parallel: require('os').cpus().length > 1,
+
+    devServer: {
+        open: process.platform === 'darwin',
+        host: '0.0.0.0',
+        port: 8080,
+        https: false,
+        hotOnly: false,
+        proxy: null, // 设置代理
+        before: app => {
+        }
+    }
 }

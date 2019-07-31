@@ -13,7 +13,10 @@ import { IEVersion } from "utils/util";
 window.__IEVersion__ = IEVersion();
 
 console.log("IEVersion : ", window.__IEVersion__);
-const support = window.__IEVersion__ < 0 || window.__IEVersion__ >= 9;
+const support =
+    window.__IEVersion__ < 0 ||
+    window.__IEVersion__ >= 9 ||
+    window.__IEVersion__ === "edge";
 
 export default {
     name: "app",
