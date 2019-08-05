@@ -1,3 +1,5 @@
+import { SESSION_USERINFO_KEY } from 'common/constants';
+
 export const getDomRect = (dom) => {
     if (!dom) return {};
     return dom.getBoundingClientRect();
@@ -84,6 +86,51 @@ export const IEVersion = () => {
     }
 }
 
+
+export const handleTreeData = (dataList = []) => {
+    let items = [];
+    let item = null;
+    let idMap = {}; // key:id,value:item
+
+    // 将所有的菜单保存到idMap,如果是一级菜单，还要存放到items数组
+    for (let i = 0; i < dataList.length; i++) {
+        let row = dataList[i];
+        item = { ...row };
+        // item.data = Object.assign({}, row);
+
+        if (row.id === row.pid || !row.pid) {
+            items.push(item);
+        }
+        idMap[row.id] = item;
+    }
+
+    // 遍历所有的非一级菜单，找到它们的父节点，并存放到父节点的items属性下
+    for (let i = 0; i < dataList.length; i++) {
+        let row = dataList[i];
+        if (row.id === row.pid || !row.pid) {
+            continue;
+        }
+        let pitem = idMap[row.pid];
+        item = idMap[row.id];
+        if (pitem.id === item.id) continue;
+        if (pitem) {
+            if (!pitem.children) {
+                pitem.children = [];
+            }
+            pitem.children.push(item);
+        }
+    }
+
+    return items;
+}
+
+export const getUserInfo = () => {
+    let userInfoStr = window.sessionStorage.getItem(SESSION_USERINFO_KEY);
+    if (!userInfoStr) return {};
+    return JSON.parse(userInfoStr);
+}
+
+
 export default {
     isNumber,
     isNumZhEn,
@@ -92,5 +139,7 @@ export default {
     isUndefined,
     isNil,
     validateField,
-    IEVersion
+    IEVersion,
+    getUserInfo,
+    handleTreeData
 }

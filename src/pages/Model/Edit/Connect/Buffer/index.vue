@@ -3,7 +3,7 @@
     <DropDown :save="save">
         <div :class="$style.root">
             <el-row :class="$style.curveWrap">
-                <el-radio v-model="radioValue" label="check1">锚点法设置</el-radio>
+                <el-radio v-model="coupdef" label="1">锚点法设置</el-radio>
                 <el-form
                     class="clearfix"
                     ref="form"
@@ -13,7 +13,7 @@
                     label-width="120px"
                 >
                     <el-form-item label="型号选择">
-                        <el-select v-model="value" placeholder="请选择">
+                        <el-select v-model="couMdfId" placeholder="请选择">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -23,24 +23,24 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="行程">
-                        <el-input-number :controls="false" v-model="check1Data.brake" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="check1Data.couRoute" :min="0"></el-input-number>
                     </el-form-item>
                     <el-form-item label="间隙">
-                        <el-input-number :controls="false" v-model="check1Data.delaytime" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="check1Data.couGap" :min="0"></el-input-number>
                     </el-form-item>
                     <el-form-item label="包络线间震动的阻尼">
-                        <el-input-number :controls="false" v-model="check1Data.loadtime" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="check1Data.couDeboost" :min="0"></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
             <el-row :class="$style.curveWrap" class="clearfix">
-                <el-radio v-model="radioValue" label="check2">分段函数法设置</el-radio>
+                <el-radio v-model="coupdef" label="2">分段函数法设置</el-radio>
 
                 <!-- <el-checkbox label="check2" class="">分段函数法设置</el-checkbox> -->
                 <div :class="$style.typeWrap">
                     <div class="clearfix">
                         <div class="fll">型号选择</div>
-                        <el-select v-model="value" placeholder="请选择" class="flr">
+                        <el-select v-model="couFdhsfId" placeholder="请选择" class="flr">
                             <el-option
                                 v-for="item in options"
                                 :key="item.value"
@@ -53,13 +53,13 @@
             </el-row>
             <el-row :class="$style.curveWrap" class="clearfix">
                 <div class="clearfix">
-                    <el-radio v-model="radioValue" label="check3">缓冲器本构</el-radio>
+                    <el-radio v-model="coupdef" label="3">缓冲器本构</el-radio>
 
                     <!-- <el-checkbox label="check3" class="fll">缓冲器本构</el-checkbox> -->
                     <el-input-number
                         class="flr"
                         :controls="false"
-                        v-model="check3Data.num"
+                        v-model="check3Data.couEquation"
                         :min="0"
                         style="width:88px;margin-bottom:6px"
                     ></el-input-number>
@@ -72,7 +72,7 @@
                     label-width="120px"
                 >
                     <el-form-item label="钩缓质量" label-position="left">
-                        <el-input-number :controls="false" v-model="check3Data.zl" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="check3Data.couQuality" :min="0"></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -84,14 +84,14 @@
 import DropDown from "components/DropDown.vue";
 
 export default {
-    name: "VehicleBrakes",
+    name: "ConnectBuffer",
     data() {
         let { dataSource } = this;
         let { checked, data } = dataSource;
         let check1Data = {},
             check2Data = [],
             check3Data = {},
-            radioValue = "";
+            coupdef = "";
 
         if (checked === "checked1") {
             check1Data = data || {};
@@ -103,7 +103,7 @@ export default {
             check1Data,
             check2Data,
             check3Data,
-            radioValue,
+            coupdef,
 
             options: [
                 {
@@ -127,7 +127,9 @@ export default {
                     label: "北京烤鸭"
                 }
             ],
-            value: ""
+            coupname: "", // 缓冲器名称
+            couFdhsfId: "",
+            couMdfId: ""
         };
     },
     components: {
@@ -156,12 +158,12 @@ export default {
         },
         // 保存数据
         save() {
-            let { check1Data, check2Data, radioValue } = this;
+            let { check1Data, check2Data, coupdef } = this;
 
             let data = {};
-            if (radioValue === "check1") {
+            if (coupdef === "1") {
                 data = { ...check1Data };
-            } else if (radioValue === "check2") {
+            } else if (coupdef === "2") {
                 data = check2Data;
             }
 

@@ -63,7 +63,7 @@ export default {
     props: {},
     methods: {
         onClickClose() {
-            this.$router.push("/model/open");
+            this.$router.push("/page/model/open");
         }
     },
     computed: {

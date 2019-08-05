@@ -13,32 +13,46 @@ export const MENU_LIST = [
         key: 'model',
         icon: Icon['model'],
         activeIcon: Icon['modelActive'],
-        url: '/model'
+        url: '/page/model'
     },
     {
         name: '参数配置',
         key: 'argcfg',
         icon: Icon['arg'],
         activeIcon: Icon['argActive'],
-        url: '/arg-cfg'
+        url: '/page/arg-cfg'
     },
     {
         name: '计算报告',
         key: 'report',
         icon: Icon['report'],
         activeIcon: Icon['reportActive'],
-        url: '/report'
+        url: '/page/report'
     }
 ];
 
+// export const MODEL_TREE_TYPE = {
+//     train: 'train',         // 列车参数
+//     basic: 'basic',         // 列车基本参数
+//     vehicle: 'vehicle',     // 车辆参数
+//     connect: 'connect',     // 连接系统
+//     circuit: 'circuit',     // 线路
+//     args: 'args'            // 模型参数
+// }
+
+export const SESSION_USERINFO_KEY = '__USERINFO__';
+
+
 export const MODEL_TREE_TYPE = {
-    train: 'train',
-    basic: 'basic',
-    vehicle: 'vehicle',
-    connect: 'connect',
-    circuit: 'circuit',
-    args: 'args'
+    train: 'LCCS',         // 列车参数
+    basic: 'VE',         // 列车基本参数
+    vehicle: 'CA',     // 车辆参数
+    connect: 'LJXT',     // 连接系统
+    circuit: 'XLCS',     // 线路
+    args: 'MXCSB'            // 模型参数
 }
+
+export const MODEL_TYPE_LINK_LIST = ['LCCS', 'VE', 'CA', 'LJXT', 'XLCS', 'MXCSB']
 
 /**
  * 获取某个模型树上的所有对应type的node
@@ -128,5 +142,4 @@ export const createTree = (name, trainNum = 0, vehicleNum = []) => {
         ]
     }
 }
-
 

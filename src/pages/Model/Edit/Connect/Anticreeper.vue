@@ -4,13 +4,13 @@
         <div class="dropPanel">
             <el-form ref="form" label-position="left" :model="formData" label-width="160px">
                 <el-form-item label="空行程">
-                    <el-input-number :controls="false" v-model="formData.eJourney" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="formData.skanclim" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="行程">
-                    <el-input-number :controls="false" v-model="formData.journey" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="formData.sanclim" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="作用力">
-                    <el-input-number :controls="false" v-model="formData.effort" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="formData.fanclim" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
         </div>

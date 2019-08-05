@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.title">{{dataSource.treeNode.label}}</div>
+        <div :class="$style.title">{{dataSource.treeNode.name}}</div>
         <div :class="$style.fileBtn">
             <el-button class="btn-default">文件</el-button>
         </div>

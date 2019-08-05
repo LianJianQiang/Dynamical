@@ -8,16 +8,21 @@ export const TreeData = [
                 label: "缓冲器型号",
                 children: [
                     {
-                        id: "/arg-cfg/buffer-curve",
-                        url: "/arg-cfg/buffer-curve",
+                        id: "/page/arg-cfg/buffer-curve",
+                        url: "/page/arg-cfg/buffer-curve",
                         label: "锚点法设置"
                     },
                     {
-                        id: "/arg-cfg/buffer-piecewise",
-                        url: "/arg-cfg/buffer-piecewise",
+                        id: "/page/arg-cfg/buffer-piecewise",
+                        url: "/page/arg-cfg/buffer-piecewise",
                         label: "分段函数法设置"
                     }
                 ]
+            },
+            {
+                id: "ykgTmpe",
+                label: "压溃管",
+                url: "/page/arg-cfg/ykg"
             }
         ]
     }

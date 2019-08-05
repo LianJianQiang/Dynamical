@@ -7,13 +7,23 @@
         </div>
         <div :class="$style.right" ref="rightWrap">
             <div :class="$style.btnWrap">
-                <el-button class="btn-xl" @click="openModel">打开模型</el-button>
+                <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
                 <el-button class="btn-xl" @click="newModel">新建模型</el-button>
             </div>
             <div class="rightCont">
                 <router-view></router-view>
             </div>
         </div>
+        <el-dialog title="请选择要编辑的模型树" :visible.sync="dialogVisible">
+            <ul :class="$style.modelsContent" class="clearfix">
+                <li
+                    class="fll"
+                    v-for="item in modelsList"
+                    :key="item.id"
+                    @click="onSelectModel(item)"
+                >{{item.name}}</li>
+            </ul>
+        </el-dialog>
     </div>
 </template>
 
@@ -22,20 +32,24 @@ import { mapActions, mapGetters } from "vuex";
 import { MODEL_TREE_TYPE, getTreeNodeByType } from "common/constants";
 
 import _util from "utils/util";
+import { model } from "api";
 
 import Tree from "./Tree";
 
 export default {
     name: "Model",
     data() {
-        return {};
+        return {
+            dialogVisible: false,
+            modelsList: []
+        };
     },
     components: {
         Tree
     },
     props: {},
     computed: {
-        ...mapGetters("models", ["isRepeat", "getModelTree"]),
+        ...mapGetters("models", ["getModelTree", "getTreeNodeByType"]),
         curTreeNodeId() {
             return this.$route.query.id;
         }
@@ -46,18 +60,28 @@ export default {
         }
     },
     methods: {
-        ...mapActions("models", ["createModel"]),
+        ...mapActions("models", ["saveModelTreeData", "setCurModelId"]),
 
-        // 打开模型
-        openModel() {
-            this.$router.push("/model/open");
+        // 选择要打开的模型树
+        onSelectModel(item) {
+            // this.$router.push("/page/model/open");
+            this.getModelTreeData(item.id);
+        },
+
+        // 请求模型树列表
+        getModelsList() {
+            model.getModels({ userId: "1" }).then(res => {
+                if (!res) return;
+                let { data = [] } = res;
+                this.modelsList = data;
+                this.dialogVisible = true;
+            });
         },
 
         // 新建模型
         newModel() {
             this.setModelName({
                 success: name => {
-                    // this.$router.push("/model/edit");
                     this.createModel(name);
                     this.createSuccessCb(name);
                 }
@@ -74,7 +98,13 @@ export default {
                 inputValidator: this.validatorModelname
             })
                 .then(({ value }) => {
-                    typeof success === "function" && success(value);
+                    model
+                        .createModel({ userId: "1", name: value })
+                        .then(res => {
+                            if (!res) return;
+                            this.getModelTreeData(res.data.id);
+                            this.$message("创建成功");
+                        });
                 })
                 .catch(e => {
                     console.log(e);
@@ -89,22 +119,32 @@ export default {
                 return "名称为只能包含汉字、数字、字母";
             }
 
-            if (this.isRepeat({ name: value })) return "模型名称重复";
-
             return true;
         },
 
-        createSuccessCb(name) {
-            let newModelTree = this.getModelTree({ name })[0];
+        /**
+         * 获取模型树的数据
+         * @param id
+         */
+        getModelTreeData(id) {
+            model.getModelTree({ id }).then(res => {
+                if (!res) return;
+                this.saveModelTreeData(res.data || []);
+                this.setCurModelId(id);
+                this.dialogVisible = false;
 
-            let arr =
-                getTreeNodeByType(newModelTree, MODEL_TREE_TYPE.basic) || [];
-            let newBasic = arr[0] || {};
+                this.createSuccessCb();
+            });
+        },
 
-            let { id, modelName, type } = newBasic;
+        createSuccessCb() {
+            let obj = this.getTreeNodeByType(MODEL_TREE_TYPE.basic);
+            if (!obj) return;
+
+            let { id, type } = obj;
             this.$router.push({
-                path: "/model/edit",
-                query: { type, name: modelName, id }
+                path: `/page/model/edit`,
+                query: { type }
             });
         }
     }
@@ -143,6 +183,15 @@ $left-width: 222px;
         bottom: 0;
         .btnWrap {
             margin-bottom: 20px;
+        }
+    }
+
+    .modelsContent {
+        max-height: 300px;
+        overflow: auto;
+        li {
+            padding: 10px 30px;
+            cursor: pointer;
         }
     }
 }

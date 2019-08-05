@@ -4,23 +4,23 @@
         <div :class="$style.root">
             <el-form ref="form" label-position="left" :model="data" label-width="160px">
                 <el-form-item label="整列最大载客工况总质量">
-                    <el-input-number :controls="false" v-model="data.max" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="data.massMax" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="整列车回转质量">
-                    <el-input-number :controls="false" v-model="data.rotating" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="data.massRotating" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="整列车牵引电机数量">
                     <el-input-number :controls="false" v-model="data.motorNum" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="牵引指令下达后的延长时间">
-                    <el-input-number :controls="false" v-model="data.delay" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="data.delayTime" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="冲击率">
-                    <el-input-number :controls="false" v-model="data.ramp" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="data.rampFun" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
             <el-row :class="$style.curveWrap">
-                <el-radio v-model="radioValue" label="check1">牵引力曲线自定义1</el-radio>
+                <el-radio v-model="characteristics" label="1">牵引力曲线自定义1</el-radio>
 
                 <ul :class="$style.curveInfo">
                     <el-form :model="curveData1">
@@ -33,7 +33,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r11"
+                                        v-model="curveData1.characterV1"
                                     />
                                 </el-form-item>
                             </span>
@@ -44,7 +44,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r12"
+                                        v-model="curveData1.characterF"
                                     />
                                 </el-form-item>
                             </span>
@@ -58,7 +58,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r21"
+                                        v-model="curveData1.characterV3"
                                     />
                                 </el-form-item>-
                                 <el-form-item>
@@ -66,7 +66,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r22"
+                                        v-model="curveData1.characterV2"
                                     />
                                 </el-form-item>
                             </span>
@@ -77,7 +77,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r23"
+                                        v-model="curveData1.characterFv"
                                     />
                                 </el-form-item>
                             </span>
@@ -91,7 +91,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r31"
+                                        v-model="curveData1.characterV5"
                                     />
                                 </el-form-item>-
                                 <el-form-item>
@@ -99,7 +99,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r32"
+                                        v-model="curveData1.characterFvv"
                                     />
                                 </el-form-item>
                             </span>
@@ -110,7 +110,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.r33"
+                                        v-model="curveData1.characterV4"
                                     />
                                 </el-form-item>
                             </span>
@@ -119,7 +119,7 @@
                 </ul>
             </el-row>
             <el-row :class="$style.curveWrap">
-                <el-radio v-model="radioValue" label="check2">牵引力曲线自定义2</el-radio>
+                <el-radio v-model="characteristics" label="2">牵引力曲线自定义2</el-radio>
 
                 <div :class="$style.curveInfo">
                     <EditTable ref="editTable" />
@@ -152,6 +152,8 @@
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
 
+import { model } from "api";
+
 export default {
     name: "Traction",
     data() {
@@ -161,7 +163,7 @@ export default {
             traction: [],
             // checked1: false,
             // checked2: false,
-            radioValue: ""
+            characteristics: ""
         };
     },
     components: {
@@ -177,7 +179,13 @@ export default {
             default: () => {}
         }
     },
+    mounted() {
+        this.initData();
+    },
     methods: {
+        initData() {
+            model
+        },
         // // table中插入一行
         // tableAdd() {
         //     let { tableData } = this;
@@ -210,17 +218,14 @@ export default {
 
         // 保存数据
         save() {
-            // console.log("data", this.data);
-            // console.log("curveData1", this.curveData1);
-            // console.log("tableData", this.tableData);
             let data = {
                 ...this.data
             };
 
             // TODO 根据不同条件将curveData1 或tableData处理成后端需要的格式
-            if (this.radioValue === "check1") {
+            if (this.characteristics === "1") {
                 data.curveData = this.curveData1;
-            } else if (this.radioValue === "checked2") {
+            } else if (this.characteristics === "2") {
                 let tableData = this.$refs.editTable.save();
                 data.curveData = tableData;
             }

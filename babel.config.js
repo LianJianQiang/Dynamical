@@ -1,8 +1,8 @@
 
-const plugins = [];
-if (['production', 'prod'].includes(process.env.NODE_ENV)) {
-    plugins.push("transform-remove-console")
-}
+// const plugins = [];
+// if (['production', 'prod'].includes(process.env.NODE_ENV)) {
+//     plugins.push("transform-remove-console")
+// }
 
 module.exports = {
     presets: [
@@ -15,7 +15,7 @@ module.exports = {
         }]
     ],
     plugins: [
-        "transform-remove-console",
+        // "transform-remove-console",         // 删除后ie白屏
         [
             "component",
             {

@@ -6,7 +6,7 @@
                 <el-select
                     :class="$style.sel"
                     class="flr"
-                    v-model="formData.selected"
+                    v-model="formData.ykgTempId"
                     placeholder="请选择"
                 >
                     <el-option v-for="item in options" :key="item.id" :value="item.label">

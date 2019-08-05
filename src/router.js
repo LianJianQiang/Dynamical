@@ -2,11 +2,11 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 
-import { MENU_LIST } from 'common/constants';
+// import { MENU_LIST } from 'common/constants';
 
 // 引入组件
-import Home from 'pages/Home.vue';
-import Argument from 'pages/Argument';
+// import Home from 'pages/Home.vue';
+// import Argument from 'pages/Argument';
 import ArgConfig from 'pages/ArgConfig';
 import Model from 'pages/Model';
 import Report from 'pages/Report';
@@ -18,49 +18,65 @@ import OpenModel from 'pages/Model/Open';
 
 import BufferCurve from 'pages/ArgConfig/BufferCurve';
 import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
+import YKGTemp from 'pages/ArgConfig/YKGTemp';
 
-let redirectUrl = MENU_LIST[0].url || '';
-
+import Login from 'pages/Login';
+import App from 'pages';
+// let redirectUrl = MENU_LIST[0].url || '';
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);
 
 const routes = [
-    { path: '/', redirect: redirectUrl },
-    { path: '/home', component: Home },
-    { path: '/arg', component: Argument },
+    { path: '/', redirect: '/login' },
+    { path: '/login', component: Login },
     {
-        path: '/arg-cfg',
-        component: ArgConfig,
+        path: '/page',
+        component: App,
+        redirect: '/page/model',
         children: [
+            // { path: 'home', component: Home },
+            // { path: 'arg', component: Argument },
             {
-                path: 'buffer-curve',
-                component: BufferCurve
+                path: 'arg-cfg',
+                component: ArgConfig,
+                children: [
+                    {
+                        path: 'buffer-curve',
+                        component: BufferCurve
+                    },
+                    {
+                        path: 'buffer-piecewise',
+                        component: BufferPiecewise
+                    },
+                    {
+                        path: 'ykg',
+                        component: YKGTemp
+                    },
+                    { path: '*', component: Waiting }
+                ]
             },
             {
-                path: 'buffer-piecewise',
-                component: BufferPiecewise
+                path: 'model',
+                component: Model,
+                children: [
+                    {
+                        path: 'edit',
+                        component: EditModel
+                    },
+                    {
+                        path: 'open',
+                        component: OpenModel
+                    },
+                    { path: '*', component: Waiting }
+                ]
             },
-            { path: '*', component: Waiting }
+            { path: 'report', component: Report },
+            { path: '*', component: NotFound }
         ]
     },
-    {
-        path: '/model',
-        component: Model,
-        children: [
-            {
-                path: 'edit',
-                component: EditModel
-            },
-            {
-                path: 'open',
-                component: OpenModel
-            },
-            { path: '*', component: Waiting }
-        ]
-    },
-    { path: '/report', component: Report },
     { path: '*', component: NotFound }
+
 ]
 
 var router = new VueRouter({

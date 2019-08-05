@@ -10,6 +10,7 @@
                 :current-node-key="getQueryId"
                 default-expand-all
                 @node-click="nodeClick"
+                :props="{label:'name'}"
             >
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                     <img v-if="data.children" :src="fileIcon" alt />
@@ -23,6 +24,9 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import Icon from "assets/icon";
+import { MODEL_TYPE_LINK_LIST } from "common/constants";
+
+// import { model } from "api";
 
 export default {
     data() {
@@ -42,10 +46,10 @@ export default {
     methods: {
         nodeClick(nodeData) {
             let { type, modelName, id, col, row } = nodeData;
-            if (nodeData.children) return;
+            if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
             if (type && modelName) {
                 this.$router.push({
-                    path: "/model/edit",
+                    path: "/page/model/edit",
                     query: { type, name: modelName, id }
                 });
 

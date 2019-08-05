@@ -4,7 +4,7 @@
         <div class="dropPanel">
             <el-form ref="form" label-position="left" :model="formData" label-width="160px">
                 <el-form-item label="风挡力">
-                    <el-input-number :controls="false" v-model="formData.effort" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="formData.fdlFront" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
         </div>

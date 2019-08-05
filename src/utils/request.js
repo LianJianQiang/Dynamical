@@ -1,16 +1,55 @@
 import axios from 'axios'
+import { Message } from 'element-ui';
 
 const instance = axios.create({
-    // baseURL: 'http://192.168.10.19:30006/',
     timeout: 30000,
     headers: {
-        'Content-Type': 'application/json',
-    }
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    transformRequest: [
+        function (data) {
+            let ret = ''
+            for (let it in data) {
+                let value;
+                if (typeof data[it] === 'object') {
+                    value = encodeURIComponent(JSON.stringify(data[it]));
+                } else {
+                    value = encodeURIComponent(data[it])
+                }
+                ret += encodeURIComponent(it) + '=' + value + '&';
+            }
+            console.log(ret);
+            return ret
+        }
+    ]
 });
+
+// 响应拦截器
+instance.interceptors.response.use(function (response) {
+    const { data = {} } = response;
+    if (response.status !== 200) {
+        Message({
+            message: response.statusText || "数据请求失败",
+            type: 'error'
+        });
+    }
+    if (data.code !== '200') {
+        Message({
+            message: data.message || '系统异常',
+            type: 'error'
+        });
+        return Promise.reject(data);
+    }
+    return data;
+}, function (error) {
+    // 响应错误
+    return Promise.reject(error);
+});
+
 
 // 跳转到登陆页面
 export function openLogin() {
-
+    window.location.href = '/';
 }
 
 export function request(url, data = {}, { method = 'post', showLoading = true } = {}) {
@@ -28,12 +67,12 @@ export function request(url, data = {}, { method = 'post', showLoading = true } 
     };
 
     return instance.request(config)
-        .then((response) => {
-            const { data = {} } = response;
+        .then((data) => {
+            if (data.code !== '200') return Promise.reject(data);
             return data;
         })
         .catch((error) => {
-            console.log(error);
+            console.log('request catch : ', error)
         })
 };
 

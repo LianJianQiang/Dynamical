@@ -46,7 +46,7 @@ export default {
 
         // 打开模型
         openModel() {
-            this.$router.push("/model/open");
+            this.$router.push("/page/model/open");
         },
 
         // 新建模型
@@ -99,7 +99,7 @@ export default {
 
             let { id, modelName, type } = newBasic;
             this.$router.push({
-                path: "/model/edit",
+                path: "/pagge/model/edit",
                 query: { type, name: modelName, id }
             });
         }

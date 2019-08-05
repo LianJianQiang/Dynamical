@@ -45,7 +45,7 @@ export default {
             if (nodeData.children) return;
             if (type && modelName) {
                 this.$router.push({
-                    path: "/model/edit",
+                    path: "/page/model/edit",
                     query: { type, name: modelName, id }
                 });
 

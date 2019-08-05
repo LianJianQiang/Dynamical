@@ -4,7 +4,7 @@
         <div :class="$style.root" class="dropPanel">
             <div class="clearfix">
                 <span class="">数量</span>
-                <el-input-number :class="$style.inpNum" class="flr" :controls="false" v-model="number" :min="0"></el-input-number>
+                <el-input-number :class="$style.inpNum" class="flr" :controls="false" v-model="jzqNum" :min="0"></el-input-number>
             </div>
             <div :class="$style.tableWrap">
                 <h4>特征曲线</h4>
@@ -25,7 +25,7 @@ export default {
 
     data() {
         return {
-            number: null,
+            jzqNum: null,
             tableData: []
         };
     },
