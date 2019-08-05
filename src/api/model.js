@@ -17,34 +17,44 @@ const getVehicleBasic = (params) => request(`${config.baseUrl}/ve1/veView`, { ..
 // 列车基本参数（新增 修改，包含第一列和第二列的数据）
 const vehicleBasicEdit = (params) => request(`${config.baseUrl}/ve1/save`, { ...params });
 
-// // 第一列车基本参数（新增、修改）
-// const vehicle1BasicEdit = (params) => request(`${config.baseUrl}/ve1/save`, { ...params });
+// 列车牵引力特性曲线详情（包含第一列和第二列车）
+const tractionView = (params) => request(`${config.baseUrl}/vtr1/vtrView`, { ...params });
 
-// // 第二列车基本参数（新增、修改）
-// const vehicle2BasicEdit = (params) => request(`${config.baseUrl}/ve2/save`, { ...params });
+// 保存列车牵引力特性曲线
+const tractionSave = (params) => request(`${config.baseUrl}/vtr1/save`, { ...params });
 
-// 列车一牵引特性曲线(新增、编辑)
-const traction1Edit = (params) => request(`${config.baseUrl}/vtr1/save`, { ...params });
+// 获取牵引力曲线列表
+const tractionList = (params) => request(`${config.baseUrl}/tcsd/listData`, { ...params });
 
-// 列车二牵引特性曲线(新增、编辑)
-const traction2Edit = (params) => request(`${config.baseUrl}/vtr2/save`, { ...params });
+// 获取牵引力曲线详情
+const tractionLiView = (params) => request(`${config.baseUrl}/tcsd/tcsdView`, { ...params });
 
-// 列车一牵引特性曲线(详情)
-const traction1 = (params) => request(`${config.baseUrl}/vtr1/vtrView`, { ...params });
+// 保存牵引力曲线详情
+const tractionLiSave = (params) => request(`${config.baseUrl}/tcsd/save`, { ...params });
 
-// 列车二牵引特性曲线(详情)
-const traction2 = (params) => request(`${config.baseUrl}/vtr2/vtrView`, { ...params });
+// 保存/更新车间连接参数配置
+const saveAllCoupType = (params) => request(`${config.baseUrl}/allcouptype/saveAllCoupType`, { ...params });
+
+// 查询车间连接参数详情
+const getAllCoupTypeView = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeView`, { ...params });
+
 
 export default {
+    // 模型树
     createModel,
     getModels,
+    getModelTree,
+
+    // 车辆基本参数
     getVehicleBasic,
     vehicleBasicEdit,
-    // vehicle1BasicEdit,
-    // vehicle2BasicEdit,
-    traction1Edit,
-    traction2Edit,
-    traction1,
-    traction2,
-    getModelTree
+    tractionView,
+    tractionSave,
+    tractionLiView,
+    tractionLiSave,
+    tractionList,
+
+    // 车间链接系统
+    saveAllCoupType,
+    getAllCoupTypeView
 }

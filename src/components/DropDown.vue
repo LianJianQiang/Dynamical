@@ -72,11 +72,11 @@ export default {
 </script>
 
 <style module lang="scss">
-$height: 32px;
+$height: 28px;
 .root {
     width: 100%;
     height: $height;
-    line-height: $height;
+    line-height: $height - 2px;
     position: relative;
 
     &.mini {
@@ -101,7 +101,7 @@ $height: 32px;
         .downIcon {
             position: absolute;
             right: 10px;
-            top: 15px;
+            top: 12px;
         }
     }
 }

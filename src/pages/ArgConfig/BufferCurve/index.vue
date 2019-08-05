@@ -85,6 +85,7 @@ export default {
     .title {
         font-size: 20px;
         text-align: center;
+        margin-bottom: 30px;
     }
 
     label {

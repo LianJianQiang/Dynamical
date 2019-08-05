@@ -19,6 +19,7 @@ import OpenModel from 'pages/Model/Open';
 import BufferCurve from 'pages/ArgConfig/BufferCurve';
 import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
 import YKGTemp from 'pages/ArgConfig/YKGTemp';
+// import Traction from 'pages/ArgConfig/Traction';
 
 import Login from 'pages/Login';
 import App from 'pages';
@@ -53,6 +54,10 @@ const routes = [
                         path: 'ykg',
                         component: YKGTemp
                     },
+                    // {
+                    //     path: 'tcsd',
+                    //     component: Traction
+                    // },
                     { path: '*', component: Waiting }
                 ]
             },

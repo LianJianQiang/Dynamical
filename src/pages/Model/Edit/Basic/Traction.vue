@@ -2,28 +2,28 @@
 <template>
     <DropDown :save="save">
         <div :class="$style.root">
-            <el-form ref="form" label-position="left" :model="data" label-width="160px">
+            <el-form ref="form" label-position="left" :model="datas" label-width="160px">
                 <el-form-item label="整列最大载客工况总质量">
-                    <el-input-number :controls="false" v-model="data.massMax" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="datas.massMax" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="整列车回转质量">
-                    <el-input-number :controls="false" v-model="data.massRotating" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="datas.massRotating" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="整列车牵引电机数量">
-                    <el-input-number :controls="false" v-model="data.motorNum" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="datas.motorNum" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="牵引指令下达后的延长时间">
-                    <el-input-number :controls="false" v-model="data.delayTime" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="datas.delayTime" :min="0"></el-input-number>
                 </el-form-item>
                 <el-form-item label="冲击率">
-                    <el-input-number :controls="false" v-model="data.rampFun" :min="0"></el-input-number>
+                    <el-input-number :controls="false" v-model="datas.rampFun" :min="0"></el-input-number>
                 </el-form-item>
             </el-form>
             <el-row :class="$style.curveWrap">
-                <el-radio v-model="characteristics" label="1">牵引力曲线自定义1</el-radio>
+                <el-radio v-model="characteristics" :label="1">牵引力曲线自定义1</el-radio>
 
                 <ul :class="$style.curveInfo">
-                    <el-form :model="curveData1">
+                    <el-form :model="datas">
                         <li>
                             <span>恒转速区：</span>
                             <span>
@@ -33,7 +33,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterV1"
+                                        v-model="datas.characterV1"
                                     />
                                 </el-form-item>
                             </span>
@@ -44,7 +44,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterF"
+                                        v-model="datas.characterF"
                                     />
                                 </el-form-item>
                             </span>
@@ -58,7 +58,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterV3"
+                                        v-model="datas.characterV3"
                                     />
                                 </el-form-item>-
                                 <el-form-item>
@@ -66,7 +66,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterV2"
+                                        v-model="datas.characterV2"
                                     />
                                 </el-form-item>
                             </span>
@@ -77,7 +77,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterFv"
+                                        v-model="datas.characterFv"
                                     />
                                 </el-form-item>
                             </span>
@@ -91,7 +91,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterV5"
+                                        v-model="datas.characterV5"
                                     />
                                 </el-form-item>-
                                 <el-form-item>
@@ -99,7 +99,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterFvv"
+                                        v-model="datas.characterFvv"
                                     />
                                 </el-form-item>
                             </span>
@@ -110,7 +110,7 @@
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
-                                        v-model="curveData1.characterV4"
+                                        v-model="datas.characterV4"
                                     />
                                 </el-form-item>
                             </span>
@@ -119,51 +119,68 @@
                 </ul>
             </el-row>
             <el-row :class="$style.curveWrap">
-                <el-radio v-model="characteristics" label="2">牵引力曲线自定义2</el-radio>
-
+                <el-radio v-model="characteristics" :label="2">牵引力曲线自定义2</el-radio>
                 <div :class="$style.curveInfo">
-                    <EditTable ref="editTable" />
-                    <!-- <div :class="$style.btnGroup">
-                        <el-button class="btn-mini" @click="tableAdd">+</el-button>
-                        <el-button class="btn-mini" @click="tableDel">-</el-button>
-                        <el-button class="btn-mini" @click="tableOpen">打开</el-button>
-                        <el-button class="btn-mini" @click="tableSave">保存</el-button>
-                    </div>
-                    <el-table :data="tableData" height="85" border size="mini">
-                        <el-table-column prop="order" label="序号" align="center" width="75" />
-                        <el-table-column prop="x" label="x" align="center" width="75">
-                            <template slot-scope="scope">
-                                <el-input-number :controls="false" v-model="scope.row.x" :min="0"></el-input-number>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="fx" label="f(x)" align="center" width="75">
-                            <template slot-scope="scope">
-                                <el-input-number v-model="scope.row.fx" :controls="false" :min="0"></el-input-number>
-                            </template>
-                        </el-table-column>
-                    </el-table>-->
+                    <EditTable
+                        ref="editTable"
+                        :dataSource="tcsd.tcsdData || []"
+                        :onOpen="onOpenCurve"
+                        :onSave="onSaveCurve"
+                    />
                 </div>
             </el-row>
+            <el-dialog title="请选择牵引力曲线" :visible.sync="dialogVisible" :modal="false">
+                <ul :class="$style.tractionList" class="clearfix">
+                    <li
+                        class="fll cursor-p"
+                        v-for="item in tractionList"
+                        :key="item.id"
+                        @click="onClickTractionLi(item)"
+                    >{{item.tcsdName}}</li>
+                </ul>
+            </el-dialog>
+            <el-dialog
+                :custom-class="$style.nameDialog"
+                title="请输入曲线名称"
+                :visible.sync="nameDialogVisible"
+                :modal="false"
+            >
+                <el-input v-model="tractionTableName"></el-input>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="nameDialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="saveTractionTable">确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </DropDown>
 </template>
 
 <script>
+import { mapActions, mapState } from "vuex";
+
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
 
+import { getUserInfo } from "utils/util";
+
 import { model } from "api";
+
+const userId = getUserInfo().userId;
 
 export default {
     name: "Traction",
     data() {
         return {
-            data: {},
-            curveData1: {},
-            traction: [],
-            // checked1: false,
-            // checked2: false,
-            characteristics: ""
+            datas: {},
+            tcsd: {},
+            characteristics: 0,
+            dialogVisible: false,
+
+            nameDialogVisible: false,
+            tractionTableName: "",
+
+            // 牵引力曲线列表
+            tractionList: []
         };
     },
     components: {
@@ -171,67 +188,100 @@ export default {
         EditTable
     },
     props: {
-        parentField: {
-            type: String
-        },
-        saveData: {
-            type: Function,
-            default: () => {}
+        type: {
+            type: String,
+            required: true
         }
     },
     mounted() {
         this.initData();
     },
+    computed: {
+        ...mapState("models", ["curModelId"])
+    },
     methods: {
         initData() {
             model
+                .tractionView({ modelId: this.curModelId, type: this.type })
+                .then(res => {
+                    if (!res) return;
+                    let { data = {} } = res;
+                    this.datas = data;
+                    this.characteristics = data.characteristics || 0;
+                    this.tcsd = data.tcsd || {};
+                });
         },
-        // // table中插入一行
-        // tableAdd() {
-        //     let { tableData } = this;
-        //     tableData.push({ order: tableData.length + 1, x: "", fx: "" });
-        //     this.tableData = tableData;
-        // },
 
-        // // table中删除一行
-        // tableDel() {
-        //     let { tableData } = this;
-        //     tableData.pop();
-        //     this.tableData = tableData;
-        // },
+        // 打开曲线
+        onOpenCurve() {
+            // TODO ？ 牵引力曲线type
+            model.tractionList({ userId, type: "4" }).then(res => {
+                if (!res) return;
+                let { data = [] } = res;
+                if (data.length === 0) {
+                    this.$message("暂无可选择的数据");
+                    return;
+                }
+                this.tractionList = res.data;
+                this.tcsdId = res.data.id;
+                this.dialogVisible = true;
+            });
+        },
 
-        // // TODO 打开和保存功能需后端支持
-        // tableOpen() {
-        //     this.$message({
-        //         message: "打开",
-        //         type: "warning"
-        //     });
-        // },
+        // 点击打开后，展示列表，并点击list
+        onClickTractionLi(item) {
+            let { id } = item;
+            model.tractionLiView({ id }).then(res => {
+                if (!res) return;
+                this.tcsd = res.data || {};
+                this.dialogVisible = false;
+            });
+        },
 
-        // // TODO 打开和保存功能需后端支持
-        // tableSave() {
-        //     this.$message({
-        //         message: "保存",
-        //         type: "warning"
-        //     });
-        // },
+        // 点击 table的保存，提示输入名称
+        onSaveCurve(data) {
+            this.nameDialogVisible = true;
+            this.tscdData = data;
+        },
+
+        // 保存table数据
+        saveTractionTable() {
+            if (!this.tractionTableName) {
+                this.$message("请输入名称");
+                return;
+            }
+            model
+                .tractionLiSave({
+                    ...this.tcsd,
+                    userId,
+                    tcsdName: this.tractionTableName,
+                    tcsdData: this.tscdData || []
+                })
+                .then(res => {
+                    if (!res) return;
+                    this.tcsdId = res.data.id;
+                    this.nameDialogVisible = false;
+                });
+        },
 
         // 保存数据
         save() {
-            let data = {
-                ...this.data
+            let params = {
+                type: this.type,
+                vtrInfo: {
+                    ...this.datas,
+                    moduleId: this.curModelId,
+                    characteristics: this.characteristics
+                }
             };
-
-            // TODO 根据不同条件将curveData1 或tableData处理成后端需要的格式
-            if (this.characteristics === "1") {
-                data.curveData = this.curveData1;
-            } else if (this.characteristics === "2") {
-                let tableData = this.$refs.editTable.save();
-                data.curveData = tableData;
-            }
-
-            if (!this.parentField) return;
-            this.saveData({ data, field: this.parentField });
+            this.tcsdId && (params.tcsdId = this.tcsdId);
+            model.tractionSave(params).then(res => {
+                if (!res) return;
+                this.$message({
+                    message: "保存成功",
+                    type: "success"
+                });
+            });
         }
     }
 };
@@ -274,6 +324,25 @@ export default {
     .subBtnWrap {
         margin-top: 10px;
         text-align: center;
+    }
+
+    .tractionList {
+        max-height: 300px;
+        overflow: auto;
+        li {
+            padding: 10px 20px;
+            margin: 0 5px;
+        }
+    }
+
+    .nameDialog {
+        :global {
+            .el-input,
+            .el-input__inner {
+                height: 32px;
+                line-height: 32px;
+            }
+        }
     }
 
     :global {

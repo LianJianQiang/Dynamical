@@ -70,12 +70,18 @@ export default {
         showSave: {
             type: Boolean,
             default: true
+        },
+        onOpen: {
+            type: Function,
+            default: () => {}
+        },
+        onSave: {
+            type: Function,
+            default: () => {}
         }
     },
-    computed: {
-    },
-    watch: {
-    },
+    computed: {},
+    watch: {},
     methods: {
         // 单元格里到值发生变化时回调
         dataChange() {
@@ -103,18 +109,12 @@ export default {
 
         // TODO 打开和保存功能需后端支持
         tableOpen() {
-            this.$message({
-                message: "打开",
-                type: "warning"
-            });
+            this.onOpen();
         },
 
         // TODO 打开和保存功能需后端支持
         tableSave() {
-            this.$message({
-                message: "保存",
-                type: "warning"
-            });
+            this.onSave(this.tableData);
         },
 
         // 保存数据

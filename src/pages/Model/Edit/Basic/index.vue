@@ -17,28 +17,28 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="速度:" prop="speed">
+                            <el-form-item label="速度:" prop="v">
                                 <el-input v-model="no1.v" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" :offset="2">
-                            <el-form-item label="起动阻力:" prop="startResistance">
+                            <el-form-item label="起动阻力:" prop="qdf">
                                 <el-input v-model="no1.qdf" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="brakes(u):" prop="brakes">
+                            <el-form-item label="brakes(u):" prop="mu">
                                 <el-input v-model="no1.mu" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" :offset="2">
-                            <el-form-item label="作用速度:" prop="speed2">
+                            <el-form-item label="作用速度:" prop="vlimit">
                                 <el-input v-model="no1.vlimit" clearable></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="牵引力特征曲线:">
-                                <Traction parentField="no1" :saveData="saveTractionData" />
+                                <Traction parentField="no1" :saveData="saveTractionData" type="1" />
                             </el-form-item>
                         </el-col>
                         <el-col :span="8" :offset="2">
@@ -79,28 +79,32 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
-                                <el-form-item label="速度:" prop="speed">
+                                <el-form-item label="速度:" prop="v">
                                     <el-input v-model="no2.v" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8" :offset="2">
-                                <el-form-item label="起动阻力:" prop="startResistance">
+                                <el-form-item label="起动阻力:" prop="qdf">
                                     <el-input v-model="no2.qdf" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
-                                <el-form-item label="brakes(u):" prop="brakes">
+                                <el-form-item label="brakes(u):" prop="mu">
                                     <el-input v-model="no2.mu" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8" :offset="2">
-                                <el-form-item label="作用速度:" prop="speed2">
+                                <el-form-item label="作用速度:" prop="vlimit">
                                     <el-input v-model="no2.vlimit" clearable></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8">
                                 <el-form-item label="牵引力特征曲线:">
-                                    <Traction parentField="no2" :saveData="saveTractionData" />
+                                    <Traction
+                                        parentField="no2"
+                                        :saveData="saveTractionData"
+                                        type="2"
+                                    />
                                 </el-form-item>
                             </el-col>
                             <el-col :span="8" :offset="2">
@@ -144,7 +148,6 @@
 <script>
 import { mapActions, mapState } from "vuex";
 
-// import DropDown from "components/DropDown.vue";
 import _util from "utils/util";
 import { MODEL_TREE_TYPE } from "common/constants";
 
@@ -156,27 +159,23 @@ import Traction from "./Traction";
 const rules = {
     num: { max: 18, isInt: true, min: 2 },
     length: {},
-    speed: {},
-    brakes: {},
-    startResistance: {},
-    speed2: {},
-    basicRe: {},
-    traction: {}
+    v: {},
+    mu: {},
+    vlimit: {},
+    qdf: {}
 };
 
 const validateField = (rule, value, cb) => {
-    // let result = _util.validateNum(value, rules[rule.field]);
-
-    // if (result) {
-    //     cb(new Error(result));
-    // }
+    let result = _util.validateNum(value, rules[rule.field]);
+    if (result) {
+        cb(new Error(result));
+    }
     cb();
 };
 
 export default {
     name: "BasicInfo",
     components: {
-        // DropDown,
         Traction
     },
     data() {
@@ -184,9 +183,8 @@ export default {
          * 当将两列车当数据放到一个formData中时，ele当校验规则会失效
          */
         return {
-            modelName: this.dataSource.modelName,
-            no1: { ...this.dataSource.no1 },
-            no2: { ...this.dataSource.no2 },
+            no1: {},
+            no2: {},
 
             rules: {
                 num: [{ validator: validateField, trigger: "change" }],
@@ -202,13 +200,6 @@ export default {
         };
     },
     props: {
-        dataSource: {
-            type: Object,
-            required: true
-            // default: function() {
-            //     return { no1: {}, no2: {} };
-            // }
-        }
     },
     computed: {
         ...mapState("models", ["curModelId"])
@@ -247,38 +238,13 @@ export default {
                                     modelId: this.curModelId
                                 }
                             })
-                            // Promise.all([
-                            //     model.vehicle1BasicEdit({
-                            //         ...this.no1,
-                            //         modelId: this.curModelId
-                            //     }),
-                            //     model.vehicle2BasicEdit({
-                            //         ...this.no2,
-                            //         modelId: this.curModelId
-                            //     })
-                            // ])
                             .then(res => {
                                 console.log(res);
                                 if (!res) return;
                                 let { data = {} } = res;
 
-                                this.no1 = {...this.no1,  id: res.data.v1Id };
-                                this.no2 = {...this.no2,  id: res.data.v2Id };
-
-                                // let res1 = res[0];
-                                // let res2 = res[1];
-                                // if (res1) {
-                                //     this.no1 = {
-                                //         ...this.no1,
-                                //         id: res1.data.id
-                                //     };
-                                // }
-                                // if (res2) {
-                                //     this.no1 = {
-                                //         ...this.no1,
-                                //         id: res2.data.id
-                                //     };
-                                // }
+                                this.no1 = { ...this.no1, id: res.data.v1Id };
+                                this.no2 = { ...this.no2, id: res.data.v2Id };
 
                                 this.getModelData(this.curModelId);
                                 this.$message("保存成功");

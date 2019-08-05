@@ -24,6 +24,11 @@ export const TreeData = [
                 label: "压溃管",
                 url: "/page/arg-cfg/ykg"
             }
+            // {
+            //     id: "tcsd",
+            //     label: "牵引力曲线",
+            //     url: "/page/arg-cfg/tcsd"
+            // }
         ]
     }
 ];
