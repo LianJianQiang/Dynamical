@@ -255,7 +255,8 @@ export default {
                     ...this.tcsd,
                     userId,
                     tcsdName: this.tractionTableName,
-                    tcsdData: this.tscdData || []
+                    tcsdData: this.tscdData || [],
+                    type: 4
                 })
                 .then(res => {
                     if (!res) return;
@@ -270,7 +271,7 @@ export default {
                 type: this.type,
                 vtrInfo: {
                     ...this.datas,
-                    moduleId: this.curModelId,
+                    modelId: this.curModelId,
                     characteristics: this.characteristics
                 }
             };

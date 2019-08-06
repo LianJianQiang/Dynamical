@@ -42,31 +42,26 @@
             <el-button class="btn-xl" @click="cancel">取消</el-button>
         </div>
 
-        <el-dialog
-            :custom-class="$style.nameDialog"
-            title="请输入曲线名称"
-            :visible.sync="nameDialogVisible"
-            :modal="false"
-        >
-            <el-input v-model="name"></el-input>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="nameDialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveData">确 定</el-button>
-            </span>
-        </el-dialog>
+        <NameDialog
+            :visible="nameDialogVisible"
+            :onSaveData="saveData"
+            :onCancel="()=>nameDialogVisible = false"
+        />
     </div>
 </template>
 
 <script>
+import NameDialog from "components/NameDialog";
 import { argConfig } from "api";
-import { getUserInfo } from "utils/util";
+import { getUserIdAndType } from "utils/util";
 
-const userInfo = getUserInfo();
-const { userId, userType = 1 } = userInfo;
+const { userId, userType } = getUserIdAndType();
 
 export default {
     name: "YKGTemp",
-    components: {},
+    components: {
+        NameDialog
+    },
     data() {
         return {
             // 当前的缓冲器型号
@@ -74,8 +69,7 @@ export default {
             curYKGType: "",
             formData: {},
 
-            nameDialogVisible: false,
-            name: ""
+            nameDialogVisible: false
         };
     },
     props: {},
@@ -89,6 +83,7 @@ export default {
         }
     },
     methods: {
+        // 获取压溃管模版列表
         getYKGTempList() {
             // TODO type 根据用户身份确定，管理员：1(公用)，普通用户：2(私有)
             argConfig.getYKGTempList({ userId, type: userType }).then(res => {
@@ -104,10 +99,15 @@ export default {
                     message: "请先选择型号",
                     type: "error"
                 });
+                return;
             }
             argConfig.delYKGTemp({ id: this.curYKGType }).then(res => {
                 if (!res) return;
+
+                // 保存成功后，刷新select数据，并清空选项
                 this.getYKGTempList();
+                this.curYKGType = "";
+
                 this.$message({
                     message: "操作成功",
                     type: "success"
@@ -116,22 +116,29 @@ export default {
         },
 
         //  保存数据
-        saveData() {
-            argConfig
-                .saveYKGTemp({
-                    ...this.formData,
-                    userId,
-                    type: userType,
-                    name: this.name
-                })
-                .then(res => {
-                    if (!res) return;
-                    this.nameDialogVisible = false;
-                    this.$message({
-                        message: "操作成功",
-                        type: "success"
-                    });
+        saveData(name) {
+            let params = {
+                ...this.formData,
+                userId,
+                type: userType,
+                name
+            };
+
+            delete params.id;
+
+            argConfig.saveYKGTemp(params).then(res => {
+                if (!res) return;
+                this.nameDialogVisible = false;
+
+                // 保存成功后，刷新select数据，并清空选项
+                this.getYKGTempList();
+                this.curYKGType = "";
+
+                this.$message({
+                    message: "操作成功",
+                    type: "success"
                 });
+            });
         },
         save() {
             this.nameDialogVisible = true;

@@ -78,6 +78,7 @@ $height: 28px;
     height: $height;
     line-height: $height - 2px;
     position: relative;
+    margin-top: 4px;
 
     &.mini {
         height: 18px;

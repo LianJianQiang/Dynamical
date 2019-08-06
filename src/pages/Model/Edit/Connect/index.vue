@@ -267,6 +267,7 @@ export default {
          * 保存模型数据
          */
         submitForm: function() {
+            console.log(this.frontData, this.backData);
             this.saveModelData({
                 id: this.dataSource.id,
                 data: {

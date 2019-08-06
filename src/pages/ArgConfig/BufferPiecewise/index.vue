@@ -29,15 +29,15 @@
                     <Table />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
-                    <div :class="$style.title">压缩加载</div>
+                    <div :class="$style.title">拉伸加载</div>
                     <Table />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
-                    <div :class="$style.title">压缩加载</div>
+                    <div :class="$style.title">压缩卸载</div>
                     <Table />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
-                    <div :class="$style.title">压缩加载</div>
+                    <div :class="$style.title">拉伸卸载</div>
                     <Table />
                 </div>
             </div>

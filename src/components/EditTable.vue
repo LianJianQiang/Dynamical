@@ -7,7 +7,7 @@
             <el-button v-if="showSave" class="btn-mini" @click="tableSave">保存</el-button>
         </div>
         <el-table :data="tableData" :height="height" border size="mini">
-            <el-table-column prop="order" label="序号" align="center" width="75" />
+            <el-table-column prop="number" label="序号" align="center" width="75" />
             <el-table-column prop="x" label="x" align="center" width="75">
                 <template slot-scope="scope">
                     <el-input-number
@@ -18,10 +18,10 @@
                     ></el-input-number>
                 </template>
             </el-table-column>
-            <el-table-column prop="fx" label="f(x)" align="center" width="75">
+            <el-table-column prop="f" label="fx" align="center" width="75">
                 <template slot-scope="scope">
                     <el-input-number
-                        v-model="scope.row.fx"
+                        v-model="scope.row.f"
                         :controls="false"
                         :min="0"
                         @change="dataChange"
@@ -91,9 +91,9 @@ export default {
         tableAdd() {
             let { tableData } = this;
             tableData.unshift({
-                order: tableData.length + 1,
+                number: tableData.length + 1,
                 x: 0,
-                fx: 0
+                f: 0
             });
             this.tableData = tableData;
             this.tableDataChange(this.tableData);

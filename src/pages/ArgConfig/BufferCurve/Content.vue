@@ -1,10 +1,10 @@
 <template>
     <div :class="$style.root" class="clearfix">
         <div :class="$style.chartWrap" class="fll">
-            <LineCharts  :options="chartsOptions" />
+            <LineCharts :options="chartsOptions" />
         </div>
         <div :class="$style.rightWrap" class="flr">
-            <div :class="$style.typeWrap" v-if="type">{{type}}</div>
+            <div :class="$style.typeWrap" v-if="type">{{typeName}}</div>
             <!-- 曲线xy值表格 -->
             <div :class="$style.chartTableWrap">
                 <EditTable
@@ -16,7 +16,7 @@
             </div>
             <!-- 曲线分段 -->
             <div :class="$style.subTableWrap">
-                <el-table :data="subTableData" border size="mini">
+                <el-table :data="pointAllotData" border size="mini">
                     <el-table-column prop="name" label="曲线分段" align="center" />
                     <el-table-column prop="value" label="点序号" align="center">
                         <template slot-scope="scope">
@@ -29,24 +29,24 @@
                 <span>x比例：1:</span>
                 <el-input-number
                     :controls="false"
-                    v-model="scaleX"
+                    v-model="xProportion"
                     :min="0"
                     :class="$style.scaleInp"
                 />
                 <span>f(x)比例：1:</span>
                 <el-input-number
                     :controls="false"
-                    v-model="scaleFx"
+                    v-model="fxProportion"
                     :min="0"
                     :class="$style.scaleInp"
                 />
                 <span>插值方法</span>
-                <el-select v-model="inter" :class="$style.inter">
+                <el-select v-model="interpolationMethod" :class="$style.inter">
                     <el-option
                         v-for="item in interList"
-                        :key="item.label"
+                        :key="item.id"
                         :label="item.name"
-                        :value="item.label"
+                        :value="item.id"
                     ></el-option>
                 </el-select>
             </div>
@@ -76,7 +76,15 @@ let chartsOptions = {
     ]
 };
 
-const interList = [{ label: "line", name: "line" }];
+const interList = [{ id: "line", name: "line" }];
+
+const defaultPointData = [
+    { name: "开始加载", value: "", key: "beforeMount" },
+    { name: "加载", value: "", key: "mount" },
+    { name: "开始卸载", value: "", key: "beforeDestory" },
+    { name: "卸载", value: "", key: "destory" }
+];
+
 export default {
     name: "BufferCurve",
     components: {
@@ -84,30 +92,47 @@ export default {
         EditTable
     },
     data() {
+        let defaultInterId = interList[0].id;
+        let {
+            pointAllotData = defaultPointData,
+            pointData = [],
+            xProportion = 1,
+            fxProportion = 1,
+            interpolationMethod = defaultInterId
+        } = this.dataSource;
+
         return {
             // 曲线分段table
-            subTableData: [
-                { name: "开始加载", value: "" },
-                { name: "加载", value: "" },
-                { name: "开始卸载", value: "" },
-                { name: "卸载", value: "" }
-            ],
+            pointAllotData,
+
+            pointData,
 
             // 比例
-            scaleX: 1,
-            scaleFx: 1,
+            xProportion,
+            fxProportion,
 
             // 插值
             interList,
-            inter: interList[0].key,
+            interpolationMethod,
 
             chartsOptions: { ...chartsOptions }
         };
     },
     props: {
         type: {
+            type: Number
+        },
+        typeName: {
             type: String,
             default: ""
+        },
+        onTalbeDataChange: {
+            type: Function,
+            default: () => {}
+        },
+        dataSource: {
+            type: Object,
+            default: () => ({})
         }
     },
     methods: {
@@ -116,10 +141,33 @@ export default {
             let yAxisData = [];
             data.map(item => {
                 if (!isNil(item.x)) xAxisData.push(item.x);
-                if (!isNil(item.fx)) yAxisData.push(item.fx);
+                if (!isNil(item.f)) yAxisData.push(item.f);
             });
             this.chartsOptions.xAxis.data = xAxisData;
             this.chartsOptions.series[0].data = yAxisData;
+
+            this.pointData = [...data];
+        },
+        saveData() {
+            let {
+                pointAllotData,
+                pointData,
+                xProportion,
+                fxProportion,
+                interpolationMethod
+            } = this;
+
+            let result = {
+                pointAllotData: [...pointAllotData],
+                pointData: [...pointData],
+                xProportion,
+                fxProportion,
+                interpolationMethod
+            };
+
+            if (this.type) result.curveType = type;
+
+            return result;
         }
     }
 };

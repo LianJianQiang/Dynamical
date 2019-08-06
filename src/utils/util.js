@@ -130,6 +130,12 @@ export const getUserInfo = () => {
     return JSON.parse(userInfoStr);
 }
 
+export const getUserIdAndType = () => {
+    let userInfo = getUserInfo();
+    let { userId, userType = 2 } = userInfo;
+    return { userId, userType }
+}
+
 
 export default {
     isNumber,
@@ -141,5 +147,6 @@ export default {
     validateField,
     IEVersion,
     getUserInfo,
-    handleTreeData
+    handleTreeData,
+    getUserIdAndType
 }
