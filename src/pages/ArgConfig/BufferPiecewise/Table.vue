@@ -79,6 +79,11 @@ export default {
             tableData: [...this.dataSource]
         };
     },
+    watch: {
+        dataSource() {
+            this.tableData = [...this.dataSource];
+        }
+    },
     methods: {
         dataChange(data) {
             console.log(data);
@@ -97,6 +102,10 @@ export default {
             tableData.pop();
             this.tableData = tableData;
             this.tableDataChange(this.tableData);
+        },
+
+        saveData() {
+            return this.tableData;
         }
     }
 };

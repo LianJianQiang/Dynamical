@@ -3,75 +3,54 @@
         <div :class="$style.title">缓冲器型号设置-分段函数法</div>
         <div :class="$style.curBuffer">
             <label>请选择缓冲器型号</label>
-            <el-select v-model="curBufferType" placeholder="请选择" class="m-l-5">
+            <el-select v-model="curTempId" placeholder="请选择" class="m-l-5">
                 <el-option
                     v-for="item in bufferList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id"
                 ></el-option>
             </el-select>
-            <el-checkbox v-model="isDiy" :class="$style.isDiy">自定义</el-checkbox>
+            <!-- <el-checkbox v-model="isDiy" :class="$style.isDiy">自定义</el-checkbox> -->
+            <div :class="$style.deleteBtn" class="cursor-p" @click="onClickDel">删除</div>
         </div>
-        <div :class="$style.editType">
-            <label>曲线类型</label>
-            <el-radio
-                v-for="(item) in globalTypeList"
-                :key="item.type"
-                v-model="globalType"
-                :label="item.type"
-            >{{item.name}}</el-radio>
-        </div>
-        <div v-if="curBufferType || isDiy">
+        <!-- <div v-if="curTempId || isDiy"> -->
+        <div>
             <div class="clearfix" :class="$style.content">
                 <div class="fll" :class="$style.tableWrap">
                     <div :class="$style.title">压缩加载</div>
-                    <Table />
+                    <Table ref="ysjzInfo" :dataSource="ysjzInfo" />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
                     <div :class="$style.title">拉伸加载</div>
-                    <Table />
+                    <Table ref="lsjzInfo" :dataSource="lsjzInfo" />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
                     <div :class="$style.title">压缩卸载</div>
-                    <Table />
+                    <Table ref="ysxzInfo" :dataSource="ysxzInfo" />
                 </div>
                 <div class="fll" :class="$style.tableWrap">
                     <div :class="$style.title">拉伸卸载</div>
-                    <Table />
+                    <Table ref="lsxzInfo" :dataSource="lsxzInfo" />
                 </div>
             </div>
             <div :class="$style.footer">
-                <el-button class="btn-xl" type="primary" @click="save">保存</el-button>
+                <el-button class="btn-xl" type="primary" @click="showNameDialog">保存</el-button>
                 <el-button class="btn-xl" @click="cancel">取消</el-button>
             </div>
         </div>
+        <NameDialog :visible="nameDialogVisible" :onSaveData="saveData" :onCancel="hideNameDialog" />
     </div>
 </template>
 
 <script>
+import NameDialog from "components/NameDialog";
+import { argConfig } from "api";
+import { getUserIdAndType, getObjFromStr } from "utils/util";
+
 import Table from "./Table";
 
-// const tableData = [
-//     {
-//         order: "2016-05-03",
-//         start: "王小虎",
-//         end: "上海",
-//         desc: "上海市普陀区金沙江路 1518 弄"
-//     },
-//     {
-//         order: "2016-05-03",
-//         start: "王小虎",
-//         end: "上海",
-//         desc: "上海市普陀区金沙江路 1518 弄"
-//     },
-//     {
-//         order: "2016-05-03",
-//         start: "王小虎",
-//         end: "上海",
-//         desc: "上海市普陀区金沙江路 1518 弄"
-//     }
-// ];
+const { userId, userType } = getUserIdAndType();
 
 const globalTypeList = [
     { type: "symmetry", name: "对称曲线" },
@@ -81,25 +60,132 @@ const globalTypeList = [
 export default {
     name: "BufferPiecewise",
     components: {
-        Table
+        Table,
+        NameDialog
     },
     data() {
         return {
             // 当前的缓冲器型号
-            curBufferType: "",
+            curTempId: "",
             bufferList: [],
-            isDiy: true,
+            // isDiy: true,
 
             // 是否是对称曲线
             globalTypeList,
-            globalType: globalTypeList[0].type
+            globalType: globalTypeList[0].type,
+
+            nameDialogVisible: false,
+
+            ysjzInfo: [], // 压缩加载
+            lsjzInfo: [], // 拉伸加载
+            ysxzInfo: [], // 压缩卸载
+            lsxzInfo: [] // 拉伸卸载
         };
     },
     props: {},
-    computed: {},
+    watch: {
+        curTempId() {
+            let { bufferList = [], curTempId } = this;
+            let curBufferData =
+                bufferList.find(item => item.id === curTempId) || {};
+            let { ysjzInfo, lsjzInfo, ysxzInfo, lsxzInfo } = curBufferData;
+
+            ysjzInfo && (this.ysjzInfo = getObjFromStr(ysjzInfo));
+            lsjzInfo && (this.lsjzInfo = getObjFromStr(lsjzInfo));
+            ysxzInfo && (this.ysxzInfo = getObjFromStr(ysxzInfo));
+            lsxzInfo && (this.lsxzInfo = getObjFromStr(lsxzInfo));
+        }
+    },
     methods: {
-        save() {},
+        // 获取模版列表
+        getCoupFdhsfTempList() {
+            argConfig
+                .getCoupFdhsfTempList({ userId, type: userType })
+                .then(res => {
+                    if (!res) return;
+                    this.bufferList = res.data || [];
+                });
+        },
+
+        // 获取所选模版的详细信息
+        getCoupFdhsfTempView() {
+            if (!this.curTempId) return;
+            argConfig.getCoupFdhsfTempView({ id: this.curTempId }).then(res => {
+                if (!res) return;
+                // TODO 待后端改完数据格式后再写
+            });
+        },
+
+        // 保存模版数据
+        saveCoupFdhsfTemp(params) {
+            argConfig.saveCoupFdhsfTemp(params).then(res => {
+                if (!res) return;
+
+                // 保存成功后，刷新select数据，并清空选项
+                this.getCoupFdhsfTempList();
+                this.curTempId = "";
+
+                this.$message({
+                    message: "操作成功",
+                    type: "success"
+                });
+            });
+        },
+
+        // 点击删除，删除选中项
+        onClickDel() {
+            if (!this.curTempId) {
+                this.$message({
+                    message: "请先选择型号",
+                    type: "error"
+                });
+                return;
+            }
+            argConfig.delCoupFdhsfTemp({ id: this.curTempId }).then(res => {
+                if (!res) return;
+
+                // 保存成功后，刷新select数据，并清空选项
+                this.getCoupFdhsfTempList();
+                this.curTempId = "";
+
+                this.$message({
+                    message: "操作成功",
+                    type: "success"
+                });
+            });
+        },
+
+        showNameDialog() {
+            this.nameDialogVisible = true;
+        },
+
+        hideNameDialog() {
+            this.nameDialogVisible = false;
+        },
+
+        saveData(name) {
+            let ysjzInfo = this.$refs.ysjzInfo.saveData();
+            let lsjzInfo = this.$refs.lsjzInfo.saveData();
+            let ysxzInfo = this.$refs.ysxzInfo.saveData();
+            let lsxzInfo = this.$refs.lsxzInfo.saveData();
+
+            let params = {
+                userId,
+                type: userType,
+                name,
+                ysjzInfo,
+                lsjzInfo,
+                ysxzInfo,
+                lsxzInfo
+            };
+
+            this.saveCoupFdhsfTemp(params);
+            this.hideNameDialog();
+        },
         cancel() {}
+    },
+    mounted() {
+        this.getCoupFdhsfTempList();
     }
 };
 </script>
@@ -116,14 +202,13 @@ export default {
         font-size: 14px;
         margin-right: 20px;
     }
-    .isDiy {
-        margin-left: 20px;
+    .deleteBtn {
+        display: inline-block;
+        padding: 0 30px;
     }
-
-    .editType {
-        margin: 10px 0;
-        // text-align: center;
-    }
+    // .isDiy {
+    //     margin-left: 20px;
+    // }
 
     .content {
         .title {

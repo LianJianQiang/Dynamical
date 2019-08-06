@@ -136,6 +136,10 @@ export const getUserIdAndType = () => {
     return { userId, userType }
 }
 
+export const getObjFromStr = (str) => {
+    // eslint-disable-next-line no-eval
+    return eval('(' + str + ')')
+}
 
 export default {
     isNumber,
@@ -148,5 +152,6 @@ export default {
     IEVersion,
     getUserInfo,
     handleTreeData,
-    getUserIdAndType
+    getUserIdAndType,
+    getObjFromStr
 }

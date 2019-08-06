@@ -104,9 +104,13 @@ export default {
 
         // 保存模版信息
         saveCoupMdfTemp(params) {
-            console.log(params);
             argConfig.saveCoupMdfTemp(params).then(res => {
                 if (!res) return;
+
+                // 保存成功后，刷新select数据，并清空选项
+                this.getCoupMdfTempList();
+                this.curTempId = "";
+
                 this.$message({
                     message: "操作成功",
                     type: "error"
