@@ -3,8 +3,8 @@
         <div :class="$style.btnGroup">
             <el-button v-if="showAdd" class="btn-mini" @click="tableAdd">+</el-button>
             <el-button v-if="showDel" class="btn-mini" @click="tableDel">-</el-button>
-            <el-button v-if="showOpen" class="btn-mini" @click="tableOpen">打开</el-button>
-            <el-button v-if="showSave" class="btn-mini" @click="tableSave">保存</el-button>
+            <el-button v-if="showOpen" class="btn-mini" @click="onOpenCurve">打开</el-button>
+            <el-button v-if="showSave" class="btn-mini" @click="onSaveCurve">保存</el-button>
         </div>
         <el-table :data="tableData" :height="height" border size="mini">
             <el-table-column prop="number" label="序号" align="center" width="75" />
@@ -29,18 +29,54 @@
                 </template>
             </el-table-column>
         </el-table>
+
+        <el-dialog title="请选择曲线" :visible.sync="curveDialogVisible" :modal="false">
+            <ul :class="$style.tractionList" class="clearfix">
+                <li
+                    class="fll cursor-p"
+                    v-for="item in tractionList"
+                    :key="item.id"
+                    @click="onClickTractionLi(item)"
+                >{{item.tcsdName}}</li>
+            </ul>
+        </el-dialog>
+        <NameDialog
+            :visible="nameDialogVisible"
+            :onSaveData="saveData"
+            :onCancel="()=>this.toggleDialog('nameDialogVisible',false)"
+        />
     </div>
 </template>
 
 <script>
+import NameDialog from "components/NameDialog";
+
+import { getUserIdAndType } from "utils/util";
+import { model } from "api";
+
+const { userId, userType } = getUserIdAndType();
+
 export default {
     name: "Table",
     data() {
         return {
-            tableData: [...this.dataSource]
+            tableData: [...this.dataSource],
+            tcsd: {},
+
+            tractionList: [],
+
+            curveDialogVisible: false,
+            nameDialogVisible: false
         };
     },
+    components: {
+        NameDialog
+    },
     props: {
+        type: {
+            // 如不传，则打开和保存会调用props里到方法
+            type: Number
+        },
         dataSource: {
             type: Array,
             default: () => {
@@ -78,11 +114,26 @@ export default {
         onSave: {
             type: Function,
             default: () => {}
+        },
+        onSaveCb: {
+            type: Function
         }
     },
     computed: {},
     watch: {},
+    updated() {
+        console.log(this.nameDialogVisible);
+    },
     methods: {
+        initData() {
+            if (!this.defaultCurveId) return;
+            this.onClickTractionLi({ id: this.defaultCurveId });
+        },
+        // 切换dialog状态
+        toggleDialog(field, bool) {
+            this[field] = bool;
+            console.log(field, this[field]);
+        },
         // 单元格里到值发生变化时回调
         dataChange() {
             this.tableDataChange(this.tableData);
@@ -107,28 +158,107 @@ export default {
             this.tableDataChange(this.tableData);
         },
 
-        // TODO 打开和保存功能需后端支持
-        tableOpen() {
-            this.onOpen();
-        },
-
-        // TODO 打开和保存功能需后端支持
+        // 保存
         tableSave() {
             this.onSave(this.tableData);
         },
 
-        // 保存数据
-        save() {
+        // 打开曲线
+        onOpenCurve() {
+            if (!this.type) {
+                this.onOpen();
+                return;
+            }
+            let type = this.type;
+            model.tractionList({ userId, type }).then(res => {
+                if (!res) return;
+                let { data = [] } = res;
+                if (data.length === 0) {
+                    this.$message("暂无可选择的数据");
+                    return;
+                }
+                this.tractionList = res.data;
+                this.curveDialogVisible = true;
+            });
+        },
+
+        // 点击打开后，展示列表，并点击list
+        onClickTractionLi(item) {
+            let { id } = item;
+            model.tractionLiView({ id }).then(res => {
+                if (!res) return;
+                let { data = {} } = res;
+                this.tcsd = data;
+                this.tableData = data.tcsdData;
+                this.curveDialogVisible = false;
+            });
+        },
+
+        // 点击 table的保存，提示输入名称
+        onSaveCurve(data) {
+            if (!this.type) {
+                this.onSave(this.tableData);
+                return;
+            }
+
+            this.toggleDialog("nameDialogVisible", true);
+        },
+
+        saveData(name) {
+            if (!name) {
+                this.$message("请输入名称");
+                return;
+            }
+            model
+                .tractionLiSave({
+                    ...this.tcsd,
+                    userId,
+                    tcsdName: name,
+                    tcsdData: this.tableData || [],
+                    type: this.type
+                })
+                .then(res => {
+                    if (!res) return;
+                    this.nameDialogVisible = false;
+
+                    // 保存成功后，将id返回给父组件
+                    this.onSaveCb && this.onSaveCb(res.data.id);
+                });
+        },
+
+        // 保存数据，旧
+        getTableData() {
             return this.tableData;
         }
     },
-    mounted() {}
+    mounted() {
+        this.initData();
+    }
 };
 </script>
 <style module lang="scss">
 .root {
     .btnGroup {
         margin-bottom: 10px;
+    }
+
+    .tractionList {
+        max-height: 300px;
+        overflow: auto;
+        li {
+            padding: 10px 20px;
+            margin: 0 5px;
+        }
+    }
+
+    .nameDialog {
+        :global {
+            .el-input,
+            .el-input__inner {
+                height: 32px;
+                line-height: 32px;
+            }
+        }
     }
 
     :global {

@@ -10,66 +10,61 @@
                 <el-form ref="frontForm" :model="frontData" label-width="120px">
                     <el-form-item label="缓冲器:">
                         <Buffer
-                            field="buffer"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.buffer"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="橡胶轴承:">
                         <RubberBearing
-                            field="rubberBearing"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.rubberBearing"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="压溃管:">
                         <Foldedcollapse
-                            field="foldedCollapse"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.foldedCollapse"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="过载保护:">
                         <OverloadProtection
-                            field="overloadProtection"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.overloadProtection"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="防爬器:">
                         <Anticreeper
-                            field="anticreeper"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.anticreeper"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
-                            field="damper"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.damper"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
                         <Windshield
-                            field="windshield"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.windshield"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
                         <Diy
                             field="diy1"
+                            :type="2"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.diy1"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <Diy
-                            field="diy2"
+                        <!-- <Diy
+                            :field="diy2"
+                            :type="3"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
-                            :dataSource="frontData.diy2"
-                        />
+                            :dataSource="frontData"
+                        />-->
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -82,69 +77,64 @@
             </el-col>
             <el-col :class="$style.back" :span="8" :offset="2">
                 <div :class="$style.title">后端面</div>
-                <el-form ref="frontForm" :model="frontData" label-width="120px">
+                <el-form ref="frontForm" :model="backData" label-width="120px">
                     <el-form-item label="缓冲器:">
-                        <Diy
-                            field="buffer"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.buffer"
+                        <Buffer
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="橡胶轴承:">
                         <RubberBearing
-                            field="rubberBearing"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.rubberBearing"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="压溃管:">
                         <Foldedcollapse
-                            field="foldedCollapse"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.foldedCollapse"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="过载保护:">
                         <OverloadProtection
-                            field="overloadProtection"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.overloadProtection"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="防爬器:">
                         <Anticreeper
-                            field="anticreeper"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.anticreeper"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
-                            field="damper"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.damper"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
                         <Windshield
-                            field="windshield"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.windshield"
+                            :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <Diy
-                            field="diy1"
+                        <!-- <Diy
+                            :field="diy1"
+                            :type="2"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.diy1"
-                        />
+                            :dataSource="backData"
+                        />-->
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <Diy
-                            field="diy2"
+                        <!-- <Diy
+                            :field="diy2"
+                            :type="3"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="frontData.diy2"
-                        />
+                            :dataSource="backData"
+                        />-->
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -259,9 +249,9 @@ export default {
 
         // 保存下拉框的数据
         saveDropDownData(params) {
-            console.log(params);
-            let { field, data, parent } = params;
-            this[parent][field] = data;
+            let { datas, parent } = params;
+            console.log(parent, datas);
+            this[parent] = { ...this[parent], ...datas };
         },
         /**
          * 保存模型数据

@@ -18,7 +18,13 @@
             </div>
             <div :class="$style.tableWrap">
                 <h4>曲线点设置</h4>
-                <EditTable ref="editTable" />
+                <EditTable
+                    ref="editTable"
+                    :type="type"
+                    :defaultCurveId="curveId"
+                    :dataSource="tableData || []"
+                    :onSaveCb="onSaveCb"
+                />
             </div>
         </div>
     </DropDown>
@@ -27,6 +33,10 @@
 <script>
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
+import NameDialog from "components/NameDialog";
+
+import { model } from "api";
+import { getUserIdAndType } from "utils/util";
 
 const options = [
     { label: "位移", value: "displace" },
@@ -34,22 +44,32 @@ const options = [
     { label: "时间", value: "time" }
 ];
 
+const { userId, userType } = getUserIdAndType();
+
 export default {
     name: "Diy",
     data() {
         return {
+            tableData: [],
             options,
-            x: ""
+            x: "",
+
+            curveId: ""
         };
     },
     components: {
         DropDown,
-        EditTable
+        EditTable,
+        NameDialog
     },
     props: {
         size: {
             type: String,
             default: ""
+        },
+        type: {
+            type: Number,
+            required: true
         },
         field: {
             type: String,
@@ -65,16 +85,22 @@ export default {
         }
     },
     methods: {
+        // 点击 table的保存，提示输入名称
+        onSaveCb(id) {
+            this.curveId = id;
+        },
+
         // 保存数据
         save() {
             let tableData = this.$refs.editTable.save();
-            let data = {
-                x: this.x,
-                tableData
+            let field = this.field;
+            let datas = {
+                [`${field}X`]: this.x,
+                [`${field}TcsdId`]: this.curveId
             };
 
             if (!this.field) return;
-            this.saveData({ data, field: this.field });
+            this.saveData({ datas});
         }
     }
 };

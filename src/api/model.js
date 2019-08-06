@@ -20,16 +20,16 @@ const vehicleBasicEdit = (params) => request(`${config.baseUrl}/ve1/save`, { ...
 // 列车牵引力特性曲线详情（包含第一列和第二列车）
 const tractionView = (params) => request(`${config.baseUrl}/vtr1/vtrView`, { ...params });
 
-// 保存列车牵引力特性曲线
+// 列车牵引力特性曲线 保存
 const tractionSave = (params) => request(`${config.baseUrl}/vtr1/save`, { ...params });
 
-// 获取牵引力曲线列表
+// 牵引力曲线 列表 获取
 const tractionList = (params) => request(`${config.baseUrl}/tcsd/listData`, { ...params });
 
-// 获取牵引力曲线详情
+// 牵引力曲线 详情 获取
 const tractionLiView = (params) => request(`${config.baseUrl}/tcsd/tcsdView`, { ...params });
 
-// 保存牵引力曲线详情
+// 牵引力曲线 详情 保存
 const tractionLiSave = (params) => request(`${config.baseUrl}/tcsd/save`, { ...params });
 
 // 保存/更新车间连接参数配置

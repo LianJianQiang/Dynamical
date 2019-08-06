@@ -62,8 +62,8 @@ export default {
     :global {
         .el-input,
         .el-input__inner {
-            height: 32px;
-            line-height: 32px;
+            height: 32px !important;
+            line-height: 32px !important;
         }
     }
 }

@@ -8,12 +8,11 @@ export default {
     methods: {
         // 保存数据
         save() {
-            let data = {
+            let datas = {
                 ...this.formData
             };
 
-            if (!this.field) return;
-            this.saveData({ data, field: this.field });
+            this.saveData({ datas });
         }
     }
 }

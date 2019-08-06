@@ -9,10 +9,6 @@ export default {
             type: String,
             default: ""
         },
-        field: {
-            type: String,
-            required: true
-        },
         dataSource: {
             type: Object,
             default: () => {
