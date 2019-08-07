@@ -52,29 +52,46 @@ export const MODEL_TREE_TYPE = {
     args: 'MXCSB'            // 模型参数
 }
 
-export const MODEL_TYPE_LINK_LIST = ['LCCS', 'VE', 'CA', 'LJXT', 'XLCS', 'MXCSB']
+export const MODEL_TYPE_LINK_LIST = ['LCCS', 'VE', 'CA', 'LJXT', 'XLCS', 'MXCSB'];
+
+export const CONNECT_ELE_DICT = {
+    hcq: 'hcq',         // 缓冲器
+    xjzc: 'xjzc',       // 橡胶轴承
+    ykg: 'ykg',         // 压溃管
+    gzbh: 'gzbh',       // 过载保护
+    fpq: 'fpq',         // 防爬器
+    cjjz: 'cjjz',       // 车间减震
+    fd: 'fd',           // 风挡
+    diy1: 'diy1',       // 自定义1
+    diy2: 'diy2'        // 自定义2
+}
+
+export const CONNECT_FACETYPE_DICT = {
+    front: { key: 1, label: 'front' },
+    back: { key: 1, label: 'back' }
+}
 
 /**
  * 获取某个模型树上的所有对应type的node
  * @param {Tree} tree  单一模型树
  * @param {*} type type
  */
-export const getTreeNodeByType = (tree, type) => {
-    let result = [];
+// export const getTreeNodeByType = (tree, type) => {
+//     let result = [];
 
-    if (!tree.children || tree.children.length === 0) return [];
-    const getFunc = (data) => {
-        data.map(item => {
-            if (item.type === type) {
-                result.push(item);
-            }
-            item.children && item.children.length > 0 && getFunc(item.children);
-        })
-    }
+//     if (!tree.children || tree.children.length === 0) return [];
+//     const getFunc = (data) => {
+//         data.map(item => {
+//             if (item.type === type) {
+//                 result.push(item);
+//             }
+//             item.children && item.children.length > 0 && getFunc(item.children);
+//         })
+//     }
 
-    getFunc(tree.children);
-    return result;
-}
+//     getFunc(tree.children);
+//     return result;
+// }
 
 export const createTree = (name, trainNum = 0, vehicleNum = []) => {
     const vehicleList = ({ type, row = 0, col = [] }) => {

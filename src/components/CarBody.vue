@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.root" :style="bodyBGImg">{{carInfo.col}}</div>
+    <div :class="$style.root" :style="bodyBGImg">{{carInfo.cal}}</div>
 </template>
 
 <script>

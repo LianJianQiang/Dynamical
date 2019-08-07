@@ -38,16 +38,17 @@ export default {
     },
     methods: {
         ...mapActions("models", ["setCurTreeNodeId"]),
+
         nodeClick(nodeData) {
             let { type, id } = nodeData;
 
             if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
+            this.setCurTreeNodeId(id);
+
             this.$router.push({
                 path: "/page/model/edit",
                 query: { type, id }
             });
-
-            this.setCurTreeNodeId(id);
 
             // const carDetail = this.getCarData({ modelName, row, col });
             // this.$store.dispatch("uiState/saveCurCarDetail", carDetail);

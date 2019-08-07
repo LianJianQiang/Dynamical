@@ -15,7 +15,7 @@
             </div>
         </div>
         <el-dialog title="请选择要编辑的模型树" :visible.sync="dialogVisible">
-            <ul :class="$style.modelsContent" class="clearfix">
+            <ul :class="$style.modelsContent" class="clearfix" v-if="modelsList.length > 0">
                 <li
                     class="fll"
                     v-for="item in modelsList"
@@ -23,18 +23,22 @@
                     @click="onSelectModel(item)"
                 >{{item.name}}</li>
             </ul>
+            <dir v-else class="noData">暂无数据</dir>
         </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { MODEL_TREE_TYPE, getTreeNodeByType } from "common/constants";
+import { MODEL_TREE_TYPE } from "common/constants";
 
 import _util from "utils/util";
 import { model } from "api";
+import { getUserIdAndType } from "utils/util";
 
 import Tree from "./Tree";
+
+const { userId } = getUserIdAndType();
 
 export default {
     name: "Model",
@@ -60,17 +64,20 @@ export default {
         }
     },
     methods: {
-        ...mapActions("models", ["saveModelTreeData", "setCurModelId"]),
+        ...mapActions("models", [
+            "saveModelTreeData",
+            "setCurModelId",
+            "setCurTreeNodeId"
+        ]),
 
         // 选择要打开的模型树
         onSelectModel(item) {
-            // this.$router.push("/page/model/open");
             this.getModelTreeData(item.id);
         },
 
         // 请求模型树列表
         getModelsList() {
-            model.getModels({ userId: "1" }).then(res => {
+            model.getModels({ userId }).then(res => {
                 if (!res) return;
                 let { data = [] } = res;
                 this.modelsList = data;
@@ -82,7 +89,7 @@ export default {
         newModel() {
             this.setModelName({
                 success: name => {
-                    this.createModel(name);
+                    // this.createModel(name);
                     this.createSuccessCb(name);
                 }
             });
@@ -98,13 +105,11 @@ export default {
                 inputValidator: this.validatorModelname
             })
                 .then(({ value }) => {
-                    model
-                        .createModel({ userId: "1", name: value })
-                        .then(res => {
-                            if (!res) return;
-                            this.getModelTreeData(res.data.id);
-                            this.$message("创建成功");
-                        });
+                    model.createModel({ userId, name: value }).then(res => {
+                        if (!res) return;
+                        this.getModelTreeData(res.data.id);
+                        this.$message("创建成功");
+                    });
                 })
                 .catch(e => {
                     console.log(e);
@@ -124,29 +129,31 @@ export default {
 
         /**
          * 获取模型树的数据
-         * @param id
          */
         getModelTreeData(id) {
             model.getModelTree({ id }).then(res => {
                 if (!res) return;
-                
+
                 this.saveModelTreeData(res.data || []);
                 this.setCurModelId(id);
-                
+
                 this.dialogVisible = false;
 
                 this.createSuccessCb();
             });
         },
 
+        // 创建或打开成功回调
         createSuccessCb() {
-            let obj = this.getTreeNodeByType(MODEL_TREE_TYPE.basic);
+            let obj = this.getTreeNodeByType(MODEL_TREE_TYPE.basic)[0];
             if (!obj) return;
 
             let { id, type } = obj;
+            this.setCurTreeNodeId(id);
+
             this.$router.push({
                 path: `/page/model/edit`,
-                query: { type }
+                query: { type, id }
             });
         }
     }

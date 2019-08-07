@@ -14,7 +14,7 @@
             </div>
             <div :class="$style.tableWrap">
                 <h4>特征曲线</h4>
-                <EditTable ref="editTable" :type="type" :onSaveCb="onSaveCb" />
+                <EditTable ref="editTable" :type="type" :onSaveCb="onSaveCb" :tableDataChange="tableDataChange"/>
             </div>
         </div>
     </DropDown>

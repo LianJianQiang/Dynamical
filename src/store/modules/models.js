@@ -111,38 +111,36 @@ const getters = {
     },
 
     // 获取车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
-    getCarListData(state, getters) {
-        return ({ modelName }) => {
-            let vehicleList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['vehicle'] });
-            // console.log(vehicleList);
-            let connectList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['connect'] });
-            // console.log(connectList);
+    // getCarListData(state, getters) {
+    //     return ({ modelName }) => {
+    //         let vehicleList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['vehicle'] });
+    //         let connectList = getters.getTreeListByType({ modelName, type: MODEL_TREE_TYPE['connect'] });
 
-            let result = {};
-            let row = null;
-            vehicleList.map((item) => {
-                for (let i = 0; i < connectList.length; i++) {
-                    let curConnect = connectList[i];
-                    if (row !== item.row) row = item.row;
-                    if (item.row === curConnect.row && item.col === curConnect.col) {
-                        if (!result[row]) result[row] = [];
-                        result[row].push({
-                            row: item.row,
-                            col: item.col,
-                            label: item.label,
-                            vehicleId: item.id,
-                            connectId: curConnect.id,
-                            vehicleData: item,
-                            connectData: curConnect
-                        });
-                        connectList.splice(i, 1);
-                    }
-                }
-            });
+    //         let result = {};
+    //         let row = null;
+    //         vehicleList.map((item) => {
+    //             for (let i = 0; i < connectList.length; i++) {
+    //                 let curConnect = connectList[i];
+    //                 if (row !== item.row) row = item.row;
+    //                 if (item.row === curConnect.row && item.col === curConnect.col) {
+    //                     if (!result[row]) result[row] = [];
+    //                     result[row].push({
+    //                         row: item.row,
+    //                         col: item.col,
+    //                         label: item.label,
+    //                         vehicleId: item.id,
+    //                         connectId: curConnect.id,
+    //                         vehicleData: item,
+    //                         connectData: curConnect
+    //                     });
+    //                     connectList.splice(i, 1);
+    //                 }
+    //             }
+    //         });
 
-            return Object.entries(result);
-        }
-    },
+    //         return Object.entries(result);
+    //     }
+    // },
 
     // 获取单个车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
     getCarData(state, getter) {
@@ -180,7 +178,7 @@ const getters = {
     /** ---------------- 新 ------------------- */
     getTreeNodeByType(state) {
         let { modelTreeCache } = state;
-        return ({ type }) => {
+        return (type) => {
             return modelTreeCache.filter((item) => { return item.type === type });
         }
     },
@@ -194,6 +192,40 @@ const getters = {
 
     curTreeNodeInfo(state, getter) {
         return getter.getTreeNodeById(state.curTreeNodeId);
+    },
+
+    // 获取车辆列表数据，包含车辆信息和链接系统信息
+    allCarData(state, getter) {
+        // 获取车辆参数中的车辆列表
+        let clcsArr = getter.getTreeNodeByType(MODEL_TREE_TYPE['vehicle']);
+        // 获取链接系统中的车辆列表
+        let ljxtArr = getter.getTreeNodeByType(MODEL_TREE_TYPE['connect']);
+
+        // 根据row和col将车辆的 车辆参数 和 链接系统 的节点数据进行合并
+        let result = {};
+        let row = null;
+        clcsArr.map((item) => {
+            if (row !== item.row) row = item.row;
+            if (!result[row]) result[row] = [];
+
+            let curConnect = ljxtArr.find((li) => li.row === item.row && li.cal === item.cal) || {};
+            let json = {
+                row: item.row,
+                cal: item.cal,
+                name: item.name,
+                vehicleId: item.id,
+                connectId: curConnect.id,
+                vehicleData: item,
+                connectData: curConnect
+            }
+            result[row].push(json);
+        });
+
+        for (let i in result) {
+            result[i].sort((a, b) => a.cal - b.cal);
+        }
+
+        return Object.entries(result);
     }
 
 }

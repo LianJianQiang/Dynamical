@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root">
-        <div v-if="!isOpenCarDetail">
-            <div v-for="(item, idx) in listData" :key="idx" :class="$style.trainWrap">
+        <div v-if="!isOpenCarDetail" :class="$style.listWrap" >
+            <div v-for="(item, idx) in allCarData" :key="idx" :class="$style.trainWrap">
                 <div :class="$style.title">{{`第${item[0]}列`}}</div>
                 <CarList :list="item[1]" :onClickList="onClickList" />
             </div>
@@ -10,7 +10,7 @@
             <div :class="$style.close" class="cursor-p" @click="onClickList({})">
                 <img :src="closeIcon" alt />
             </div>
-            <div :class="$style.title">{{carDetail.label}}</div>
+            <div :class="$style.title">{{carDetail.name}}</div>
             <CarBodyDetail :detail="carDetail" />
         </div>
     </div>
@@ -40,21 +40,22 @@ export default {
         ...mapActions("uiState", ["saveCurCarDetail"]),
 
         onClickList(info) {
+            console.log(info);
             this.saveCurCarDetail(info);
         }
     },
     computed: {
-        ...mapGetters("models", ["getCarListData"]),
+        ...mapGetters("models", ["allCarData"]),
         ...mapGetters("uiState", ["isOpenCarDetail"]),
-        ...mapState("uiState", ["carDetail"]),
+        ...mapState("uiState", ["carDetail"])
 
-        listData() {
-            return this.getCarListData({ modelName: "ces" });
-        }
+        // listData() {
+        //     return this.allCarData;
+        // }
     },
     mounted() {
-        // console.log(this.getCarListData({ modelName: "ces" }));
-        console.log(this.isOpenCarDetail);
+        // console.log(this.allCarData);
+        // console.log(this.isOpenCarDetail);
     }
 };
 </script>
@@ -63,7 +64,7 @@ export default {
 .root {
     background: #fff;
     border-radius: $raduis_1;
-    padding: 20px;
+    // padding: 20px;
     position: relative;
     .trainWrap {
         margin-bottom: 60px;
@@ -76,6 +77,11 @@ export default {
         font-size: 20px;
         font-weight: 500;
         margin: 20px 0;
+    }
+
+    .listWrap,
+    .detailWrap {
+        padding: 30px;
     }
 
     .detailWrap {

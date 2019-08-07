@@ -10,44 +10,44 @@
                 <el-form ref="frontForm" :model="frontData" label-width="120px">
                     <el-form-item label="缓冲器:">
                         <Buffer
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.hcq })"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="橡胶轴承:">
                         <RubberBearing
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.xjzc})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="压溃管:">
                         <Foldedcollapse
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.ykg})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="过载保护:">
                         <OverloadProtection
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.gzbh})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="防爬器:">
                         <Anticreeper
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.fpq})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
                             :type="1"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.cjjz})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
                         <Windshield
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.fd})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
@@ -55,7 +55,7 @@
                         <Diy
                             field="diy1"
                             :type="2"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.diy1})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
@@ -63,7 +63,7 @@
                         <Diy
                             field="diy2"
                             :type="3"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.diy2})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
@@ -81,44 +81,44 @@
                 <el-form ref="frontForm" :model="backData" label-width="120px">
                     <el-form-item label="缓冲器:">
                         <Buffer
-                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.hcq})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
                     <el-form-item label="橡胶轴承:">
                         <RubberBearing
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.xjzc})"
                             :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="压溃管:">
                         <Foldedcollapse
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.ykg})"
                             :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="过载保护:">
                         <OverloadProtection
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.gzbh})"
                             :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="防爬器:">
                         <Anticreeper
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.fpq})"
                             :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
                             :type="1"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.cjjz})"
                             :dataSource="backData"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
                         <Windshield
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.fd})"
                             :dataSource="backData"
                         />
                     </el-form-item>
@@ -126,7 +126,7 @@
                         <Diy
                             field="diy1"
                             :type="2"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.diy1})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
@@ -134,7 +134,7 @@
                         <Diy
                             field="diy2"
                             :type="3"
-                            :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
+                            :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.diy2})"
                             :dataSource="frontData"
                         />
                     </el-form-item>
@@ -170,7 +170,11 @@
 import { mapActions, mapGetters, mapState } from "vuex";
 
 import Img from "assets/images";
-import { MODEL_TREE_TYPE } from "common/constants";
+import {
+    MODEL_TREE_TYPE,
+    CONNECT_ELE_DICT,
+    CONNECT_FACETYPE_DICT
+} from "common/constants";
 import { filterJson } from "utils/util";
 import { model } from "api";
 
@@ -201,13 +205,18 @@ export default {
             frontData: {},
             backData: {},
             copySource: null,
-            Img
+            Img,
+            eleDict: CONNECT_ELE_DICT
         };
     },
     props: {},
     computed: {
         ...mapState("models", ["curModelId", "curTreeNodeId"]),
-        ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
+        ...mapGetters("models", [
+            "getTreeNodeByType",
+            "curTreeNodeInfo",
+            "getTreeNodeById"
+        ]),
 
         trainList() {
             return this.getTreeNodeByType({ type: MODEL_TREE_TYPE.connect });
@@ -222,29 +231,13 @@ export default {
     },
     mounted() {},
     methods: {
-        // 复制端
-        copyItem(item) {
-            if (item === "left") {
-                this.frontData = { ...this.backData };
-            } else {
-                this.backData = { ...this.frontData };
-            }
-            this.$message("操作成功");
-        },
+        ...mapActions("uiState", ["saveDefinedConnect"]),
 
-        // 复制 其他车辆
-        copyCar() {
-            if (!this.copySource) {
-                this.$message("请先选择车辆");
-                return;
-            }
-            if (!this.carNum) {
-                this.$message({
-                    message: "数据错误",
-                    type: "error"
-                });
-                return;
-            }
+        // 获取页面数据
+        initData(carNum) {
+            carNum = carNum || this.carNum;
+            if (!carNum) return;
+
             model
                 .getAllCoupTypeByModelId({
                     modelId: this.curModelId,
@@ -266,11 +259,47 @@ export default {
                     });
                 });
         },
+        // 复制端
+        copyItem(item) {
+            if (item === "left") {
+                this.frontData = { ...this.backData };
+            } else {
+                this.backData = { ...this.frontData };
+            }
+            this.$message("操作成功");
+        },
+
+        // 复制 其他车辆
+        copyCar() {
+            if (!this.copySource) {
+                this.$message("请先选择车辆");
+                return;
+            }
+
+            // TODO 未测试
+            let sourceInfo = this.getTreeNodeById(this.copySource);
+
+            let { row, cal } = sourceInfo;
+            if (!row || !cal) return null;
+
+            this.initData(`${row}-${cal}`);
+        },
 
         // 保存下拉框的数据
         saveDropDownData(params) {
-            let { datas, parent } = params;
+            let { datas, parent, ele } = params;
             this[parent] = { ...this[parent], ...datas };
+
+            // 保存已定义的元件列表，图形显示使用
+            let faceType = CONNECT_FACETYPE_DICT.back.key;
+            if (parent === "frontData") {
+                faceType = CONNECT_FACETYPE_DICT.front.key;
+            }
+            this.saveDefinedConnect({
+                id: this.curTreeNodeId,
+                faceType,
+                eleType: ele
+            });
         },
 
         /**
@@ -325,7 +354,9 @@ export default {
             // this.backData = {};
         }
     },
-    mounted() {}
+    mounted() {
+        this.initData();
+    }
 };
 </script>
 

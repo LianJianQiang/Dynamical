@@ -18,7 +18,12 @@
             </div>
             <div :class="$style.tableWrap">
                 <h4>曲线点设置</h4>
-                <EditTable ref="editTable" :type="type" :onSaveCb="onSaveCb" />
+                <EditTable
+                    ref="editTable"
+                    :type="type"
+                    :onSaveCb="onSaveCb"
+                    :tableDataChange="tableDataChange"
+                />
             </div>
         </div>
     </DropDown>
@@ -35,9 +40,9 @@ import { getUserIdAndType } from "utils/util";
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
 
 const options = [
-    { label: "位移", value: "displace" },
-    { label: "速度", value: "speed" },
-    { label: "时间", value: "time" }
+    { label: "位移", value: 1 },
+    { label: "速度", value: 2 },
+    { label: "时间", value: 3 }
 ];
 
 const { userId, userType } = getUserIdAndType();

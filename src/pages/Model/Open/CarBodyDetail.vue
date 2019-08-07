@@ -3,77 +3,103 @@
         <div :class="$style.train" class="cursor-p" :style="bodyBGImg">
             <div>
                 <img
+                    v-if="isShowEle(frontKey, eleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-前端"
                     :class="[$style.frontHC,$style.hc,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-后端"
                     :class="[$style.backHC,$style.hc,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(frontKey, eleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-前端"
                     :class="[$style.frontXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-后端"
                     :class="[$style.backXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(frontKey, eleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-前端"
                     :class="[$style.frontYK,$style.yk,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-后端"
                     :class="[$style.backYK,$style.yk,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-前端"
                     :class="[$style.frontGZ,$style.gz,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-后端"
                     :class="[$style.backGZ,$style.gz,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(frontKey, eleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-前端"
                     :class="[$style.frontFP,$style.fp,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-后端"
                     :class="[$style.backFP,$style.fp,$style.connectEle]"
                 />
-                <div :class="[$style.diy,$style.connectDiy,$style.frontDIY1,$style.connectEle]">diy1</div>
-                <div :class="[$style.diy,$style.connectDiy,$style.frontDIY2,$style.connectEle]">diy2</div>
-                <div :class="[$style.diy,$style.connectDiy,$style.backDIY1,$style.connectEle]">diy1</div>
-                <div :class="[$style.diy,$style.connectDiy,$style.backDIY2,$style.connectEle]">diy2</div>
+                <div
+                    v-if="isShowEle(frontKey, eleDict.diy1)"
+                    :class="[$style.diy,$style.connectDiy,$style.frontDIY1,$style.connectEle]"
+                >diy1</div>
+                <div
+                    v-if="isShowEle(frontKey, eleDict.diy2)"
+                    :class="[$style.diy,$style.connectDiy,$style.frontDIY2,$style.connectEle]"
+                >diy2</div>
+                <div
+                    v-if="isShowEle(backKey, eleDict.diy1)"
+                    :class="[$style.diy,$style.connectDiy,$style.backDIY1,$style.connectEle]"
+                >diy1</div>
+                <div
+                    v-if="isShowEle(backKey, eleDict.diy2)"
+                    :class="[$style.diy,$style.connectDiy,$style.backDIY2,$style.connectEle]"
+                >diy2</div>
                 <img
+                    v-if="isShowEle(frontKey, eleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-前端"
                     :class="[$style.frontFD,$style.fd,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-后端"
                     :class="[$style.backFD,$style.fd,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(frontKey, eleDict.cjjz)"
                     :src="Img['cjjz']"
-                    title="防爬-前端"
+                    title="车间减震-前端"
                     :class="[$style.frontCJJZ,$style.cjjz,$style.connectEle]"
                 />
                 <img
+                    v-if="isShowEle(backKey, eleDict.cjjz)"
                     :src="Img['cjjz']"
-                    title="防爬-后端"
+                    title="车间减震-后端"
                     :class="[$style.backCJJZ,$style.cjjz,$style.connectEle]"
                 />
                 <img :src="Img['qy']" title="牵引系统" :class="[$style.qy,$style.btmEle]" />
@@ -87,7 +113,10 @@
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
 import Img from "assets/images/connect";
+
+import { CONNECT_ELE_DICT, CONNECT_FACETYPE_DICT } from "common/constants";
 
 export default {
     name: "CarBodyDetail",
@@ -95,12 +124,41 @@ export default {
     data() {
         return {
             Img,
-            bodyBGImg: { backgroundImage: `url(${Img["ct01"]})` }
+            bodyBGImg: { backgroundImage: `url(${Img["ct01"]})` },
+            eleDict: CONNECT_ELE_DICT,
+            frontKey: CONNECT_FACETYPE_DICT.front.key,
+            backKey: CONNECT_FACETYPE_DICT.back.key
         };
     },
     props: {},
     methods: {},
-    computed: {},
+    computed: {
+        ...mapGetters("uiState", ["curCarConnectDetail", "carDetail"]),
+        ...mapState("models", ["curTreeNodeId"]),
+
+        isShowEle() {
+            let curConnectId = this.curTreeNodeId;
+            let curConnect = this.curCarConnectDetail[curConnectId];
+            return (faceType, eleType) => {
+                if (!curConnect) return false;
+
+                if (faceType === CONNECT_FACETYPE_DICT.front.key) {
+                    return (
+                        curConnect[CONNECT_FACETYPE_DICT.front.label].indexOf(
+                            eleType
+                        ) !== -1
+                    );
+                } else if (faceType === CONNECT_FACETYPE_DICT.back.key) {
+                    return (
+                        curConnect[CONNECT_FACETYPE_DICT.back.label].indexOf(
+                            eleType
+                        ) !== -1
+                    );
+                }
+                return false;
+            };
+        }
+    },
     mounted() {}
 };
 </script>
@@ -110,7 +168,7 @@ export default {
     display: inline-block;
     background-color: #fff;
     margin: 0 auto;
-    img{
+    img {
         cursor: pointer;
     }
 

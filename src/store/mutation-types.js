@@ -15,6 +15,9 @@ export const MODEL_SAVE_TREE_DATA = 'MODEL_SAVE_TREE_DATA';
 export const MODEL_SET_CUR_MODEL_ID = 'MODEL_SET_CUR_MODEL_ID';
 export const MODEL_SET_CUR_MODEL_NODE = 'MODEL_SET_CUR_MODEL_NODE';
 
+// 已定义的链接系统
+export const MODEL_SAVE_CONNECT_DEFINED = 'MODEL_SAVE_CONNECT_DEFINED';
+
 
 /* ----------------------- 打开模型页面 状态 ----------------------- */
 export const OPEN_CAR_DETAIL = 'OPEN_CAR_DETAIL';

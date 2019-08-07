@@ -224,6 +224,7 @@ export default {
         text-align: center;
         font-size: 18px;
         padding-top: 20px;
+        margin-bottom: 30px;
     }
 
     .fileBtn {

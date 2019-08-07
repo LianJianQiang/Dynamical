@@ -18,11 +18,18 @@ export default {
             this.curveId = id;
         },
 
+        tableDataChange(data) {
+            this.tableData = data;
+
+            // 数据编辑以后，将id清空，后续提示用户保存数据
+            this.curveId = "";
+        },
+
         // 保存数据
         save() {
             return new Promise((resolve, reject) => {
                 // 调用editTable组件自动保存，生成tcsdID，并通过onSaveCb回调返回
-                if (!this.curveId) {
+                if (!this.curveId && this.tableData) {
                     this.$message({
                         message: "请先点击保存，保存数据"
                     });
