@@ -182,11 +182,14 @@ export default {
                 this.tcsd = data;
                 this.tableData = getObjFromStr(data.tcsdData) || [];
                 this.curveDialogVisible = false;
+
+                // 打开数据后，将id返回给父组件
+                this.onSaveCb(res.data.id);
             });
         },
 
         // 点击 table的保存，提示输入名称
-        onSaveCurve() {
+        onSaveCurve(cb) {
             let params = this.getSaveDataParmas();
 
             if (this.onSave) {
@@ -197,7 +200,7 @@ export default {
             this.tcsd = params;
 
             if (params.id) {
-                this.tractionLiSave();
+                this.tractionLiSave(cb);
                 return;
             }
 
@@ -219,7 +222,7 @@ export default {
         },
 
         // 保存talbe对数据
-        tractionLiSave() {
+        tractionLiSave(cb) {
             let params = this.tcsd;
 
             if (this.tcsdName) {
@@ -231,7 +234,11 @@ export default {
                 this.nameDialogVisible = false;
 
                 this.tcsdId = res.data.id;
+
+                // 保存数据后，将id返回给父组件
                 this.onSaveCb(res.data.id);
+
+                typeof cb === "function" && cb();
             });
         }
     },

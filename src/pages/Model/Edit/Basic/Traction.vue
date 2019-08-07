@@ -123,34 +123,12 @@
                 <div :class="$style.curveInfo">
                     <EditTable
                         ref="editTable"
-                        :dataSource="tcsd.tcsdData || []"
-                        :onOpen="onOpenCurve"
-                        :onSave="onSaveCurve"
+                        :type="4"
+                        :tableDataChange="tableDataChange"
+                        :onSaveCb="onSaveCb"
                     />
                 </div>
             </el-row>
-            <el-dialog title="请选择牵引力曲线" :visible.sync="dialogVisible" :modal="false">
-                <ul :class="$style.tractionList" class="clearfix">
-                    <li
-                        class="fll cursor-p"
-                        v-for="item in tractionList"
-                        :key="item.id"
-                        @click="onClickTractionLi(item)"
-                    >{{item.tcsdName}}</li>
-                </ul>
-            </el-dialog>
-            <el-dialog
-                :custom-class="$style.nameDialog"
-                title="请输入曲线名称"
-                :visible.sync="nameDialogVisible"
-                :modal="false"
-            >
-                <el-input v-model="tractionTableName"></el-input>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="nameDialogVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="saveTractionTable">确 定</el-button>
-                </span>
-            </el-dialog>
         </div>
     </DropDown>
 </template>
@@ -164,6 +142,7 @@ import EditTable from "components/EditTable";
 import { getUserInfo } from "utils/util";
 
 import { model } from "api";
+import { Promise } from "q";
 
 const userId = getUserInfo().userId;
 
@@ -189,6 +168,7 @@ export default {
     },
     props: {
         type: {
+            // 表示第几列车
             type: String,
             required: true
         }
@@ -212,75 +192,42 @@ export default {
                 });
         },
 
-        // 打开曲线
-        onOpenCurve() {
-            // TODO ？ 牵引力曲线type
-            model.tractionList({ userId, type: "4" }).then(res => {
-                if (!res) return;
-                let { data = [] } = res;
-                if (data.length === 0) {
-                    this.$message("暂无可选择的数据");
-                    return;
-                }
-                this.tractionList = res.data;
-                this.tcsdId = res.data.id;
-                this.dialogVisible = true;
-            });
+        tableDataChange(data) {
+            this.tableData = data;
+
+            // 数据编辑以后，将id清空，后续提示用户保存数据
+            this.tcsdId = "";
         },
 
-        // 点击打开后，展示列表，并点击list
-        onClickTractionLi(item) {
-            let { id } = item;
-            model.tractionLiView({ id }).then(res => {
-                if (!res) return;
-                this.tcsd = res.data || {};
-                this.dialogVisible = false;
-            });
-        },
-
-        // 点击 table的保存，提示输入名称
-        onSaveCurve(data) {
-            this.nameDialogVisible = true;
-            this.tscdData = data;
-        },
-
-        // 保存table数据
-        saveTractionTable() {
-            if (!this.tractionTableName) {
-                this.$message("请输入名称");
-                return;
-            }
-            model
-                .tractionLiSave({
-                    ...this.tcsd,
-                    userId,
-                    tcsdName: this.tractionTableName,
-                    tcsdData: this.tscdData || [],
-                    type: 4
-                })
-                .then(res => {
-                    if (!res) return;
-                    this.tcsdId = res.data.id;
-                    this.nameDialogVisible = false;
-                });
+        onSaveCb(id) {
+            this.tcsdId = id;
         },
 
         // 保存数据
         save() {
-            let params = {
-                type: this.type,
-                vtrInfo: {
-                    ...this.datas,
-                    modelId: this.curModelId,
-                    characteristics: this.characteristics
+            return new Promise(resolve => {
+                if (this.tableData && !this.tcsdId) {
+                    this.$message("请先保存表格数据");
+                    return resolve(false);
                 }
-            };
-            this.tcsdId && (params.tcsdId = this.tcsdId);
-            model.tractionSave(params).then(res => {
-                if (!res) return;
-                this.$message({
-                    message: "保存成功",
-                    type: "success"
+
+                let params = {
+                    type: this.type,
+                    vtrInfo: {
+                        ...this.datas,
+                        modelId: this.curModelId,
+                        characteristics: this.characteristics
+                    }
+                };
+                this.tcsdId && (params.tcsdId = this.tcsdId);
+                model.tractionSave(params).then(res => {
+                    if (!res) return;
+
+                    resolve(true);
+                    this.$message({
+                        message: "保存成功",
+                        type: "success"
+                    });
                 });
             });
         }
