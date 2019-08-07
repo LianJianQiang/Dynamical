@@ -199,8 +199,7 @@ export default {
             }
         };
     },
-    props: {
-    },
+    props: {},
     computed: {
         ...mapState("models", ["curModelId"])
     },
@@ -239,13 +238,13 @@ export default {
                                 }
                             })
                             .then(res => {
-                                console.log(res);
                                 if (!res) return;
                                 let { data = {} } = res;
 
                                 this.no1 = { ...this.no1, id: res.data.v1Id };
                                 this.no2 = { ...this.no2, id: res.data.v2Id };
 
+                                // 基本参数变更以后，更新treeData
                                 this.getModelData(this.curModelId);
                                 this.$message("保存成功");
                             });
@@ -265,7 +264,6 @@ export default {
         },
 
         saveTractionData(params) {
-            console.log("index", params);
             let { field = "", data = {} } = params;
             if (field) this[field]["traction"] = data;
         }

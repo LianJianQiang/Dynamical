@@ -40,9 +40,10 @@
                 >{{item.tcsdName}}</li>
             </ul>
         </el-dialog>
+
         <NameDialog
             :visible="nameDialogVisible"
-            :onSaveData="saveData"
+            :onSaveData="saveCurveName"
             :onCancel="()=>this.toggleDialog('nameDialogVisible',false)"
         />
     </div>
@@ -51,7 +52,7 @@
 <script>
 import NameDialog from "components/NameDialog";
 
-import { getUserIdAndType } from "utils/util";
+import { getUserIdAndType, getObjFromStr } from "utils/util";
 import { model } from "api";
 
 const { userId, userType } = getUserIdAndType();
@@ -111,33 +112,28 @@ export default {
             type: Function,
             default: () => {}
         },
-        onSave: {
+        // onSave: {
+        //     type: Function,
+        //     default: () => {}
+        // }
+        onSaveCb: {
             type: Function,
             default: () => {}
-        },
-        onSaveCb: {
-            type: Function
         }
     },
     computed: {},
     watch: {},
-    updated() {
-        console.log(this.nameDialogVisible);
-    },
     methods: {
-        initData() {
-            if (!this.defaultCurveId) return;
-            this.onClickTractionLi({ id: this.defaultCurveId });
-        },
         // 切换dialog状态
         toggleDialog(field, bool) {
             this[field] = bool;
-            console.log(field, this[field]);
         },
+
         // 单元格里到值发生变化时回调
         dataChange() {
             this.tableDataChange(this.tableData);
         },
+
         // table中插入一行
         tableAdd() {
             let { tableData } = this;
@@ -156,11 +152,6 @@ export default {
             tableData.pop();
             this.tableData = tableData;
             this.tableDataChange(this.tableData);
-        },
-
-        // 保存
-        tableSave() {
-            this.onSave(this.tableData);
         },
 
         // 打开曲线
@@ -189,51 +180,62 @@ export default {
                 if (!res) return;
                 let { data = {} } = res;
                 this.tcsd = data;
-                this.tableData = data.tcsdData;
+                this.tableData = getObjFromStr(data.tcsdData) || [];
                 this.curveDialogVisible = false;
             });
         },
 
         // 点击 table的保存，提示输入名称
-        onSaveCurve(data) {
-            if (!this.type) {
-                this.onSave(this.tableData);
+        onSaveCurve() {
+            let params = this.getSaveDataParmas();
+
+            if (this.onSave) {
+                this.onSave(params);
+                return;
+            }
+
+            this.tcsd = params;
+
+            if (params.id) {
+                this.tractionLiSave();
                 return;
             }
 
             this.toggleDialog("nameDialogVisible", true);
         },
 
-        saveData(name) {
-            if (!name) {
-                this.$message("请输入名称");
-                return;
-            }
-            model
-                .tractionLiSave({
-                    ...this.tcsd,
-                    userId,
-                    tcsdName: name,
-                    tcsdData: this.tableData || [],
-                    type: this.type
-                })
-                .then(res => {
-                    if (!res) return;
-                    this.nameDialogVisible = false;
-
-                    // 保存成功后，将id返回给父组件
-                    this.onSaveCb && this.onSaveCb(res.data.id);
-                });
+        getSaveDataParmas() {
+            return {
+                ...this.tcsd,
+                userId,
+                tcsdData: this.tableData || [],
+                type: this.type
+            };
         },
 
-        // 保存数据，旧
-        getTableData() {
-            return this.tableData;
+        saveCurveName(name) {
+            this.tcsdName = name;
+            this.tractionLiSave();
+        },
+
+        // 保存talbe对数据
+        tractionLiSave() {
+            let params = this.tcsd;
+
+            if (this.tcsdName) {
+                params.tcsdName = this.tcsdName;
+            }
+
+            model.tractionLiSave(params).then(res => {
+                if (!res) return;
+                this.nameDialogVisible = false;
+
+                this.tcsdId = res.data.id;
+                this.onSaveCb(res.data.id);
+            });
         }
     },
-    mounted() {
-        this.initData();
-    }
+    mounted() {}
 };
 </script>
 <style module lang="scss">
@@ -248,16 +250,6 @@ export default {
         li {
             padding: 10px 20px;
             margin: 0 5px;
-        }
-    }
-
-    .nameDialog {
-        :global {
-            .el-input,
-            .el-input__inner {
-                height: 32px;
-                line-height: 32px;
-            }
         }
     }
 

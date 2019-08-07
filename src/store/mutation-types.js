@@ -13,6 +13,7 @@ export const CREATE_MODEL = 'CREATE_MODEL';
 export const MODEL_SAVE_TREE_DATA = 'MODEL_SAVE_TREE_DATA';
 // 当前选中的modelID
 export const MODEL_SET_CUR_MODEL_ID = 'MODEL_SET_CUR_MODEL_ID';
+export const MODEL_SET_CUR_MODEL_NODE = 'MODEL_SET_CUR_MODEL_NODE';
 
 
 /* ----------------------- 打开模型页面 状态 ----------------------- */

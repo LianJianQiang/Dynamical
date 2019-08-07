@@ -18,7 +18,6 @@ const instance = axios.create({
                 }
                 ret += encodeURIComponent(it) + '=' + value + '&';
             }
-            console.log(ret);
             return ret
         }
     ]

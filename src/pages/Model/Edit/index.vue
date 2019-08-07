@@ -1,34 +1,19 @@
 <template>
     <div :class="$style.root">
-        <div v-if="curModelData.length>0">
-            <div :class="$style.close" class="cursor-p" @click="onClickClose" v-if="curTreeNodeType !== modelTreetype.args && curTreeNodeType !== modelTreetype.circuit">
+        <div v-if="curModelId">
+            <div
+                :class="$style.close"
+                class="cursor-p"
+                @click="onClickClose"
+                v-if="curTreeNodeType !== modelTreetype.args && curTreeNodeType !== modelTreetype.circuit"
+            >
                 <img :src="closeIcon" alt />
             </div>
-            <BasicInfo
-                v-if="curTreeNodeType === modelTreetype.basic"
-                :dataSource="dataSource"
-                :key="curTreeNodeId"
-            />
-            <Vehicle
-                v-if="curTreeNodeType === modelTreetype.vehicle"
-                :dataSource="dataSource"
-                :key="curTreeNodeId"
-            />
-            <Connect
-                v-if="curTreeNodeType === modelTreetype.connect"
-                :dataSource="dataSource"
-                :key="curTreeNodeId"
-            />
-            <Circuit
-                v-if="curTreeNodeType === modelTreetype.circuit"
-                :dataSource="dataSource"
-                :key="curTreeNodeId"
-            />
-            <Args
-                v-if="curTreeNodeType === modelTreetype.args"
-                :dataSource="dataSource"
-                :key="curTreeNodeId"
-            />
+            <BasicInfo v-if="curTreeNodeType === modelTreetype.basic" :key="curTreeNodeId" />
+            <Vehicle v-if="curTreeNodeType === modelTreetype.vehicle" :key="curTreeNodeId" />
+            <Connect v-if="curTreeNodeType === modelTreetype.connect" :key="curTreeNodeId" />
+            <Circuit v-if="curTreeNodeType === modelTreetype.circuit" :key="curTreeNodeId" />
+            <Args v-if="curTreeNodeType === modelTreetype.args" :key="curTreeNodeId" />
         </div>
     </div>
 </template>
@@ -67,39 +52,11 @@ export default {
         }
     },
     computed: {
-        ...mapState("models", ["modelsData", "modelTree"]),
-        ...mapGetters("models", ["getModelTree", "getTreeNode"]),
+        ...mapGetters("models", ["curTreeNodeInfo"]),
+        ...mapState("models", ["curModelId", "curTreeNodeId"]),
 
-        curModelName() {
-            return this.$route.query.name;
-        },
         curTreeNodeType() {
-            return this.$route.query.type;
-        },
-        curTreeNodeId() {
-            return this.$route.query.id;
-        },
-        curModelData() {
-            return this.getModelTree({ name: this.curModelName });
-        },
-        curModelTreeInfo() {
-            return this.getTreeNode({ id: this.curTreeNodeId });
-        },
-        dataSource() {
-            let modelsData = this.modelsData[this.curTreeNodeId];
-            let treeNode = this.curModelTreeInfo || {};
-            if (modelsData) {
-                return {
-                    ...modelsData,
-                    treeNode
-                };
-            }
-
-            return {
-                modelName: this.curModelName,
-                id: this.curTreeNodeId,
-                treeNode
-            };
+            return this.curTreeNodeInfo.type;
         }
     },
     mounted() {}

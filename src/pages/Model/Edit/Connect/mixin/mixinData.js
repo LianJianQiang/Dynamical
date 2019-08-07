@@ -5,14 +5,22 @@ export default {
         };
     },
 
+    watch: {
+        dataSource() {
+            this.formData = { ...this.dataSource }
+        }
+    },
     methods: {
         // 保存数据
         save() {
-            let datas = {
-                ...this.formData
-            };
+            return new Promise((resolve) => {
+                let datas = {
+                    ...this.formData
+                };
 
-            this.saveData({ datas });
+                this.saveData({ datas });
+                resolve(true);
+            })
         }
     }
 }

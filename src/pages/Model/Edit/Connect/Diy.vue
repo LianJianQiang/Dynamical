@@ -18,13 +18,7 @@
             </div>
             <div :class="$style.tableWrap">
                 <h4>曲线点设置</h4>
-                <EditTable
-                    ref="editTable"
-                    :type="type"
-                    :defaultCurveId="curveId"
-                    :dataSource="tableData || []"
-                    :onSaveCb="onSaveCb"
-                />
+                <EditTable ref="editTable" :type="type" :onSaveCb="onSaveCb" />
             </div>
         </div>
     </DropDown>
@@ -38,6 +32,8 @@ import NameDialog from "components/NameDialog";
 import { model } from "api";
 import { getUserIdAndType } from "utils/util";
 
+import mixinSaveFunc from "./mixin/mixinSaveFunc";
+
 const options = [
     { label: "位移", value: "displace" },
     { label: "速度", value: "speed" },
@@ -48,13 +44,11 @@ const { userId, userType } = getUserIdAndType();
 
 export default {
     name: "Diy",
+    mixins: [mixinSaveFunc],
     data() {
         return {
-            tableData: [],
             options,
-            x: "",
-
-            curveId: ""
+            x: ""
         };
     },
     components: {
@@ -85,22 +79,16 @@ export default {
         }
     },
     methods: {
-        // 点击 table的保存，提示输入名称
-        onSaveCb(id) {
-            this.curveId = id;
-        },
-
-        // 保存数据
-        save() {
-            let tableData = this.$refs.editTable.save();
+        onSaveData() {
             let field = this.field;
+            if (!field) return;
+
             let datas = {
                 [`${field}X`]: this.x,
                 [`${field}TcsdId`]: this.curveId
             };
 
-            if (!this.field) return;
-            this.saveData({ datas});
+            this.saveData({ datas });
         }
     }
 };
@@ -116,6 +104,16 @@ export default {
         margin-top: 14px;
         h4 {
             font-size: 12px;
+        }
+    }
+
+    .nameDialog {
+        :global {
+            .el-input,
+            .el-input__inner {
+                height: 32px;
+                line-height: 32px;
+            }
         }
     }
 

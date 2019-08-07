@@ -1,5 +1,5 @@
 
-import { SAVE_MODEL_DATA, CREATE_MODEL, INIT_MODELS, MODEL_SAVE_TREE_DATA, MODEL_SET_CUR_MODEL_ID } from 'store/mutation-types.js';
+import { SAVE_MODEL_DATA, CREATE_MODEL, INIT_MODELS, MODEL_SAVE_TREE_DATA, MODEL_SET_CUR_MODEL_ID, MODEL_SET_CUR_MODEL_NODE } from 'store/mutation-types.js';
 import { createTree, MODEL_TREE_TYPE } from 'common/constants';
 
 import { handleTreeData } from 'utils/util';
@@ -67,7 +67,8 @@ const state = {
     modelsData: {},     // 每个元件的数据{ id: data }
     modelTreeCache: [],     // modelTree原始数据缓存
     modelsTree: [],      // 模型树数据
-    curModelId: ''       // 当前选中模型的id
+    curModelId: '',       // 当前选中模型树的id
+    curTreeNodeId: ""      // 当前选中的tree节点id
 }
 
 // getters
@@ -180,9 +181,21 @@ const getters = {
     getTreeNodeByType(state) {
         let { modelTreeCache } = state;
         return ({ type }) => {
-            return modelTreeCache.find((item) => { return item.type === type });
+            return modelTreeCache.filter((item) => { return item.type === type });
         }
+    },
+
+    getTreeNodeById(state) {
+        let { modelTreeCache } = state;
+        return (id) => {
+            return modelTreeCache.find((item) => { return item.id === id }) || {};
+        }
+    },
+
+    curTreeNodeInfo(state, getter) {
+        return getter.getTreeNodeById(state.curTreeNodeId);
     }
+
 }
 
 // actions
@@ -205,12 +218,20 @@ const actions = {
             commit({ type: MODEL_SET_CUR_MODEL_ID, id })
         })
     },
+
+    // 保存当前选中的treeData
     saveModelTreeData({ commit }, treeData) {
         commit({ type: MODEL_SAVE_TREE_DATA, treeData })
     },
 
+    // 当前选中的model的id
     setCurModelId({ commit }, id) {
         commit({ type: MODEL_SET_CUR_MODEL_ID, id })
+    },
+
+    // 当前选中的treeNode
+    setCurTreeNodeId({ commit }, id) {
+        commit({ type: MODEL_SET_CUR_MODEL_NODE, id })
     }
 }
 
@@ -244,14 +265,22 @@ const mutations = {
     },
 
     /** -------------------------- 新---------- */
+    // 保存当前选中的treeData
     [MODEL_SAVE_TREE_DATA](state, { treeData }) {
         let trees = handleTreeData(treeData);
 
         state.modelsTree = trees;
         state.modelTreeCache = treeData;    // 缓存数据
     },
+
+    // 当前选中的model的id
     [MODEL_SET_CUR_MODEL_ID](state, { id }) {
         state.curModelId = id;
+    },
+
+    // 当前选中的treeNode
+    [MODEL_SET_CUR_MODEL_NODE](state, { id }) {
+        state.curTreeNodeId = id;
     }
 }
 

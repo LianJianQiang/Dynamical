@@ -7,7 +7,7 @@
                 v-else
                 :data="modelsTree"
                 node-key="id"
-                :current-node-key="getQueryId"
+                :current-node-key="curTreeNodeId"
                 default-expand-all
                 @node-click="nodeClick"
                 :props="{label:'name'}"
@@ -22,11 +22,9 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 import Icon from "assets/icon";
 import { MODEL_TYPE_LINK_LIST } from "common/constants";
-
-// import { model } from "api";
 
 export default {
     data() {
@@ -35,28 +33,32 @@ export default {
         };
     },
     computed: {
-        ...mapState("models", ["modelsTree"]),
-        ...mapGetters("models", ["getCarData"]),
+        ...mapState("models", ["modelsTree", "curTreeNodeId"])
+        // ...mapGetters("models", ["getCarData"]),
+    },
+    methods: {
+        ...mapActions("models", ["setCurTreeNodeId"]),
+        nodeClick(nodeData) {
+            let { type, id } = nodeData;
 
+            if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
+            this.$router.push({
+                path: "/page/model/edit",
+                query: { type, id }
+            });
+
+            this.setCurTreeNodeId(id);
+
+            // const carDetail = this.getCarData({ modelName, row, col });
+            // this.$store.dispatch("uiState/saveCurCarDetail", carDetail);
+        },
         getQueryId() {
             let { id = "" } = this.$route.query || {};
             return id;
         }
     },
-    methods: {
-        nodeClick(nodeData) {
-            let { type, modelName, id, col, row } = nodeData;
-            if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
-            if (type && modelName) {
-                this.$router.push({
-                    path: "/page/model/edit",
-                    query: { type, name: modelName, id }
-                });
-
-                const carDetail = this.getCarData({ modelName, row, col });
-                this.$store.dispatch("uiState/saveCurCarDetail", carDetail);
-            }
-        }
+    mounted() {
+        this.setCurTreeNodeId(this.getQueryId());
     }
 };
 </script>

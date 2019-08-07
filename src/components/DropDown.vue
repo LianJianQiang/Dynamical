@@ -62,9 +62,10 @@ export default {
             this.setVisible();
             this.cancel();
         },
-        clickSave() {
-            this.setVisible();
-            this.save();
+        async clickSave() {
+            // this.setVisible();
+            let result = await this.save();
+            result && this.setVisible();
         }
     },
     mounted() {}

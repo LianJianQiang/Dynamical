@@ -75,7 +75,6 @@ export default {
         submitForm(formName) {
             let { username, password } = this.loginForm;
             this.$refs[formName].validate(valid => {
-                console.log("valid : ", valid);
                 if (valid) {
                     this.$router.push("/page");
                     

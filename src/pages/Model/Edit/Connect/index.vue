@@ -1,9 +1,9 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.title">{{dataSource.treeNode.label}}</div>
-        <div :class="$style.fileBtn">
+        <div :class="$style.title">{{curTreeNodeInfo.name}}</div>
+        <!-- <div :class="$style.fileBtn">
             <el-button class="btn-default">文件</el-button>
-        </div>
+        </div>-->
         <el-row :class="$style.content" class="clearfix">
             <el-col :class="$style.front" :span="8">
                 <div :class="$style.title">前端面</div>
@@ -40,6 +40,7 @@
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
+                            :type="1"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
                             :dataSource="frontData"
                         />
@@ -59,12 +60,12 @@
                         />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <!-- <Diy
-                            :field="diy2"
+                        <Diy
+                            field="diy2"
                             :type="3"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData'})"
                             :dataSource="frontData"
-                        />-->
+                        />
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -110,6 +111,7 @@
                     </el-form-item>
                     <el-form-item label="车间减震器:">
                         <Damper
+                            :type="1"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
                             :dataSource="backData"
                         />
@@ -121,20 +123,20 @@
                         />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <!-- <Diy
-                            :field="diy1"
+                        <Diy
+                            field="diy1"
                             :type="2"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="backData"
-                        />-->
+                            :dataSource="frontData"
+                        />
                     </el-form-item>
                     <el-form-item label="用户自定义:">
-                        <!-- <Diy
-                            :field="diy2"
+                        <Diy
+                            field="diy2"
                             :type="3"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData'})"
-                            :dataSource="backData"
-                        />-->
+                            :dataSource="frontData"
+                        />
                     </el-form-item>
                 </el-form>
             </el-col>
@@ -145,12 +147,12 @@
                     <el-option
                         v-for="item in trainList"
                         :key="item.id"
-                        :label="item.label"
+                        :label="item.name"
                         :value="item.id"
-                        :disabled="!modelsData[item.id] || item.id === formData.id"
+                        :disabled="item.id !== curTreeNodeId"
                     ></el-option>
                 </el-select>
-                <el-button class="btn-xl" :class="$style.copyBtn" @click="copy">复制</el-button>
+                <el-button class="btn-xl" :class="$style.copyBtn" @click="copyCar">复制</el-button>
 
                 <el-button
                     :class="$style.subBtn"
@@ -169,6 +171,8 @@ import { mapActions, mapGetters, mapState } from "vuex";
 
 import Img from "assets/images";
 import { MODEL_TREE_TYPE } from "common/constants";
+import { filterJson } from "utils/util";
+import { model } from "api";
 
 import Foldedcollapse from "./FoldedCollapse";
 
@@ -193,85 +197,123 @@ export default {
         Buffer
     },
     data() {
-        /**
-         * 当将两列车当数据放到一个formData中时，ele当校验规则会失效
-         */
-        let formData = { ...this.dataSource };
-        // let { front = {}, back = {} } = formData;
         return {
-            formData,
             frontData: {},
             backData: {},
             copySource: null,
-            modelName: this.dataSource.modelName,
             Img
         };
     },
-    props: {
-        dataSource: {
-            type: Object,
-            required: true
-        }
-    },
+    props: {},
     computed: {
-        ...mapState("models", ["modelsData"]),
-        ...mapGetters("models", ["getTreeListByType"]),
+        ...mapState("models", ["curModelId", "curTreeNodeId"]),
+        ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
 
         trainList() {
-            return this.getTreeListByType({
-                modelName: this.dataSource.modelName,
-                type: MODEL_TREE_TYPE.connect
-            });
+            return this.getTreeNodeByType({ type: MODEL_TREE_TYPE.connect });
+        },
+        carNum() {
+            let node = this.curTreeNodeInfo || {};
+            let { row, cal } = node;
+
+            if (!row || !cal) return null;
+            return `${row}-${cal}`;
         }
     },
+    mounted() {},
     methods: {
-        ...mapActions("models", ["saveModelData"]),
-
         // 复制端
         copyItem(item) {
             if (item === "left") {
-                this.frontData = JSON.parse(JSON.stringify(this.backData));
+                this.frontData = { ...this.backData };
             } else {
-                this.backData = JSON.parse(JSON.stringify(this.frontData));
+                this.backData = { ...this.frontData };
             }
+            this.$message("操作成功");
         },
 
-        // 复制
-        copy() {
-            if (!this.copySource) return;
-            let data = this.modelsData[this.copySource];
-            this.formData = { ...data };
-            this.$message({
-                message: "操作成功",
-                type: "success"
-            });
+        // 复制 其他车辆
+        copyCar() {
+            if (!this.copySource) {
+                this.$message("请先选择车辆");
+                return;
+            }
+            if (!this.carNum) {
+                this.$message({
+                    message: "数据错误",
+                    type: "error"
+                });
+                return;
+            }
+            model
+                .getAllCoupTypeByModelId({
+                    modelId: this.curModelId,
+                    carNum: this.carNum
+                })
+                .then(res => {
+                    if (!res) return;
+
+                    let { data = [] } = res;
+                    let front = data.find(item => item.faceType === "1") || {};
+                    let back = data.find(item => item.faceType === "2") || {};
+
+                    this.frontData = { ...front };
+                    this.backData = { ...back };
+
+                    this.$message({
+                        message: "操作成功",
+                        type: "success"
+                    });
+                });
         },
 
         // 保存下拉框的数据
         saveDropDownData(params) {
             let { datas, parent } = params;
-            console.log(parent, datas);
             this[parent] = { ...this[parent], ...datas };
         },
+
         /**
          * 保存模型数据
          */
         submitForm: function() {
-            console.log(this.frontData, this.backData);
-            this.saveModelData({
-                id: this.dataSource.id,
-                data: {
-                    id: this.dataSource.id,
-                    type: MODEL_TREE_TYPE.connect,
-                    modelName: this.dataSource.modelName,
-                    frontData: { ...this.frontData },
-                    backData: { ...this.backData }
-                }
+            let frontData = filterJson(this.frontData);
+            let backData = filterJson(this.backData);
+
+            if (!this.carNum) {
+                this.$message({
+                    message: "数据错误",
+                    type: "error"
+                });
+                return;
+            }
+
+            Object.assign(frontData, {
+                modelId: this.curModelId,
+                faceType: 1,
+                carNum: this.carNum
             });
 
-            this.$message({
-                message: "保存成功",
-                type: "success"
+            Object.assign(backData, {
+                modelId: this.curModelId,
+                faceType: 2,
+                carNum: this.carNum
+            });
+
+            let params = {
+                allCoupTypeArr: [{ ...frontData }, { ...backData }]
+            };
+
+            model.saveAllCoupType(params).then(res => {
+                if (!res) return;
+
+                this.frontData = { ...frontData, id: res.data["1"] };
+                this.backData = { ...backData, id: res.data["2"] };
+
+                this.$message({
+                    message: "保存成功",
+                    type: "success"
+                });
             });
         },
 
@@ -279,8 +321,8 @@ export default {
          * 取消输入
          */
         resetForm: function() {
-            this.frontData = {};
-            this.backData = {};
+            // this.frontData = {};
+            // this.backData = {};
         }
     },
     mounted() {}

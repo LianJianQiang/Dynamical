@@ -38,6 +38,8 @@ const saveAllCoupType = (params) => request(`${config.baseUrl}/allcouptype/saveA
 // 查询车间连接参数详情
 const getAllCoupTypeView = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeView`, { ...params });
 
+// 根据模型id和车辆号获取车间连接端面列表
+const getAllCoupTypeByModelId = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeByModelId`, { ...params });
 
 export default {
     // 模型树
@@ -56,5 +58,6 @@ export default {
 
     // 车间链接系统
     saveAllCoupType,
-    getAllCoupTypeView
+    getAllCoupTypeView,
+    getAllCoupTypeByModelId
 }

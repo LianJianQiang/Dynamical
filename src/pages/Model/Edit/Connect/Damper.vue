@@ -3,12 +3,18 @@
     <DropDown :save="save" :size="size" :placeholder="placeholder">
         <div :class="$style.root" class="dropPanel">
             <div class="clearfix">
-                <span class="">数量</span>
-                <el-input-number :class="$style.inpNum" class="flr" :controls="false" v-model="jzqNum" :min="0"></el-input-number>
+                <span class>数量</span>
+                <el-input-number
+                    :class="$style.inpNum"
+                    class="flr"
+                    :controls="false"
+                    v-model="jzqNum"
+                    :min="0"
+                ></el-input-number>
             </div>
             <div :class="$style.tableWrap">
                 <h4>特征曲线</h4>
-                <EditTable ref="editTable" />
+                <EditTable ref="editTable" :type="type" :onSaveCb="onSaveCb" />
             </div>
         </div>
     </DropDown>
@@ -18,10 +24,11 @@
 import EditTable from "components/EditTable";
 
 import mixin from "./mixin/mixin";
+import mixinSaveFunc from "./mixin/mixinSaveFunc";
 
 export default {
     name: "Damper",
-    mixins: [mixin],
+    mixins: [mixin, mixinSaveFunc],
 
     data() {
         return {
@@ -32,18 +39,22 @@ export default {
     components: {
         EditTable
     },
+    props: {
+        type: {
+            required: true
+        }
+    },
 
     methods: {
         // 保存数据
-        save() {
-            let tableData = this.$refs.editTable.save();
+        onSaveData() {
             let data = {
-                num: this.num,
-                tableData
+                jzqNum: this.jzqNum,
+                jzqTcsdId: this.curveId
             };
 
             if (!this.field) return;
-            this.saveData({ data, field: this.field });
+            this.saveData({ data });
         }
     }
 };
@@ -55,7 +66,7 @@ export default {
     height: 100%;
     font-size: 12px;
 
-    .inpNum{
+    .inpNum {
         width: 150px;
     }
 

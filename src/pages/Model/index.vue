@@ -129,8 +129,10 @@ export default {
         getModelTreeData(id) {
             model.getModelTree({ id }).then(res => {
                 if (!res) return;
+                
                 this.saveModelTreeData(res.data || []);
                 this.setCurModelId(id);
+                
                 this.dialogVisible = false;
 
                 this.createSuccessCb();

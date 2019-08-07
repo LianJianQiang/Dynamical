@@ -1,9 +1,9 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.title">{{dataSource.treeNode.name}}</div>
-        <div :class="$style.fileBtn">
+        <div :class="$style.title">{{curTreeNodeInfo.name}}</div>
+        <!-- <div :class="$style.fileBtn">
             <el-button class="btn-default">文件</el-button>
-        </div>
+        </div> -->
         <div :class="$style.formWrap" class="clearfix">
             <el-form ref="vehicleForm" :model="formData" :rules="rules" label-width="120px">
                 <el-col :span="8">
@@ -122,12 +122,8 @@ export default {
         Diy
     },
     data() {
-        /**
-         * 当将两列车当数据放到一个formData中时，ele当校验规则会失效
-         */
-        let formData = { ...this.dataSource };
         return {
-            formData,
+            formData: {},
             // formData: {
             //     mass: null, // 车体质量
             //     k_car: null, // 车体刚度
@@ -139,9 +135,6 @@ export default {
             //     diy3: {} // 用户自定义
             // },
             copySource: null,
-            modelName: this.dataSource.modelName,
-            // no1: { ...this.dataSource.no1 },
-            // no2: { ...this.dataSource.no2 },
             rules: {
                 mass: [{ validator: validateField, trigger: "change" }],
                 k_car: [{ validator: validateField, trigger: "change" }],
@@ -149,22 +142,13 @@ export default {
             }
         };
     },
-    props: {
-        dataSource: {
-            type: Object,
-            required: true
-            // default: function() {
-            //     return { no1: {}, no2: {} };
-            // }
-        }
-    },
+    props: {},
     computed: {
-        ...mapState("models", ["modelsData"]),
-        ...mapGetters("models", ["getTreeListByType"]),
+        ...mapState("models", ["modelsData", "curModelId"]),
+        ...mapGetters("models", ["getTreeListByType", "curTreeNodeInfo"]),
 
         trainList() {
             return this.getTreeListByType({
-                modelName: this.dataSource.modelName,
                 type: MODEL_TREE_TYPE.vehicle
             });
         }
@@ -195,11 +179,9 @@ export default {
             this.$refs.vehicleForm.validate(vali => {
                 if (!vali) return;
                 this.saveModelData({
-                    id: this.dataSource.id,
+                    id: this.curModelId,
                     data: {
-                        // id: this.dataSource.id,
                         type: MODEL_TREE_TYPE.vehicle,
-                        // modelName: this.dataSource.modelName,
                         ...this.formData
                     }
                 });

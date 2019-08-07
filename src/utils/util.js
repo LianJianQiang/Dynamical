@@ -141,6 +141,14 @@ export const getObjFromStr = (str) => {
     return eval('(' + str + ')')
 }
 
+export const filterJson = (json) => {
+    let result = {};
+    for (let i in json) {
+        json[i] && (result[i] = json[i])
+    }
+    return result;
+}
+
 export default {
     isNumber,
     isNumZhEn,
@@ -153,5 +161,6 @@ export default {
     getUserInfo,
     handleTreeData,
     getUserIdAndType,
-    getObjFromStr
+    getObjFromStr,
+    filterJson
 }

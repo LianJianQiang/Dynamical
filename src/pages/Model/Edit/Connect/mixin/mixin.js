@@ -23,5 +23,10 @@ export default {
             type: String,
             default: "参数设置"
         }
+    },
+    watch: {
+        dataSource() {
+            this.formData = { ...this.dataSource }
+        }
     }
 }
