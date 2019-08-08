@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from "vuex";
+import { mapState, mapGetters, mapActions } from "vuex";
 
 import { MODEL_TREE_TYPE } from "common/constants";
 import Img from "assets/icon";
@@ -47,12 +47,23 @@ export default {
     },
     props: {},
     methods: {
+        ...mapActions("uiState", ["saveCurCarDetail"]),
         onClickClose() {
+            // 点击关闭，如果当前是对车辆信息或连接系统编辑，跳到大样图，否则，列车示意图
+            let { curTreeNodeInfo } = this;
+            let { row, cal } = curTreeNodeInfo;
+            if (!row || !cal) {
+                this.saveCurCarDetail({});
+            } else {
+                let car = this.getCarDataByNum(row, cal) || {};
+                this.saveCurCarDetail(car);
+            }
+
             this.$router.push("/page/model/open");
         }
     },
     computed: {
-        ...mapGetters("models", ["curTreeNodeInfo"]),
+        ...mapGetters("models", ["curTreeNodeInfo", "getCarDataByNum"]),
         ...mapState("models", ["curModelId", "curTreeNodeId"]),
 
         curTreeNodeType() {

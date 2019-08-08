@@ -74,35 +74,35 @@ const state = {
 // getters
 const getters = {
     // 获取模型树
-    getModel(state) {
-        return ({ id, name }) => {
-            return state.modelsTree.filter(item => (item.id && item.id === id) || (item.modelName && item.modelName === name));
-        }
-    },
+    // getModel(state) {
+    //     return ({ id, name }) => {
+    //         return state.modelsTree.filter(item => (item.id && item.id === id) || (item.modelName && item.modelName === name));
+    //     }
+    // },
 
     // 获取模型树
-    getModelTree(state) {
-        return ({ name }) => {
-            return state.modelsTree.filter(item => (item.modelName && item.modelName === name));
-        }
-    },
+    // getModelTree(state) {
+    //     return ({ name }) => {
+    //         return state.modelsTree.filter(item => (item.modelName && item.modelName === name));
+    //     }
+    // },
 
     // 根据id获取模型树上的节点
-    getTreeNode(state) {
-        return ({ id }) => {
-            return getTreeNodeInfo(state.modelsTree, id);
-        }
-    },
+    // getTreeNode(state) {
+    //     return ({ id }) => {
+    //         return getTreeNodeInfo(state.modelsTree, id);
+    //     }
+    // },
 
-    getTreeListByType(state, getters) {
-        return ({ modelName, type }) => {
-            let curTree = getters.getModelTree({ name: modelName })[0];
-            return getTreeNodeList(curTree, type);
-        }
-    },
+    // getTreeListByType(state, getters) {
+    //     return ({ modelName, type }) => {
+    //         let curTree = getters.getModelTree({ name: modelName })[0];
+    //         return getTreeNodeList(curTree, type);
+    //     }
+    // },
 
 
-    // 根据id获取数据
+    // 根据id获取数据   模型参数表中有用到，后期删除
     getNodeArgs(state) {
         return (id) => {
             let datas = state['modelsData'][id] || {};
@@ -143,37 +143,37 @@ const getters = {
     // },
 
     // 获取单个车辆列表，包含每列车包含该车所有数据（车辆数据和连接系统数据）
-    getCarData(state, getter) {
-        return ({ row, col, modelName }) => {
-            row = String(row);
-            col = String(col);
+    // getCarData(state, getter) {
+    //     return ({ row, col, modelName }) => {
+    //         row = String(row);
+    //         col = String(col);
 
-            const list = getter.getCarListData({ modelName });
+    //         const list = getter.getCarListData({ modelName });
 
-            for (let i = 0; i < list.length; i++) {
-                const curLi = list[i];
-                const curRow = String(curLi[0]);
-                const curCol = curLi[1];
+    //         for (let i = 0; i < list.length; i++) {
+    //             const curLi = list[i];
+    //             const curRow = String(curLi[0]);
+    //             const curCol = curLi[1];
 
-                if (curRow === row) {
-                    for (let j = 0; j < curCol.length; j++) {
-                        if (String(curCol[j]['col']) === col) {
-                            return curCol[j];
-                        }
-                    }
-                }
-            }
+    //             if (curRow === row) {
+    //                 for (let j = 0; j < curCol.length; j++) {
+    //                     if (String(curCol[j]['col']) === col) {
+    //                         return curCol[j];
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            return null;
-        }
-    },
+    //         return null;
+    //     }
+    // },
 
     // 判断模型树是否存在
-    isRepeat(state) {
-        return ({ id, name }) => {
-            return state.modelsTree.filter(item => (item.id && item.id === id) || (item.modelName && item.modelName === name)).length > 0
-        }
-    },
+    // isRepeat(state) {
+    //     return ({ id, name }) => {
+    //         return state.modelsTree.filter(item => (item.id && item.id === id) || (item.modelName && item.modelName === name)).length > 0
+    //     }
+    // },
 
     /** ---------------- 新 ------------------- */
     getTreeNodeByType(state) {
@@ -192,6 +192,12 @@ const getters = {
 
     curTreeNodeInfo(state, getter) {
         return getter.getTreeNodeById(state.curTreeNodeId);
+    },
+
+    curCarNum(state, getter) {
+        let curVe = getter.curTreeNodeInfo;
+        if (!curVe.row || !curVe.cal) return null;
+        return { row: curVe.row, col: curVe.cal }
     },
 
     // 获取车辆列表数据，包含车辆信息和链接系统信息
@@ -226,6 +232,26 @@ const getters = {
         }
 
         return Object.entries(result);
+    },
+
+    // 通过车号获取车辆信息
+    getCarDataByNum(state, getter) {
+        return (row, cal) => {
+            if (!row || !cal) return null;
+            let allCarData = getter.allCarData;
+
+            for (let i = 0; i < allCarData.length; i++) {
+                if (allCarData[i][0] === row) {
+                    let curRow = allCarData[i][1];
+                    for (let j = 0; j < curRow.length; j++) {
+                        if (curRow[j].cal === cal) {
+                            return curRow[j];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 
 }

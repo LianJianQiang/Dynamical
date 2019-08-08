@@ -173,7 +173,7 @@ import Img from "assets/images";
 import {
     MODEL_TREE_TYPE,
     CONNECT_ELE_DICT,
-    CONNECT_FACETYPE_DICT
+    CAR_ELE_DICT
 } from "common/constants";
 import { filterJson } from "utils/util";
 import { model } from "api";
@@ -291,13 +291,13 @@ export default {
             this[parent] = { ...this[parent], ...datas };
 
             // 保存已定义的元件列表，图形显示使用
-            let faceType = CONNECT_FACETYPE_DICT.back.key;
+            let faceType = CAR_ELE_DICT.back.key;
             if (parent === "frontData") {
-                faceType = CONNECT_FACETYPE_DICT.front.key;
+                faceType = CAR_ELE_DICT.front.key;
             }
             this.saveDefinedConnect({
-                id: this.curTreeNodeId,
-                faceType,
+                id: this.carNum,
+                type: faceType,
                 eleType: ele
             });
         },

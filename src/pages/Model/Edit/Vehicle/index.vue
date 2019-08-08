@@ -145,10 +145,10 @@ export default {
     props: {},
     computed: {
         ...mapState("models", ["modelsData", "curModelId"]),
-        ...mapGetters("models", ["getTreeListByType", "curTreeNodeInfo"]),
+        ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
 
         trainList() {
-            return this.getTreeListByType({
+            return this.getTreeNodeByType({
                 type: MODEL_TREE_TYPE.vehicle
             });
         }

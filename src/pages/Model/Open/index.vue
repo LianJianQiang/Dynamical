@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.root">
-        <div v-if="!isOpenCarDetail" :class="$style.listWrap" >
+        <div v-if="!isOpenCarDetail" :class="$style.listWrap">
             <div v-for="(item, idx) in allCarData" :key="idx" :class="$style.trainWrap">
                 <div :class="$style.title">{{`第${item[0]}列`}}</div>
                 <CarList :list="item[1]" :onClickList="onClickList" />
@@ -11,7 +11,7 @@
                 <img :src="closeIcon" alt />
             </div>
             <div :class="$style.title">{{carDetail.name}}</div>
-            <CarBodyDetail :detail="carDetail" />
+            <CarBodyDetail />
         </div>
     </div>
 </template>
@@ -40,7 +40,6 @@ export default {
         ...mapActions("uiState", ["saveCurCarDetail"]),
 
         onClickList(info) {
-            console.log(info);
             this.saveCurCarDetail(info);
         }
     },

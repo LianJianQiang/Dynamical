@@ -53,7 +53,7 @@ export default {
     },
     props: {},
     computed: {
-        ...mapGetters("models", ["getModelTree", "getTreeNodeByType"]),
+        ...mapGetters("models", ["getTreeNodeByType"]),
         curTreeNodeId() {
             return this.$route.query.id;
         }

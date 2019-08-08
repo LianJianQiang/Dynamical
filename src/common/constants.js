@@ -66,9 +66,22 @@ export const CONNECT_ELE_DICT = {
     diy2: 'diy2'        // 自定义2
 }
 
-export const CONNECT_FACETYPE_DICT = {
+export const CAR_ELE_DICT = {
     front: { key: 1, label: 'front' },
-    back: { key: 1, label: 'back' }
+    back: { key: 1, label: 'back' },
+    info: { key: 3, label: 'info' }
+}
+
+export const CONNECT_ELE_FIELD_DICT = {
+    hcq: ['couGap', 'couRoute', 'couDeboost', 'coupname', 'coupdef', 'couMdfId', 'couFdhsfId', 'couQuality', 'couEquation'],         // 缓冲器
+    xjzc: ['kelas', 'selas'],       // 橡胶轴承
+    ykg: ['ykgTempId'],         // 压溃管
+    gzbh: ['fprot', 'sprot'],       // 过载保护
+    fpq: ['fanclim', 'sanclim', 'skanclim'],         // 防爬器
+    cjjz: ['jzqTcsdId', 'jzqNum'],       // 车间减震
+    fd: ['fdlFront'],           // 风挡
+    diy1: ['diy1TcsdId', 'diy1X'],       // 自定义1
+    diy2: ['diy2TcsdId', 'diy2X']        // 自定义2
 }
 
 /**
@@ -93,70 +106,70 @@ export const CONNECT_FACETYPE_DICT = {
 //     return result;
 // }
 
-export const createTree = (name, trainNum = 0, vehicleNum = []) => {
-    const vehicleList = ({ type, row = 0, col = [] }) => {
-        let result = [];
-        for (let i = 1; i <= row; i++) {
-            for (let j = 1; j <= col[i - 1]; j++) {
-                result.push({
-                    id: `${name}_${type}_${i}_${j}`,
-                    type,
-                    row: i,
-                    col: j,
-                    label: `第${i}列 第${j}辆`,
-                    modelName: name
-                })
-            }
-        }
-        return result;
-    };
+// export const createTree = (name, trainNum = 0, vehicleNum = []) => {
+//     const vehicleList = ({ type, row = 0, col = [] }) => {
+//         let result = [];
+//         for (let i = 1; i <= row; i++) {
+//             for (let j = 1; j <= col[i - 1]; j++) {
+//                 result.push({
+//                     id: `${name}_${type}_${i}_${j}`,
+//                     type,
+//                     row: i,
+//                     col: j,
+//                     label: `第${i}列 第${j}辆`,
+//                     modelName: name
+//                 })
+//             }
+//         }
+//         return result;
+//     };
 
-    return {
-        id: name,
-        label: `${name}`,
-        modelName: name,
-        children: [
-            {
-                id: `${name}_${MODEL_TREE_TYPE.train}`,
-                type: `${MODEL_TREE_TYPE.train}`,
-                label: "列车参数",
-                modelName: name,
-                children: [
-                    {
-                        id: `${name}_${MODEL_TREE_TYPE.basic}`,
-                        type: `${MODEL_TREE_TYPE.basic}`,
-                        modelName: name,
-                        label: "列车基本参数"
-                    },
-                    {
-                        id: `${name}_${MODEL_TREE_TYPE.vehicle}`,
-                        label: "车辆参数",
-                        type: `${MODEL_TREE_TYPE.vehicle}`,
-                        modelName: name,
-                        children: vehicleList({ type: MODEL_TREE_TYPE.vehicle, row: trainNum, col: vehicleNum })
-                    },
-                    {
-                        id: `${name}_${MODEL_TREE_TYPE.connect}`,
-                        label: "车连接系统",
-                        type: `${MODEL_TREE_TYPE.connect}`,
-                        modelName: name,
-                        children: vehicleList({ type: MODEL_TREE_TYPE.connect, row: trainNum, col: vehicleNum })
-                    }
-                ]
-            },
-            {
-                id: `${name}_${MODEL_TREE_TYPE.circuit}`,
-                type: `${MODEL_TREE_TYPE.circuit}`,
-                modelName: name,
-                label: "线路参数"
-            },
-            {
-                id: `${name}_${MODEL_TREE_TYPE.args}`,
-                type: `${MODEL_TREE_TYPE.args}`,
-                modelName: name,
-                label: "模型参数"
-            }
-        ]
-    }
-}
+//     return {
+//         id: name,
+//         label: `${name}`,
+//         modelName: name,
+//         children: [
+//             {
+//                 id: `${name}_${MODEL_TREE_TYPE.train}`,
+//                 type: `${MODEL_TREE_TYPE.train}`,
+//                 label: "列车参数",
+//                 modelName: name,
+//                 children: [
+//                     {
+//                         id: `${name}_${MODEL_TREE_TYPE.basic}`,
+//                         type: `${MODEL_TREE_TYPE.basic}`,
+//                         modelName: name,
+//                         label: "列车基本参数"
+//                     },
+//                     {
+//                         id: `${name}_${MODEL_TREE_TYPE.vehicle}`,
+//                         label: "车辆参数",
+//                         type: `${MODEL_TREE_TYPE.vehicle}`,
+//                         modelName: name,
+//                         children: vehicleList({ type: MODEL_TREE_TYPE.vehicle, row: trainNum, col: vehicleNum })
+//                     },
+//                     {
+//                         id: `${name}_${MODEL_TREE_TYPE.connect}`,
+//                         label: "车连接系统",
+//                         type: `${MODEL_TREE_TYPE.connect}`,
+//                         modelName: name,
+//                         children: vehicleList({ type: MODEL_TREE_TYPE.connect, row: trainNum, col: vehicleNum })
+//                     }
+//                 ]
+//             },
+//             {
+//                 id: `${name}_${MODEL_TREE_TYPE.circuit}`,
+//                 type: `${MODEL_TREE_TYPE.circuit}`,
+//                 modelName: name,
+//                 label: "线路参数"
+//             },
+//             {
+//                 id: `${name}_${MODEL_TREE_TYPE.args}`,
+//                 type: `${MODEL_TREE_TYPE.args}`,
+//                 modelName: name,
+//                 label: "模型参数"
+//             }
+//         ]
+//     }
+// }
 

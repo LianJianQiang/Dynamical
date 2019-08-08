@@ -24,11 +24,12 @@
             >{{item.name}}</el-radio>
         </div>
         <div v-if="curTempId || isDiy">
-            <div :class="$style.contWrap" v-if="curveTypeList.length===0">
-                <Content ref="content" />
+            <div :class="$style.contWrap" v-if="isSymmetry === '1'">
+                <ContentLs ref="contentLs" :dataSource="dataSource" />
             </div>
-            <div :class="$style.contWrap" v-else v-for="item in curveTypeList" :key="item.type">
-                <Content :type="item.type" :typeName="item.name" :ref="`content${item.type}`" />
+            <div :class="$style.contWrap" v-else>
+                <ContentLs :type="1" typeName="拉伸" ref="contentLs" :dataSource="dataSource" />
+                <ContentYs :type="2" typeName="压缩" ref="contentYs" :dataSource="dataSource" />
             </div>
             <div :class="$style.footer">
                 <el-button class="btn-xl" type="primary" @click="showNameDialog">保存</el-button>
@@ -43,23 +44,32 @@
 <script>
 import NameDialog from "components/NameDialog";
 import { argConfig } from "api";
-import { getUserIdAndType } from "utils/util";
+import { getUserIdAndType, getObjFromStr } from "utils/util";
 
-import Content from "./Content";
+import ContentLs from "./ContentLs";
+import ContentYs from "./ContentYs";
 
 const { userId, userType } = getUserIdAndType();
 
 const symmetryTypeList = [
-    { type: 1, name: "对称曲线" },
-    { type: 2, name: "非对称曲线" }
+    { type: "1", name: "对称曲线" },
+    { type: "2", name: "非对称曲线" }
 ];
 
 const curveTypeList = [{ type: 1, name: "拉伸" }, { type: 2, name: "压缩" }];
 
+const needEvalField = [
+    "pointAllotDataYs",
+    "pointAllotDataLs",
+    "pointDataYs",
+    "pointDataLs"
+];
+
 export default {
     name: "BufferCurve",
     components: {
-        Content,
+        ContentLs,
+        ContentYs,
         NameDialog
     },
     data() {
@@ -69,6 +79,8 @@ export default {
             bufferList: [],
             isDiy: false,
 
+            dataSource: {},
+
             // 是否是对称曲线
             symmetryTypeList,
             isSymmetry: symmetryTypeList[0].type,
@@ -77,9 +89,15 @@ export default {
         };
     },
     props: {},
-    computed: {
-        curveTypeList() {
-            return this.isSymmetry === 1 ? [] : [...curveTypeList];
+    computed: {},
+    watch: {
+        curTempId() {
+            let { curTempId, bufferList } = this;
+            let dataSource = bufferList.find(item => item.id === curTempId);
+
+            this.isSymmetry = dataSource.isSymmetry;
+            this.dataSource = dataSource;
+            this.isDiy = false;
         }
     },
     methods: {
@@ -89,18 +107,26 @@ export default {
                 .getCoupMdfTempList({ userId, type: userType })
                 .then(res => {
                     if (!res) return;
-                    this.bufferList = res.data || [];
+                    let data = res.data || [];
+
+                    data.map(item => {
+                        needEvalField.map(li => {
+                            item[li] && (item[li] = getObjFromStr(item[li]));
+                        });
+                    });
+                    console.log(data);
+                    this.bufferList = data;
                 });
         },
 
         // 获取所选模版的详细信息
-        getCoupMdfTempView() {
-            if (!this.curTempId) return;
-            argConfig.getCoupMdfTempView({ id: this.curTempId }).then(res => {
-                if (!res) return;
-                // TODO 待后端改完数据格式后再写
-            });
-        },
+        // getCoupMdfTempView() {
+        //     if (!this.curTempId) return;
+        //     argConfig.getCoupMdfTempView({ id: this.curTempId }).then(res => {
+        //         if (!res) return;
+        //         // TODO 待后端改完数据格式后再写
+        //     });
+        // },
 
         // 保存模版信息
         saveCoupMdfTemp(params) {
@@ -113,7 +139,7 @@ export default {
 
                 this.$message({
                     message: "操作成功",
-                    type: "error"
+                    type: "success"
                 });
             });
         },
@@ -150,29 +176,49 @@ export default {
         },
 
         saveData(name) {
-            let data = [];
+            let params = {};
 
-            // TODO 曲线类型分为对称和非对称，后端数据格式不明确，临时定义为data=[]
-            if (this.curveTypeList.length === 0) {
+            // 神一样对数据格式
+            if (this.isSymmetry === 1) {
+                let data = this.$refs.contentLs.saveData();
                 // 对称曲线
-                data.push(this.$refs.content.saveData());
+                params.xProportionYs = params.xProportionLs = data.xProportion;
+
+                params.fxProportionYs = params.fxProportionLs =
+                    data.fxProportion;
+
+                params.interpolationMethodYs = params.interpolationMethodLs =
+                    data.interpolationMethod;
+
+                params.pointAllotDataYs = params.pointAllotDataLs =
+                    data.pointAllotData;
+
+                params.pointDataYs = params.pointDataLs = data.pointData;
             } else {
                 // 非对称曲线
-                this.curveTypeList.map(item => {
-                    data.push(this.$refs[`content${item.type}`].saveData());
-                });
+                let dataYs = this.$refs.contentLs.saveData();
+                params.xProportionLs = dataYs.xProportion;
+                params.fxProportionLs = dataYs.fxProportion;
+                params.interpolationMethodLs = dataYs.interpolationMethod;
+                params.pointAllotDataLs = dataYs.pointAllotData;
+                params.pointDataLs = dataYs.pointData;
+
+                let dataLs = this.$refs.contentYs.saveData();
+                params.xProportionYs = dataLs.xProportion;
+                params.fxProportionYs = dataLs.fxProportion;
+                params.interpolationMethodYs = dataLs.interpolationMethod;
+                params.pointAllotDataYs = dataLs.pointAllotData;
+                params.pointDataYs = dataLs.pointData;
             }
             this.hideNameDialog();
 
-            let params = {
+            this.saveCoupMdfTemp({
                 userId,
                 type: userType,
                 name,
                 isSymmetry: this.isSymmetry,
-                data
-            };
-
-            this.saveCoupMdfTemp(params);
+                ...params
+            });
         },
         cancel() {}
     },

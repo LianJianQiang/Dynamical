@@ -49,9 +49,6 @@ export default {
                 path: "/page/model/edit",
                 query: { type, id }
             });
-
-            // const carDetail = this.getCarData({ modelName, row, col });
-            // this.$store.dispatch("uiState/saveCurCarDetail", carDetail);
         },
         getQueryId() {
             let { id = "" } = this.$route.query || {};

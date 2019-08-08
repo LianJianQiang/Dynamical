@@ -116,7 +116,13 @@
 import { mapGetters, mapState } from "vuex";
 import Img from "assets/images/connect";
 
-import { CONNECT_ELE_DICT, CONNECT_FACETYPE_DICT } from "common/constants";
+import {
+    CONNECT_ELE_DICT,
+    CAR_ELE_DICT,
+    CONNECT_ELE_FIELD_DICT
+} from "common/constants";
+
+import { model } from "api";
 
 export default {
     name: "CarBodyDetail",
@@ -126,40 +132,65 @@ export default {
             Img,
             bodyBGImg: { backgroundImage: `url(${Img["ct01"]})` },
             eleDict: CONNECT_ELE_DICT,
-            frontKey: CONNECT_FACETYPE_DICT.front.key,
-            backKey: CONNECT_FACETYPE_DICT.back.key
+            frontKey: CAR_ELE_DICT.front.key,
+            backKey: CAR_ELE_DICT.back.key,
+
+            connectFrontData: {},
+            connectBackData: {}
         };
     },
     props: {},
-    methods: {},
     computed: {
-        ...mapGetters("uiState", ["curCarConnectDetail", "carDetail"]),
-        ...mapState("models", ["curTreeNodeId"]),
+        ...mapGetters("uiState", ["curCarNum"]),
+        ...mapState("models", ["curTreeNodeId", "curModelId"]),
 
         isShowEle() {
-            let curConnectId = this.curTreeNodeId;
-            let curConnect = this.curCarConnectDetail[curConnectId];
-            return (faceType, eleType) => {
-                if (!curConnect) return false;
+            let { connectBackData, connectFrontData } = this;
 
-                if (faceType === CONNECT_FACETYPE_DICT.front.key) {
-                    return (
-                        curConnect[CONNECT_FACETYPE_DICT.front.label].indexOf(
-                            eleType
-                        ) !== -1
-                    );
-                } else if (faceType === CONNECT_FACETYPE_DICT.back.key) {
-                    return (
-                        curConnect[CONNECT_FACETYPE_DICT.back.label].indexOf(
-                            eleType
-                        ) !== -1
-                    );
+            return (faceType, ele) => {
+                let list = CONNECT_ELE_FIELD_DICT[ele];
+
+                let data = connectBackData;
+                if (faceType === this.frontKey) {
+                    data = connectFrontData;
                 }
-                return false;
+
+                for (let i = 0; i < list.length; i++) {
+                    let value = data[list[i]];
+                    // 如果元件的某个字段的值存在或等于0，表示该元件已定义过
+                    if (value || value === 0) {
+                        return true;
+                    }
+                    return false;
+                }
             };
         }
     },
-    mounted() {}
+    methods: {
+        getAllCoupTypeByModelId() {
+            let { curCarNum, curModelId } = this;
+            if (!curCarNum) return;
+
+            const carNum = `${curCarNum.row}-${curCarNum.col}`;
+            model
+                .getAllCoupTypeByModelId({
+                    modelId: curModelId,
+                    carNum
+                })
+                .then(res => {
+                    if (!res) return;
+                    let { data = [] } = res;
+                    this.connectFrontData =
+                        data.find(item => item.faceType === "1") || {};
+                    this.connectBackData =
+                        data.find(item => item.faceType === "2") || {};
+                });
+        }
+    },
+
+    mounted() {
+        this.getAllCoupTypeByModelId();
+    }
 };
 </script>
 
