@@ -32,7 +32,7 @@
                 <ContentYs :type="2" typeName="压缩" ref="contentYs" :dataSource="dataSource" />
             </div>
             <div :class="$style.footer">
-                <el-button class="btn-xl" type="primary" @click="showNameDialog">保存</el-button>
+                <el-button class="btn-xl" type="primary" @click="onClickSaveData">保存</el-button>
                 <el-button class="btn-xl" @click="cancel">取消</el-button>
             </div>
         </div>
@@ -48,8 +48,6 @@ import { getUserIdAndType, getObjFromStr } from "utils/util";
 
 import ContentLs from "./ContentLs";
 import ContentYs from "./ContentYs";
-
-const { userId, userType } = getUserIdAndType();
 
 const symmetryTypeList = [
     { type: "1", name: "对称曲线" },
@@ -89,13 +87,18 @@ export default {
         };
     },
     props: {},
-    computed: {},
+    computed: {
+        curBufferTemp() {
+            let { curTempId, bufferList } = this;
+            return bufferList.find(item => item.id === curTempId) || {};
+        }
+    },
     watch: {
         curTempId() {
-            let { curTempId, bufferList } = this;
-            let dataSource = bufferList.find(item => item.id === curTempId);
+            let { isSymmetry } = this;
+            let dataSource = this.curBufferTemp;
 
-            this.isSymmetry = dataSource.isSymmetry;
+            this.isSymmetry = dataSource.isSymmetry || isSymmetry;
             this.dataSource = dataSource;
             this.isDiy = false;
         }
@@ -103,6 +106,8 @@ export default {
     methods: {
         // 获取模版列表
         getCoupMdfTempList() {
+            const { userId, userType } = getUserIdAndType();
+
             argConfig
                 .getCoupMdfTempList({ userId, type: userType })
                 .then(res => {
@@ -114,28 +119,18 @@ export default {
                             item[li] && (item[li] = getObjFromStr(item[li]));
                         });
                     });
-                    console.log(data);
+
                     this.bufferList = data;
                 });
         },
-
-        // 获取所选模版的详细信息
-        // getCoupMdfTempView() {
-        //     if (!this.curTempId) return;
-        //     argConfig.getCoupMdfTempView({ id: this.curTempId }).then(res => {
-        //         if (!res) return;
-        //         // TODO 待后端改完数据格式后再写
-        //     });
-        // },
 
         // 保存模版信息
         saveCoupMdfTemp(params) {
             argConfig.saveCoupMdfTemp(params).then(res => {
                 if (!res) return;
 
-                // 保存成功后，刷新select数据，并清空选项
+                // 保存成功后，刷新select数据
                 this.getCoupMdfTempList();
-                this.curTempId = "";
 
                 this.$message({
                     message: "操作成功",
@@ -167,8 +162,14 @@ export default {
             });
         },
 
-        showNameDialog() {
-            this.nameDialogVisible = true;
+        onClickSaveData() {
+            // 如果是自定义，则输入用户名；否则，覆盖已选数据
+            if (this.isDiy) {
+                this.nameDialogVisible = true;
+                return;
+            }
+
+            this.saveData();
         },
 
         hideNameDialog() {
@@ -179,7 +180,7 @@ export default {
             let params = {};
 
             // 神一样对数据格式
-            if (this.isSymmetry === 1) {
+            if (this.isSymmetry === "1") {
                 let data = this.$refs.contentLs.saveData();
                 // 对称曲线
                 params.xProportionYs = params.xProportionLs = data.xProportion;
@@ -212,13 +213,22 @@ export default {
             }
             this.hideNameDialog();
 
-            this.saveCoupMdfTemp({
+            const { userId, userType } = getUserIdAndType();
+
+            let fetchParams = {
                 userId,
                 type: userType,
                 name,
                 isSymmetry: this.isSymmetry,
                 ...params
-            });
+            };
+
+            if (!this.isDiy && this.curTempId) {
+                fetchParams.id = this.curTempId;
+                fetchParams.name = this.curBufferTemp.name;
+            }
+
+            this.saveCoupMdfTemp(fetchParams);
         },
         cancel() {}
     },

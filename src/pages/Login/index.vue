@@ -76,13 +76,13 @@ export default {
             let { username, password } = this.loginForm;
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    this.$router.push("/page");
-                    
                     // TODO 测试
                     window.sessionStorage.setItem(
                         SESSION_USERINFO_KEY,
                         JSON.stringify({ userId: "1" })
                     );
+
+                    this.$router.push("/page");
 
                     // login.signIn({ username, password }).then(res => {
                     //     if (!res) return;

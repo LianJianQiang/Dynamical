@@ -47,12 +47,12 @@ export const MODEL_TREE_TYPE = {
     train: 'LCCS',         // 列车参数
     basic: 'VE',         // 列车基本参数
     vehicle: 'CA',     // 车辆参数
-    connect: 'LJXT',     // 连接系统
+    connect: 'CJLJXT',     // 连接系统
     circuit: 'XLCS',     // 线路
     args: 'MXCSB'            // 模型参数
 }
 
-export const MODEL_TYPE_LINK_LIST = ['LCCS', 'VE', 'CA', 'LJXT', 'XLCS', 'MXCSB'];
+export const MODEL_TYPE_LINK_LIST = ['LCCS', 'VE', 'CA', 'CJLJXT', 'XLCS', 'MXCSB'];
 
 export const CONNECT_ELE_DICT = {
     hcq: 'hcq',         // 缓冲器

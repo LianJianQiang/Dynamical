@@ -55,8 +55,6 @@ import NameDialog from "components/NameDialog";
 import { getUserIdAndType, getObjFromStr } from "utils/util";
 import { model } from "api";
 
-const { userId, userType } = getUserIdAndType();
-
 export default {
     name: "Table",
     data() {
@@ -161,6 +159,8 @@ export default {
                 return;
             }
             let type = this.type;
+            const { userId } = getUserIdAndType();
+
             model.tractionList({ userId, type }).then(res => {
                 if (!res) return;
                 let { data = [] } = res;
@@ -208,6 +208,8 @@ export default {
         },
 
         getSaveDataParmas() {
+            const { userId } = getUserIdAndType();
+
             return {
                 ...this.tcsd,
                 userId,

@@ -16,44 +16,44 @@ const getTreeData = (params = {}) => {
     return createTree(modelName, 2, [num1, num2]);
 }
 
-const getTreeNodeInfo = (trees, id) => {
-    let result = null;
+// const getTreeNodeInfo = (trees, id) => {
+//     let result = null;
 
-    const getFunc = (arr) => {
-        if (result) return;
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].id === id) {
-                result = arr[i];
-                return;
-            } else if (arr[i].children && arr[i].children.length > 0) {
-                getFunc(arr[i].children);
-            }
-        }
-    }
+//     const getFunc = (arr) => {
+//         if (result) return;
+//         for (let i = 0; i < arr.length; i++) {
+//             if (arr[i].id === id) {
+//                 result = arr[i];
+//                 return;
+//             } else if (arr[i].children && arr[i].children.length > 0) {
+//                 getFunc(arr[i].children);
+//             }
+//         }
+//     }
 
-    getFunc(trees);
-    return result;
-}
+//     getFunc(trees);
+//     return result;
+// }
 
-const getTreeNodeList = (tree = {}, type) => {
-    let rootChild = tree.children || [];
-    let result = [];
+// const getTreeNodeList = (tree = {}, type) => {
+//     let rootChild = tree.children || [];
+//     let result = [];
 
-    const getFunc = (arr) => {
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].type === type && !arr[i].children) {
-                result.push(arr[i]);
-            }
+//     const getFunc = (arr) => {
+//         for (let i = 0; i < arr.length; i++) {
+//             if (arr[i].type === type && !arr[i].children) {
+//                 result.push(arr[i]);
+//             }
 
-            if (arr[i].children) {
-                getFunc(arr[i].children);
-            }
-        }
-    }
+//             if (arr[i].children) {
+//                 getFunc(arr[i].children);
+//             }
+//         }
+//     }
 
-    getFunc(rootChild);
-    return result;
-}
+//     getFunc(rootChild);
+//     return result;
+// }
 
 
 /*

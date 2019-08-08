@@ -10,6 +10,7 @@
                 <EditTable
                     :showSave="false"
                     :showOpen="false"
+                    :dataSource="pointData"
                     :tableDataChange="charTableChange"
                     height="200"
                 />
@@ -94,27 +95,27 @@ export default {
     data() {
         let defaultInterId = interList[0].id;
         let { dataSource } = this;
-        let {
-            pointAllotData = defaultPointData,
-            pointData = [],
-            xProportion = 1,
-            fxProportion = 1,
-            interpolationMethod = defaultInterId
-        } = this.dataSource;
+        const {
+            pointAllotDataLs,
+            pointDataLs,
+            xProportionLs,
+            fxProportionLs,
+            interpolationMethodLs
+        } = dataSource;
 
         return {
             // 曲线分段table
-            pointAllotData,
+            pointAllotData: pointAllotDataLs || defaultPointData,
 
-            pointData,
+            pointData: pointDataLs || [],
 
             // 比例
-            xProportion,
-            fxProportion,
+            xProportion: xProportionLs || 1,
+            fxProportion: fxProportionLs || 1,
 
             // 插值
             interList,
-            interpolationMethod,
+            interpolationMethod: interpolationMethodLs || defaultInterId,
 
             chartsOptions: { ...chartsOptions }
         };
@@ -170,6 +171,9 @@ export default {
 
             return result;
         }
+    },
+    mounted() {
+        this.charTableChange(this.pointData);
     }
 };
 </script>

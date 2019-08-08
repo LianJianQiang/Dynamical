@@ -38,8 +38,6 @@ import { getUserIdAndType } from "utils/util";
 
 import Tree from "./Tree";
 
-const { userId } = getUserIdAndType();
-
 export default {
     name: "Model",
     data() {
@@ -77,6 +75,8 @@ export default {
 
         // 请求模型树列表
         getModelsList() {
+            const { userId } = getUserIdAndType();
+
             model.getModels({ userId }).then(res => {
                 if (!res) return;
                 let { data = [] } = res;

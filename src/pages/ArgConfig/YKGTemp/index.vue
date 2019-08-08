@@ -11,6 +11,8 @@
                     :value="item.id"
                 ></el-option>
             </el-select>
+            <el-checkbox v-model="isDiy" :class="$style.isDiy">自定义</el-checkbox>
+
             <div :class="$style.deleteBtn" class="cursor-p" @click="onClickDel">删除</div>
         </div>
         <div class="clearfix" :class="$style.formWrap">
@@ -69,6 +71,8 @@ export default {
             curYKGType: "",
             formData: {},
 
+            isDiy: false,
+
             nameDialogVisible: false
         };
     },
@@ -124,15 +128,16 @@ export default {
                 name
             };
 
-            delete params.id;
+            if (this.isDiy || !this.curYKGType) {
+                delete params.id;
+            }
 
             argConfig.saveYKGTemp(params).then(res => {
                 if (!res) return;
                 this.nameDialogVisible = false;
 
-                // 保存成功后，刷新select数据，并清空选项
+                // 保存成功后，刷新select数据
                 this.getYKGTempList();
-                this.curYKGType = "";
 
                 this.$message({
                     message: "操作成功",
@@ -141,7 +146,12 @@ export default {
             });
         },
         save() {
-            this.nameDialogVisible = true;
+            if (this.isDiy || !this.curYKGType) {
+                this.nameDialogVisible = true;
+                return;
+            }
+
+            this.saveData(this.formData.name);
         },
         cancel() {}
     },
@@ -167,6 +177,10 @@ export default {
     .deleteBtn {
         display: inline-block;
         padding: 0 30px;
+    }
+
+    .isDiy {
+        margin-left: 20px;
     }
 
     .formWrap {

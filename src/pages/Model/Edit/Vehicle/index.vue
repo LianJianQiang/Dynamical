@@ -3,17 +3,17 @@
         <div :class="$style.title">{{curTreeNodeInfo.name}}</div>
         <!-- <div :class="$style.fileBtn">
             <el-button class="btn-default">文件</el-button>
-        </div> -->
+        </div>-->
         <div :class="$style.formWrap" class="clearfix">
             <el-form ref="vehicleForm" :model="formData" :rules="rules" label-width="120px">
                 <el-col :span="8">
-                    <el-form-item label="车辆质量:" prop="mass">
-                        <el-input v-model="formData.mass" clearable></el-input>
+                    <el-form-item label="车辆质量:" prop="m">
+                        <el-input v-model="formData.m" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" :offset="2">
-                    <el-form-item label="车体刚度:" prop="k_car">
-                        <el-input v-model="formData.k_car" clearable></el-input>
+                    <el-form-item label="车体刚度:" prop="kcar">
+                        <el-input v-model="formData.kcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -26,8 +26,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" :offset="2">
-                    <el-form-item label="车体强度:" prop="q_car">
-                        <el-input v-model="formData.q_car" clearable></el-input>
+                    <el-form-item label="车体强度:" prop="qcar">
+                        <el-input v-model="formData.qcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -74,9 +74,9 @@
                     <el-option
                         v-for="item in trainList"
                         :key="item.id"
-                        :label="item.label"
+                        :label="item.name"
                         :value="item.id"
-                        :disabled="!modelsData[item.id] || item.id === formData.id"
+                        :disabled="item.id === formData.id"
                     ></el-option>
                 </el-select>
                 <el-button class="btn-xl" :class="$style.copyBtn" @click="copy">复制</el-button>
@@ -99,17 +99,20 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import _util from "utils/util";
 import { MODEL_TREE_TYPE } from "common/constants";
 
+import { carArg } from "api";
+
 import Traction from "./Traction";
 import Brakes from "./Brakes";
 import Diy from "./Diy";
+import { type } from "os";
 // import Traction from "./Traction";
 
 // 自定义验证规则
 const rules = {
     // mass: { max: 10, isInt: true, min: 2 },
-    mass: {},
-    k_car: {},
-    q_car: {}
+    m: {},
+    kcar: {},
+    qcar: {}
 };
 
 const validateField = _util.validateField(rules);
@@ -124,46 +127,57 @@ export default {
     data() {
         return {
             formData: {},
-            // formData: {
-            //     mass: null, // 车体质量
-            //     k_car: null, // 车体刚度
-            //     q_car: null, // 车体强度
-            //     brakes: {}, // 制动系统
-            //     traction: {}, // 牵引系统
-            //     diy1: {}, // 用户自定义
-            //     diy2: {}, // 用户自定义
-            //     diy3: {} // 用户自定义
-            // },
+
             copySource: null,
             rules: {
-                mass: [{ validator: validateField, trigger: "change" }],
-                k_car: [{ validator: validateField, trigger: "change" }],
-                q_car: [{ validator: validateField, trigger: "change" }]
+                m: [{ validator: validateField, trigger: "change" }],
+                kcar: [{ validator: validateField, trigger: "change" }],
+                qcar: [{ validator: validateField, trigger: "change" }]
             }
         };
     },
     props: {},
     computed: {
-        ...mapState("models", ["modelsData", "curModelId"]),
+        ...mapState("models", ["modelsData"]),
         ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
 
         trainList() {
-            return this.getTreeNodeByType({
-                type: MODEL_TREE_TYPE.vehicle
-            });
+            return this.getTreeNodeByType(MODEL_TREE_TYPE.vehicle);
         }
     },
     methods: {
-        ...mapActions("models", ["saveModelData"]),
+        initData(cb) {
+            let { id } = this.curTreeNodeInfo || {};
+            if (!id) return;
+
+            carArg.vehicleView({ id }).then(res => {
+                if (!res) return;
+                this.formData = res.data || {};
+
+                typeof cb === "function" && cb();
+            });
+        },
 
         // 复制
         copy() {
             if (!this.copySource) return;
-            let data = this.modelsData[this.copySource];
-            this.formData = { ...data };
-            this.$message({
-                message: "操作成功",
-                type: "success"
+
+            // 获取复制源的基本信息
+            let sourceInfo = this.trainList.find(
+                item => item.id === this.copySource
+            );
+            if (!sourceInfo) return;
+
+            let { row, cal, id } = sourceInfo;
+            carArg.vehicleCopy({ id, carNums: `${row}-${cal}` }).then(res => {
+                if (!res) return;
+
+                this.initData(() => {
+                    this.$message({
+                        message: "操作成功",
+                        type: "success"
+                    });
+                });
             });
         },
 
@@ -178,13 +192,14 @@ export default {
         submitForm: function() {
             this.$refs.vehicleForm.validate(vali => {
                 if (!vali) return;
-                this.saveModelData({
-                    id: this.curModelId,
-                    data: {
-                        type: MODEL_TREE_TYPE.vehicle,
-                        ...this.formData
-                    }
-                });
+
+                this.saveData();
+            });
+        },
+
+        saveData() {
+            carArg.vehicleEdit({ ...this.formData }).then(res => {
+                if (!res) return;
 
                 this.$message({
                     message: "保存成功",
@@ -197,19 +212,12 @@ export default {
          * 取消输入
          */
         resetForm: function() {
-            this.$refs.vehicleForm.resetFields();
-        },
-
-        /**
-         * 控制dropDown
-         */
-        setDropDownVisible(params) {
-            let { visible = false, field = "", data = {} } = params;
-            if (field) this[field]["traction"] = data;
-            this.$refs.traction1.setVisible(visible);
+            // this.$refs.vehicleForm.resetFields();
         }
     },
-    mounted() {}
+    mounted() {
+        this.initData();
+    }
 };
 </script>
 

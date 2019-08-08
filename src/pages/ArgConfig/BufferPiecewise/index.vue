@@ -11,7 +11,7 @@
                     :value="item.id"
                 ></el-option>
             </el-select>
-            <!-- <el-checkbox v-model="isDiy" :class="$style.isDiy">自定义</el-checkbox> -->
+            <el-checkbox v-model="isDiy" :class="$style.isDiy">自定义</el-checkbox>
             <div :class="$style.deleteBtn" class="cursor-p" @click="onClickDel">删除</div>
         </div>
         <!-- <div v-if="curTempId || isDiy"> -->
@@ -35,7 +35,7 @@
                 </div>
             </div>
             <div :class="$style.footer">
-                <el-button class="btn-xl" type="primary" @click="showNameDialog">保存</el-button>
+                <el-button class="btn-xl" type="primary" @click="onClickSaveData">保存</el-button>
                 <el-button class="btn-xl" @click="cancel">取消</el-button>
             </div>
         </div>
@@ -50,7 +50,6 @@ import { getUserIdAndType, getObjFromStr } from "utils/util";
 
 import Table from "./Table";
 
-const { userId, userType } = getUserIdAndType();
 
 const globalTypeList = [
     { type: "symmetry", name: "对称曲线" },
@@ -68,7 +67,7 @@ export default {
             // 当前的缓冲器型号
             curTempId: "",
             bufferList: [],
-            // isDiy: true,
+            isDiy: false,
 
             // 是否是对称曲线
             globalTypeList,
@@ -83,11 +82,15 @@ export default {
         };
     },
     props: {},
+    computed: {
+        curBufferTemp() {
+            let { curTempId, bufferList } = this;
+            return bufferList.find(item => item.id === curTempId) || {};
+        }
+    },
     watch: {
         curTempId() {
-            let { bufferList = [], curTempId } = this;
-            let curBufferData =
-                bufferList.find(item => item.id === curTempId) || {};
+            let curBufferData = this.curBufferTemp;
             let { ysjzInfo, lsjzInfo, ysxzInfo, lsxzInfo } = curBufferData;
 
             ysjzInfo && (this.ysjzInfo = getObjFromStr(ysjzInfo));
@@ -99,21 +102,14 @@ export default {
     methods: {
         // 获取模版列表
         getCoupFdhsfTempList() {
+            const { userId, userType } = getUserIdAndType();
+
             argConfig
                 .getCoupFdhsfTempList({ userId, type: userType })
                 .then(res => {
                     if (!res) return;
                     this.bufferList = res.data || [];
                 });
-        },
-
-        // 获取所选模版的详细信息
-        getCoupFdhsfTempView() {
-            if (!this.curTempId) return;
-            argConfig.getCoupFdhsfTempView({ id: this.curTempId }).then(res => {
-                if (!res) return;
-                // TODO 待后端改完数据格式后再写
-            });
         },
 
         // 保存模版数据
@@ -123,7 +119,6 @@ export default {
 
                 // 保存成功后，刷新select数据，并清空选项
                 this.getCoupFdhsfTempList();
-                this.curTempId = "";
 
                 this.$message({
                     message: "操作成功",
@@ -155,8 +150,14 @@ export default {
             });
         },
 
-        showNameDialog() {
-            this.nameDialogVisible = true;
+        onClickSaveData() {
+            // 如果是自定义，则输入用户名；否则，覆盖已选数据
+            if (this.isDiy) {
+                this.nameDialogVisible = true;
+                return;
+            }
+
+            this.saveData();
         },
 
         hideNameDialog() {
@@ -169,6 +170,8 @@ export default {
             let ysxzInfo = this.$refs.ysxzInfo.saveData();
             let lsxzInfo = this.$refs.lsxzInfo.saveData();
 
+            const { userId, userType } = getUserIdAndType();
+
             let params = {
                 userId,
                 type: userType,
@@ -178,6 +181,11 @@ export default {
                 ysxzInfo,
                 lsxzInfo
             };
+
+            if (!this.isDiy && this.curTempId) {
+                params.id = this.curTempId;
+                params.name = this.curBufferTemp.name;
+            }
 
             this.saveCoupFdhsfTemp(params);
             this.hideNameDialog();
@@ -206,9 +214,9 @@ export default {
         display: inline-block;
         padding: 0 30px;
     }
-    // .isDiy {
-    //     margin-left: 20px;
-    // }
+    .isDiy {
+        margin-left: 20px;
+    }
 
     .content {
         .title {
