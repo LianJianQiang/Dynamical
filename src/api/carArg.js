@@ -11,7 +11,7 @@ const vehicleView = (params) => request(`${config.baseUrl}/ca/view`, { ...params
 });
 
 // 车辆参数 编辑
-const vehicleEdit = (params) => request(`${config.baseUrl}/ca/view`, { ...params }, {
+const vehicleEdit = (params) => request(`${config.baseUrl}/ca/save`, { ...params }, {
     method: 'post'
 });
 
@@ -21,9 +21,51 @@ const vehicleCopy = (params) => request(`${config.baseUrl}/ca/caCopy`, { ...para
 });
 
 
+// 车辆参数_牵引系统查询
+const tractionView = (params) => request(`${config.baseUrl}/tr/view`, { ...params }, {
+    method: 'post'
+});
+
+// 车辆参数_牵引系统编辑
+const tractionEdit = (params) => request(`${config.baseUrl}/tr/save`, { ...params }, {
+    method: 'post'
+});
+
+// 车辆参数_制动系统查询
+const brakesView = (params) => request(`${config.baseUrl}/br/view`, { ...params }, {
+    method: 'post'
+});
+
+// 车辆参数_制动系统编辑
+const brakesEdit = (params) => request(`${config.baseUrl}/br/save`, { ...params }, {
+    method: 'post'
+});
+
+// 车辆参数_用户自定义查询
+const diyView = (params) => request(`${config.baseUrl}/diy/view`, { ...params }, {
+    method: 'post'
+});
+
+// 车辆参数_用户自定义编辑
+const diySave = (params) => request(`${config.baseUrl}/diy/save`, { ...params }, {
+    method: 'post'
+});
+
+
+
 
 export default {
     vehicleView,
     vehicleEdit,
-    vehicleCopy
+    vehicleCopy,
+
+    tractionView,
+    tractionEdit,
+
+    brakesView,
+    brakesEdit,
+
+    diySave,
+    diyView
+
 }

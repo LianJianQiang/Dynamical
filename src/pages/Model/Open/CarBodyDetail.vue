@@ -3,126 +3,170 @@
         <div :class="$style.train" class="cursor-p" :style="bodyBGImg">
             <div>
                 <img
-                    v-if="isShowEle(frontKey, eleDict.hcq)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-前端"
                     :class="[$style.frontHC,$style.hc,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.hcq)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-后端"
                     :class="[$style.backHC,$style.hc,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(frontKey, eleDict.xjzc)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-前端"
                     :class="[$style.frontXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.xjzc)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-后端"
                     :class="[$style.backXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(frontKey, eleDict.ykg)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-前端"
                     :class="[$style.frontYK,$style.yk,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.ykg)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-后端"
                     :class="[$style.backYK,$style.yk,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.gzbh)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-前端"
                     :class="[$style.frontGZ,$style.gz,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.gzbh)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-后端"
                     :class="[$style.backGZ,$style.gz,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(frontKey, eleDict.fpq)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-前端"
                     :class="[$style.frontFP,$style.fp,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.fpq)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-后端"
                     :class="[$style.backFP,$style.fp,$style.connectEle]"
                 />
                 <div
-                    v-if="isShowEle(frontKey, eleDict.diy1)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.diy1)"
                     :class="[$style.diy,$style.connectDiy,$style.frontDIY1,$style.connectEle]"
                 >diy1</div>
                 <div
-                    v-if="isShowEle(frontKey, eleDict.diy2)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.diy2)"
                     :class="[$style.diy,$style.connectDiy,$style.frontDIY2,$style.connectEle]"
                 >diy2</div>
                 <div
-                    v-if="isShowEle(backKey, eleDict.diy1)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.diy1)"
                     :class="[$style.diy,$style.connectDiy,$style.backDIY1,$style.connectEle]"
                 >diy1</div>
                 <div
-                    v-if="isShowEle(backKey, eleDict.diy2)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.diy2)"
                     :class="[$style.diy,$style.connectDiy,$style.backDIY2,$style.connectEle]"
                 >diy2</div>
                 <img
-                    v-if="isShowEle(frontKey, eleDict.fd)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-前端"
                     :class="[$style.frontFD,$style.fd,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.fd)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-后端"
                     :class="[$style.backFD,$style.fd,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(frontKey, eleDict.cjjz)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(frontKey, connectEleDict.cjjz)"
                     :src="Img['cjjz']"
                     title="车间减震-前端"
                     :class="[$style.frontCJJZ,$style.cjjz,$style.connectEle]"
                 />
                 <img
-                    v-if="isShowEle(backKey, eleDict.cjjz)"
+                    @dblclick="onDblclick('connect')"
+                    v-if="isShowEle(backKey, connectEleDict.cjjz)"
                     :src="Img['cjjz']"
                     title="车间减震-后端"
                     :class="[$style.backCJJZ,$style.cjjz,$style.connectEle]"
                 />
-                <img :src="Img['qy']" title="牵引系统" :class="[$style.qy,$style.btmEle]" />
-                <img :src="Img['zd']" title="制动系统" :class="[$style.zd,$style.btmEle]" />
-                <div :class="[$style.diy,$style.carDiy,$style.btmDIY1,$style.btmEle]">diy1</div>
-                <div :class="[$style.diy,$style.carDiy,$style.btmDIY2,$style.btmEle]">diy2</div>
-                <div :class="[$style.diy,$style.carDiy,$style.btmDIY3,$style.btmEle]">diy3</div>
+                <img
+                    @dblclick="onDblclick('vehicle')"
+                    :src="Img['qy']"
+                    title="牵引系统"
+                    :class="[$style.qy,$style.btmEle]"
+                    v-if="isShowEle(infoKey, vehicleEleDict.qyxt)"
+                />
+                <img
+                    @dblclick="onDblclick('vehicle')"
+                    :src="Img['zd']"
+                    title="制动系统"
+                    :class="[$style.zd,$style.btmEle]"
+                    v-if="isShowEle(infoKey, vehicleEleDict.zdxt)"
+                />
+                <div
+                    @dblclick="onDblclick('vehicle')"
+                    :class="[$style.diy,$style.carDiy,$style.btmDIY1,$style.btmEle]"
+                    v-if="isShowEle(infoKey, vehicleEleDict.diy1)"
+                >diy1</div>
+                <div
+                    @dblclick="onDblclick('vehicle')"
+                    :class="[$style.diy,$style.carDiy,$style.btmDIY2,$style.btmEle]"
+                    v-if="isShowEle(infoKey, vehicleEleDict.diy2)"
+                >diy2</div>
+                <div
+                    @dblclick="onDblclick('vehicle')"
+                    :class="[$style.diy,$style.carDiy,$style.btmDIY3,$style.btmEle]"
+                    v-if="isShowEle(infoKey, vehicleEleDict.diy3)"
+                >diy3</div>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters, mapState, mapActions } from "vuex";
 import Img from "assets/images/connect";
 
 import {
     CONNECT_ELE_DICT,
+    VEHICLE_ELE_DICT,
     CAR_ELE_DICT,
-    CONNECT_ELE_FIELD_DICT
+    CONNECT_ELE_FIELD_DICT,
+    VEHICLE_ELE_FIELD_DICT
 } from "common/constants";
 
-import { model } from "api";
+import { model, carArg } from "api";
 
 export default {
     name: "CarBodyDetail",
@@ -131,47 +175,119 @@ export default {
         return {
             Img,
             bodyBGImg: { backgroundImage: `url(${Img["ct01"]})` },
-            eleDict: CONNECT_ELE_DICT,
+            connectEleDict: CONNECT_ELE_DICT,
+            vehicleEleDict: VEHICLE_ELE_DICT,
+
             frontKey: CAR_ELE_DICT.front.key,
             backKey: CAR_ELE_DICT.back.key,
+            infoKey: CAR_ELE_DICT.info.key,
 
             connectFrontData: {},
-            connectBackData: {}
+            connectBackData: {},
+            diyData: {},
+            brakesData: {},
+            tractionData: {}
         };
     },
     props: {},
     computed: {
+        ...mapState("uiState", ["carDetail"]),
         ...mapGetters("uiState", ["curCarNum"]),
         ...mapState("models", ["curTreeNodeId", "curModelId"]),
 
         isShowEle() {
-            let { connectBackData, connectFrontData } = this;
-
-            return (faceType, ele) => {
-                let list = CONNECT_ELE_FIELD_DICT[ele];
-
-                let data = connectBackData;
-                if (faceType === this.frontKey) {
-                    data = connectFrontData;
+            return (type, ele) => {
+                if (type === this.infoKey) {
+                    return this.vehicleEleIsShow(type, ele);
                 }
-
-                for (let i = 0; i < list.length; i++) {
-                    let value = data[list[i]];
-                    // 如果元件的某个字段的值存在或等于0，表示该元件已定义过
-                    if (value || value === 0) {
-                        return true;
-                    }
-                    return false;
-                }
+                return this.connectEleIsShow(type, ele);
             };
         }
     },
     methods: {
-        getAllCoupTypeByModelId() {
-            let { curCarNum, curModelId } = this;
+        ...mapActions("models", ["setCurTreeNodeId"]),
+
+        // 双击图标
+        onDblclick(eleType) {
+            let { connectData = {}, vehicleData = {} } = this.carDetail || {};
+
+            let curInfo = {};
+            if (eleType === "connect") {
+                curInfo = connectData;
+            } else if (eleType === "vehicle") {
+                curInfo = vehicleData;
+            }
+
+            let { id, type } = curInfo;
+            if (!id || !type) return;
+
+            this.setCurTreeNodeId(id);
+
+            this.$router.push({
+                path: "/page/model/edit",
+                query: { type, id }
+            });
+        },
+        // 判断车辆参数元件是否显示
+        vehicleEleIsShow(type, ele) {
+            let list = VEHICLE_ELE_FIELD_DICT[ele];
+
+            let data = {};
+            if (ele === VEHICLE_ELE_DICT["zdxt"]) {
+                // 制动系统
+                data = this.brakesData;
+            } else if (ele === VEHICLE_ELE_DICT["qyxt"]) {
+                // 牵引系统
+                data = this.tractionData;
+            } else {
+                data = this.diyData;
+                return data[ele] === 1;
+            }
+
+            for (let i = 0; i < list.length; i++) {
+                let value = data[list[i]];
+                // 如果元件的某个字段的值存在，表示该元件已定义过，0代表未定义
+                if (value) {
+                    return true;
+                }
+            }
+            return false;
+        },
+
+        // 判断连接系统元件是否显示
+        connectEleIsShow(type, ele) {
+            let { connectBackData, connectFrontData } = this;
+
+            let list = CONNECT_ELE_FIELD_DICT[ele];
+
+            // 判断是取前端面数据还是后端面数据
+            let data = connectBackData;
+            if (type === this.frontKey) {
+                data = connectFrontData;
+            }
+
+            for (let i = 0; i < list.length; i++) {
+                let value = data[list[i]];
+                // 如果元件的某个字段的值存在，表示该元件已定义过，0代表未定义
+                if (value) {
+                    return true;
+                }
+            }
+            return false;
+        },
+        getCarNum() {
+            let { curCarNum } = this;
             if (!curCarNum) return;
 
-            const carNum = `${curCarNum.row}-${curCarNum.col}`;
+            return `${curCarNum.row}-${curCarNum.col}`;
+        },
+
+        // 获取连接系统列表
+        getAllCoupTypeByModelId() {
+            let { curModelId } = this;
+            const carNum = this.getCarNum();
+            if (!carNum) return;
+
             model
                 .getAllCoupTypeByModelId({
                     modelId: curModelId,
@@ -180,16 +296,51 @@ export default {
                 .then(res => {
                     if (!res) return;
                     let { data = [] } = res;
+
                     this.connectFrontData =
                         data.find(item => item.faceType === "1") || {};
+
                     this.connectBackData =
                         data.find(item => item.faceType === "2") || {};
                 });
+        },
+
+        // 获取车辆参数diy数据
+        getVehicleDiy() {
+            let { vehicleId } = this.carDetail || {};
+            if (!vehicleId) return;
+            return carArg.diyView({ caId: vehicleId }).then(res => {
+                if (!res) return;
+                this.diyData = res.data || {};
+            });
+        },
+
+        // 获取车辆参数 制动系统数据
+        getBrakesView() {
+            let { vehicleId } = this.carDetail || {};
+            if (!vehicleId) return;
+            return carArg.brakesView({ caId: vehicleId }).then(res => {
+                if (!res) return;
+                this.brakesData = res.data || {};
+            });
+        },
+
+        // 获取车辆参数 牵引系统数据
+        getTractionView() {
+            let { vehicleId } = this.carDetail || {};
+            if (!vehicleId) return;
+            return carArg.tractionView({ caId: vehicleId }).then(res => {
+                if (!res) return;
+                this.tractionData = res.data || {};
+            });
         }
     },
 
     mounted() {
         this.getAllCoupTypeByModelId();
+        this.getVehicleDiy();
+        this.getBrakesView();
+        this.getTractionView();
     }
 };
 </script>

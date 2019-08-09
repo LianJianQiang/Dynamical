@@ -149,7 +149,7 @@
                         :key="item.id"
                         :label="item.name"
                         :value="item.id"
-                        :disabled="item.id !== curTreeNodeId"
+                        :disabled="item.id === curTreeNodeId"
                     ></el-option>
                 </el-select>
                 <el-button class="btn-xl" :class="$style.copyBtn" @click="copyCar">复制</el-button>
@@ -215,18 +215,12 @@ export default {
         ...mapGetters("models", [
             "getTreeNodeByType",
             "curTreeNodeInfo",
-            "getTreeNodeById"
+            "getTreeNodeById",
+            "curCarNum"
         ]),
 
         trainList() {
-            return this.getTreeNodeByType({ type: MODEL_TREE_TYPE.connect });
-        },
-        carNum() {
-            let node = this.curTreeNodeInfo || {};
-            let { row, cal } = node;
-
-            if (!row || !cal) return null;
-            return `${row}-${cal}`;
+            return this.getTreeNodeByType(MODEL_TREE_TYPE.connect);
         }
     },
     mounted() {},
@@ -234,14 +228,14 @@ export default {
         ...mapActions("uiState", ["saveDefinedConnect"]),
 
         // 获取页面数据
-        initData(carNum) {
-            carNum = carNum || this.carNum;
-            if (!carNum) return;
+        initData(curCarNum) {
+            curCarNum = curCarNum || this.curCarNum;
+            if (!curCarNum) return;
 
             model
                 .getAllCoupTypeByModelId({
                     modelId: this.curModelId,
-                    carNum: this.carNum
+                    carNum: this.curCarNum
                 })
                 .then(res => {
                     if (!res) return;
@@ -252,11 +246,6 @@ export default {
 
                     this.frontData = { ...front };
                     this.backData = { ...back };
-
-                    this.$message({
-                        message: "操作成功",
-                        type: "success"
-                    });
                 });
         },
         // 复制端
@@ -296,7 +285,7 @@ export default {
                 faceType = CAR_ELE_DICT.front.key;
             }
             this.saveDefinedConnect({
-                id: this.carNum,
+                id: this.curCarNum,
                 type: faceType,
                 eleType: ele
             });
@@ -309,7 +298,7 @@ export default {
             let frontData = filterJson(this.frontData);
             let backData = filterJson(this.backData);
 
-            if (!this.carNum) {
+            if (!this.curCarNum) {
                 this.$message({
                     message: "数据错误",
                     type: "error"
@@ -320,13 +309,13 @@ export default {
             Object.assign(frontData, {
                 modelId: this.curModelId,
                 faceType: 1,
-                carNum: this.carNum
+                carNum: this.curCarNum
             });
 
             Object.assign(backData, {
                 modelId: this.curModelId,
                 faceType: 2,
-                carNum: this.carNum
+                carNum: this.curCarNum
             });
 
             let params = {

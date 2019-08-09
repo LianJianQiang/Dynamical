@@ -66,9 +66,17 @@ export const CONNECT_ELE_DICT = {
     diy2: 'diy2'        // 自定义2
 }
 
+export const VEHICLE_ELE_DICT = {
+    diy1: 'diy1',         // 用户自定义1
+    diy2: 'diy2',         // 用户自定义2
+    diy3: 'diy3',         // 用户自定义3
+    qyxt: 'qyxt',         // 牵引系统
+    zdxt: 'zdxt'          // 制动系统
+}
+
 export const CAR_ELE_DICT = {
     front: { key: 1, label: 'front' },
-    back: { key: 1, label: 'back' },
+    back: { key: 2, label: 'back' },
     info: { key: 3, label: 'info' }
 }
 
@@ -84,92 +92,17 @@ export const CONNECT_ELE_FIELD_DICT = {
     diy2: ['diy2TcsdId', 'diy2X']        // 自定义2
 }
 
-/**
- * 获取某个模型树上的所有对应type的node
- * @param {Tree} tree  单一模型树
- * @param {*} type type
- */
-// export const getTreeNodeByType = (tree, type) => {
-//     let result = [];
+export const VEHICLE_ELE_FIELD_DICT = {
+    diy1: ['diy1TcsdData'],
+    diy2: ['diy2TcsdData'],
+    diy3: ['diy3TcsdData'],
+    qyxt: ['tracdef', 'emNum', 'tracf', 'delayTime', 'loadTime', 'tcsd'],
+    zdxt: ['brakedef', 'brakef', 'delayTime', 'loadTime', 'tcsd']
+}
 
-//     if (!tree.children || tree.children.length === 0) return [];
-//     const getFunc = (data) => {
-//         data.map(item => {
-//             if (item.type === type) {
-//                 result.push(item);
-//             }
-//             item.children && item.children.length > 0 && getFunc(item.children);
-//         })
-//     }
 
-//     getFunc(tree.children);
-//     return result;
-// }
-
-// export const createTree = (name, trainNum = 0, vehicleNum = []) => {
-//     const vehicleList = ({ type, row = 0, col = [] }) => {
-//         let result = [];
-//         for (let i = 1; i <= row; i++) {
-//             for (let j = 1; j <= col[i - 1]; j++) {
-//                 result.push({
-//                     id: `${name}_${type}_${i}_${j}`,
-//                     type,
-//                     row: i,
-//                     col: j,
-//                     label: `第${i}列 第${j}辆`,
-//                     modelName: name
-//                 })
-//             }
-//         }
-//         return result;
-//     };
-
-//     return {
-//         id: name,
-//         label: `${name}`,
-//         modelName: name,
-//         children: [
-//             {
-//                 id: `${name}_${MODEL_TREE_TYPE.train}`,
-//                 type: `${MODEL_TREE_TYPE.train}`,
-//                 label: "列车参数",
-//                 modelName: name,
-//                 children: [
-//                     {
-//                         id: `${name}_${MODEL_TREE_TYPE.basic}`,
-//                         type: `${MODEL_TREE_TYPE.basic}`,
-//                         modelName: name,
-//                         label: "列车基本参数"
-//                     },
-//                     {
-//                         id: `${name}_${MODEL_TREE_TYPE.vehicle}`,
-//                         label: "车辆参数",
-//                         type: `${MODEL_TREE_TYPE.vehicle}`,
-//                         modelName: name,
-//                         children: vehicleList({ type: MODEL_TREE_TYPE.vehicle, row: trainNum, col: vehicleNum })
-//                     },
-//                     {
-//                         id: `${name}_${MODEL_TREE_TYPE.connect}`,
-//                         label: "车连接系统",
-//                         type: `${MODEL_TREE_TYPE.connect}`,
-//                         modelName: name,
-//                         children: vehicleList({ type: MODEL_TREE_TYPE.connect, row: trainNum, col: vehicleNum })
-//                     }
-//                 ]
-//             },
-//             {
-//                 id: `${name}_${MODEL_TREE_TYPE.circuit}`,
-//                 type: `${MODEL_TREE_TYPE.circuit}`,
-//                 modelName: name,
-//                 label: "线路参数"
-//             },
-//             {
-//                 id: `${name}_${MODEL_TREE_TYPE.args}`,
-//                 type: `${MODEL_TREE_TYPE.args}`,
-//                 modelName: name,
-//                 label: "模型参数"
-//             }
-//         ]
-//     }
-// }
-
+export const DIY_XAXIS_OPTIONS = [
+    { name: "位移", id: 1 },
+    { name: "速度", id: 2 },
+    { name: "时间", id: 3 }
+];

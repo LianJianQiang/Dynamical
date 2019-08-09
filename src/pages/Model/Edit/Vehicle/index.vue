@@ -1,11 +1,14 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.title">{{curTreeNodeInfo.name}}</div>
-        <!-- <div :class="$style.fileBtn">
-            <el-button class="btn-default">文件</el-button>
-        </div>-->
         <div :class="$style.formWrap" class="clearfix">
-            <el-form ref="vehicleForm" :model="formData" :rules="rules" label-width="120px">
+            <el-form
+                ref="vehicleForm"
+                :key="formKey"
+                :model="formData"
+                :rules="rules"
+                label-width="120px"
+            >
                 <el-col :span="8">
                     <el-form-item label="车辆质量:" prop="m">
                         <el-input v-model="formData.m" clearable></el-input>
@@ -18,11 +21,7 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="牵引系统:">
-                        <Traction
-                            field="traction"
-                            :saveData="saveDropDownData"
-                            :dataSource="formData.traction"
-                        />
+                        <Traction />
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" :offset="2">
@@ -32,37 +31,36 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="制动系统:">
-                        <Brakes
-                            field="brakes"
-                            :saveData="saveDropDownData"
-                            :dataSource="formData.brakes"
-                        />
+                        <Brakes />
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" :offset="2">
                     <el-form-item label="用户自定义1:">
                         <Diy
-                            field="brakes"
-                            :saveData="saveDropDownData"
-                            :dataSource="formData.diy1"
+                            field="diy1Tcsd"
+                            :saveData="(params)=>onSaveDiyData({...params, type:'diy1'})"
+                            :dataSource="diyData.diy1TcsdData"
+                            :type="7"
                         />
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="用户自定义2:">
                         <Diy
-                            field="brakes"
-                            :saveData="saveDropDownData"
-                            :dataSource="formData.diy2"
+                            field="diy2Tcsd"
+                            :saveData="(params)=>onSaveDiyData({...params, type:'diy2'})"
+                            :dataSource="diyData.diy2TcsdData"
+                            :type="8"
                         />
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" :offset="2">
                     <el-form-item label="用户自定义3:">
                         <Diy
-                            field="brakes"
-                            :saveData="saveDropDownData"
-                            :dataSource="formData.diy3"
+                            field="diy3Tcsd"
+                            :saveData="(params)=>onSaveDiyData({...params, type:'diy3'})"
+                            :dataSource="diyData.diy3TcsdData"
+                            :type="9"
                         />
                     </el-form-item>
                 </el-col>
@@ -79,7 +77,7 @@
                         :disabled="item.id === formData.id"
                     ></el-option>
                 </el-select>
-                <el-button class="btn-xl" :class="$style.copyBtn" @click="copy">复制</el-button>
+                <el-button class="btn-xl" :class="$style.copyBtn" @click="copyCar">复制</el-button>
 
                 <el-button
                     :class="$style.subBtn"
@@ -127,6 +125,9 @@ export default {
     data() {
         return {
             formData: {},
+            diyData: {},
+
+            formKey: _util.randomString("vehicleForm_"),
 
             copySource: null,
             rules: {
@@ -146,21 +147,35 @@ export default {
         }
     },
     methods: {
-        initData(cb) {
+        initData() {
+            let { initPageData, initDiyData } = this;
+            return Promise.all([initPageData(), initDiyData()]);
+        },
+        initPageData(cb) {
             let { id } = this.curTreeNodeInfo || {};
             if (!id) return;
 
-            carArg.vehicleView({ id }).then(res => {
+            return carArg.vehicleView({ id }).then(res => {
                 if (!res) return;
                 this.formData = res.data || {};
+            });
+        },
 
-                typeof cb === "function" && cb();
+        initDiyData() {
+            let { id } = this.curTreeNodeInfo || {};
+            if (!id) return;
+            return carArg.diyView({ caId: id }).then(res => {
+                if (!res) return;
+                this.diyData = res.data || {};
             });
         },
 
         // 复制
-        copy() {
-            if (!this.copySource) return;
+        copyCar() {
+            if (!this.copySource) {
+                this.$message("请先选择车辆");
+                return;
+            };
 
             // 获取复制源的基本信息
             let sourceInfo = this.trainList.find(
@@ -172,7 +187,9 @@ export default {
             carArg.vehicleCopy({ id, carNums: `${row}-${cal}` }).then(res => {
                 if (!res) return;
 
-                this.initData(() => {
+                this.formKey = _util.randomString("vehicleForm_");
+
+                this.initData().then(resArr => {
                     this.$message({
                         message: "操作成功",
                         type: "success"
@@ -181,10 +198,11 @@ export default {
             });
         },
 
-        // 保存下拉框的数据
-        saveDropDownData(params) {
-            let { field, data } = params;
-            this.formData[field] = data;
+        // 保存用户自定义数据
+        onSaveDiyData(params) {
+            let { field, data, type } = params;
+            this.diyData[field] = data.tcsdId;
+            this.diyData[type] = 1;
         },
         /**
          * 保存模型数据
@@ -198,8 +216,17 @@ export default {
         },
 
         saveData() {
-            carArg.vehicleEdit({ ...this.formData }).then(res => {
-                if (!res) return;
+            let diyData = { ...this.diyData };
+            delete diyData.diy1TcsdData;
+            delete diyData.diy2TcsdData;
+            delete diyData.diy3TcsdData;
+
+            Promise.all([
+                carArg.vehicleEdit({ ...this.formData }),
+                carArg.diySave({ ...this.diyData })
+            ]).then(res => {
+                console.log(res);
+                if (!res[0] || !res[1]) return;
 
                 this.$message({
                     message: "保存成功",

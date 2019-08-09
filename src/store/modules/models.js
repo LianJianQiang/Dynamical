@@ -202,6 +202,8 @@ const getters = {
 
     // 获取车辆列表数据，包含车辆信息和链接系统信息
     allCarData(state, getter) {
+        if (window.__ALL_CAR_DATA__) return window.__ALL_CAR_DATA__;
+
         // 获取车辆参数中的车辆列表
         let clcsArr = getter.getTreeNodeByType(MODEL_TREE_TYPE['vehicle']);
         // 获取链接系统中的车辆列表
@@ -231,7 +233,9 @@ const getters = {
             result[i].sort((a, b) => a.cal - b.cal);
         }
 
-        return Object.entries(result);
+        window.__ALL_CAR_DATA__ = Object.entries(result);
+
+        return window.__ALL_CAR_DATA__;
     },
 
     // 通过车号获取车辆信息
@@ -329,6 +333,7 @@ const mutations = {
 
         state.modelsTree = trees;
         state.modelTreeCache = treeData;    // 缓存数据
+        window.__ALL_CAR_DATA__ = null;
     },
 
     // 当前选中的model的id

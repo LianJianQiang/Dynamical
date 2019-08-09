@@ -77,9 +77,17 @@ export default {
             type: Number
         },
         dataSource: {
+            // table所用数据，后续将 dataSource 和tcsdData 进行合并
             type: Array,
             default: () => {
                 return [];
+            }
+        },
+        tcsdData: {
+            // 完整的数据，包含id等
+            type: Object,
+            default: () => {
+                return {};
             }
         },
         tableDataChange: {
@@ -117,10 +125,21 @@ export default {
         onSaveCb: {
             type: Function,
             default: () => {}
+        },
+        getParentData: {
+            type: Function,
+            default: () => ({})
         }
     },
     computed: {},
-    watch: {},
+    watch: {
+        dataSource() {
+            this.tableData = [...this.dataSource];
+        },
+        tcsdData() {
+            this.tcsd = { ...this.tcsdData };
+        }
+    },
     methods: {
         // 切换dialog状态
         toggleDialog(field, bool) {
@@ -147,7 +166,7 @@ export default {
         // table中删除一行
         tableDel() {
             let { tableData } = this;
-            tableData.pop();
+            tableData.shift();
             this.tableData = tableData;
             this.tableDataChange(this.tableData);
         },
@@ -210,8 +229,14 @@ export default {
         getSaveDataParmas() {
             const { userId } = getUserIdAndType();
 
+            // 适用于保存数据时，需要将父组件的数据一块发送到服务端到场景；
+            // 如：车辆参数中，用户自定义到横轴坐标，后端临时该接口，将横轴坐标放到该接口
+            // 神一般到方案:-)
+            let parentData = this.getParentData();
+
             return {
                 ...this.tcsd,
+                ...parentData,
                 userId,
                 tcsdData: this.tableData || [],
                 type: this.type
@@ -234,6 +259,11 @@ export default {
             model.tractionLiSave(params).then(res => {
                 if (!res) return;
                 this.nameDialogVisible = false;
+
+                this.$message({
+                    message: "操作成功",
+                    type: "success"
+                });
 
                 this.tcsdId = res.data.id;
 
