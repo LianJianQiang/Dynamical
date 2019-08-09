@@ -197,7 +197,7 @@ const getters = {
     curCarNum(state, getter) {
         let curVe = getter.curTreeNodeInfo;
         if (!curVe.row || !curVe.cal) return null;
-        return { row: curVe.row, col: curVe.cal }
+        return { row: curVe.row, cal: curVe.cal }
     },
 
     // 获取车辆列表数据，包含车辆信息和链接系统信息

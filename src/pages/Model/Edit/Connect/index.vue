@@ -221,6 +221,11 @@ export default {
 
         trainList() {
             return this.getTreeNodeByType(MODEL_TREE_TYPE.connect);
+        },
+        carNameStr() {
+            let { curCarNum } = this;
+            if (!this.curCarNum) return "";
+            return `${curCarNum.row}-${curCarNum.cal}`;
         }
     },
     mounted() {},
@@ -228,14 +233,14 @@ export default {
         ...mapActions("uiState", ["saveDefinedConnect"]),
 
         // 获取页面数据
-        initData(curCarNum) {
-            curCarNum = curCarNum || this.curCarNum;
-            if (!curCarNum) return;
+        initData(carNameStr, cb) {
+            carNameStr = carNameStr || this.carNameStr;
+            if (!carNameStr) return;
 
             model
                 .getAllCoupTypeByModelId({
                     modelId: this.curModelId,
-                    carNum: this.curCarNum
+                    carNum: carNameStr
                 })
                 .then(res => {
                     if (!res) return;
@@ -246,6 +251,8 @@ export default {
 
                     this.frontData = { ...front };
                     this.backData = { ...back };
+
+                    typeof cb === "function" && cb();
                 });
         },
         // 复制端
@@ -267,11 +274,17 @@ export default {
 
             // TODO 未测试
             let sourceInfo = this.getTreeNodeById(this.copySource);
+            console.log(sourceInfo);
 
             let { row, cal } = sourceInfo;
             if (!row || !cal) return null;
 
-            this.initData(`${row}-${cal}`);
+            this.initData(`${row}-${cal}`, () => {
+                this.$message({
+                    message: "操作成功",
+                    type: "success"
+                });
+            });
         },
 
         // 保存下拉框的数据
@@ -285,7 +298,7 @@ export default {
                 faceType = CAR_ELE_DICT.front.key;
             }
             this.saveDefinedConnect({
-                id: this.curCarNum,
+                id: this.carNameStr,
                 type: faceType,
                 eleType: ele
             });
@@ -298,7 +311,7 @@ export default {
             let frontData = filterJson(this.frontData);
             let backData = filterJson(this.backData);
 
-            if (!this.curCarNum) {
+            if (!this.carNameStr) {
                 this.$message({
                     message: "数据错误",
                     type: "error"
@@ -309,13 +322,13 @@ export default {
             Object.assign(frontData, {
                 modelId: this.curModelId,
                 faceType: 1,
-                carNum: this.curCarNum
+                carNum: this.carNameStr
             });
 
             Object.assign(backData, {
                 modelId: this.curModelId,
                 faceType: 2,
-                carNum: this.curCarNum
+                carNum: this.carNameStr
             });
 
             let params = {
