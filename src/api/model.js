@@ -11,6 +11,9 @@ const getModels = (params) => request(`${config.baseUrl}/model/listData`, { ...p
 // 创建模型
 const getModelTree = (params) => request(`${config.baseUrl}/model/modelTree`, { ...params });
 
+// 车辆顺序调整
+const resortVehicleOrder = (params) => request(`${config.baseUrl}/ca/sequenceAdjust`, { ...params });
+
 // 列车基本参数（查询，包含第一列和第二列的数据）
 const getVehicleBasic = (params) => request(`${config.baseUrl}/ve1/veView`, { ...params });
 
@@ -41,11 +44,14 @@ const getAllCoupTypeView = (params) => request(`${config.baseUrl}/allcouptype/ge
 // 根据模型id和车辆号获取车间连接端面列表
 const getAllCoupTypeByModelId = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeByModelId`, { ...params });
 
+
+
 export default {
     // 模型树
     createModel,
     getModels,
     getModelTree,
+    resortVehicleOrder,
 
     // 车辆基本参数
     getVehicleBasic,

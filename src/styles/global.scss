@@ -49,6 +49,8 @@ img {
   background-color: $highlight-color_1 !important;
   color: #fff !important;
   font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 body {
   .btn-mini {
@@ -122,4 +124,26 @@ body {
   padding: 10px;
   text-align: center;
   color: #999;
+}
+
+.globalLoading {
+  z-index: 99999999 !important;
+  .el-icon-loading {
+    font-size: 50px;
+  }
+
+  .el-loading-text {
+    font-size: 18px;
+  }
+}
+
+// 禁止选中文本
+// 在 IE < 10 和Opera < 15中，需要在需要禁止选中的元素上面添加一个属性unselectable="on"，
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Chrome/Safari/Opera */
+  -khtml-user-select: none; /* Konqueror */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently not supported by any browser */
 }

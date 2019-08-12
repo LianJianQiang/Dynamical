@@ -1,5 +1,10 @@
 <template>
-    <div :class="$style.root" :style="bodyBGImg">{{carInfo.cal}}</div>
+    <div
+        :class="$style.root"
+        :style="bodyBGImg"
+        @mousedown.stop="(ev)=>$emit('mousedown',ev)"
+        @mouseup.stop="(ev)=>$emit('mouseup',ev)"
+    >{{`${carInfo.row}-${carInfo.cal}`}}</div>
 </template>
 
 <script>
@@ -11,11 +16,9 @@ const TYPE_DICT = {
     trail: "ct03"
 };
 export default {
-    name: "Header",
+    name: "CarBody",
     data() {
-        const imgUrl = Img[TYPE_DICT[this.type]];
         return {
-            bodyBGImg: { backgroundImage: `url(${imgUrl})` }
         };
     },
     props: {
@@ -26,7 +29,14 @@ export default {
             type: Object,
             default: () => {}
         }
-    }
+    },
+    computed: {
+        bodyBGImg() {
+            const imgUrl = Img[TYPE_DICT[this.type]];
+            return { backgroundImage: `url(${imgUrl})` };
+        }
+    },
+    watch: {}
 };
 </script>
 

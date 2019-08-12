@@ -1,10 +1,7 @@
 <template>
-    <div :class="$style.root">
+    <div :class="$style.root" class="noselect" unselectable="on">
         <div v-if="!isOpenCarDetail" :class="$style.listWrap">
-            <div v-for="(item, idx) in allCarData" :key="idx" :class="$style.trainWrap">
-                <div :class="$style.title">{{`第${item[0]}列`}}</div>
-                <CarList :list="item[1]" :onClickList="onClickList" />
-            </div>
+            <CarList />
         </div>
         <div v-else :class="$style.detailWrap">
             <div :class="$style.close" class="cursor-p" @click="onClickList({})">
@@ -20,7 +17,7 @@
 import { mapGetters, mapActions, mapState } from "vuex";
 
 import Img from "assets/icon";
-import CarList from "components/CarList";
+import CarList from "./CarList";
 
 import CarBodyDetail from "./CarBodyDetail";
 
@@ -44,18 +41,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters("models", ["allCarData"]),
         ...mapGetters("uiState", ["isOpenCarDetail"]),
         ...mapState("uiState", ["carDetail"])
-
-        // listData() {
-        //     return this.allCarData;
-        // }
     },
-    mounted() {
-        // console.log(this.allCarData);
-        // console.log(this.isOpenCarDetail);
-    }
+    mounted() {}
 };
 </script>
 
@@ -63,20 +52,7 @@ export default {
 .root {
     background: #fff;
     border-radius: $raduis_1;
-    // padding: 20px;
     position: relative;
-    .trainWrap {
-        margin-bottom: 60px;
-        &:last-child {
-            margin-bottom: 20px;
-        }
-    }
-    .title {
-        text-align: left;
-        font-size: 20px;
-        font-weight: 500;
-        margin: 20px 0;
-    }
 
     .listWrap,
     .detailWrap {
@@ -86,6 +62,7 @@ export default {
     .detailWrap {
         text-align: center;
         .title {
+            margin: 20px 0;
             text-align: center;
             font-size: 18px;
             font-weight: normal;

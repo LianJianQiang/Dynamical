@@ -106,14 +106,19 @@ module.exports = {
     },
     parallel: require('os').cpus().length > 1,
 
-    devServer: {
-        open: process.platform === 'darwin',
-        host: '0.0.0.0',
-        port: 8080,
-        https: false,
-        hotOnly: false,
-        proxy: null, // 设置代理
-        before: app => {
-        }
-    }
+    // devServer: {
+    //     // open: process.platform === 'darwin', // 配置自动启动浏览器
+    //     // host: 'localhost',
+    //     port: 8080,
+    //     proxy: {
+    //         '/api': {
+    //             target: 'http://txh.logimis.com/', // 对应自己的接口
+    //             changeOrigin: true,
+    //             ws: true,
+    //             pathRewrite: {
+    //                 '^/api': ''
+    //             }
+    //         }
+    //     }
+    // }
 }

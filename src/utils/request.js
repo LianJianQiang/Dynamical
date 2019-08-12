@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { Message } from 'element-ui';
+import loading from 'utils/loading';
 
 const instance = axios.create({
     timeout: 30000,
@@ -52,6 +53,7 @@ export function openLogin() {
 }
 
 export function request(url, data = {}, { method = 'post', showLoading = true } = {}) {
+    showLoading && loading.show();
     // 通用参数
     let common = {};
 
@@ -67,10 +69,12 @@ export function request(url, data = {}, { method = 'post', showLoading = true } 
 
     return instance.request(config)
         .then((data) => {
+            loading.hide();
             if (data.code !== '200') return Promise.reject(data);
             return data;
         })
         .catch((error) => {
+            loading.hide();
             console.log('request catch : ', error)
         })
 };

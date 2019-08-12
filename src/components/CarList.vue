@@ -8,9 +8,20 @@
             @click="clickList(item)"
         >
             <Car
+                @mousedown="onCarMouseDown($event, item)"
+                @mouseup="onCarMouseUp($event, item)"
                 :class="[$style[`car_${getCarType(idx)}`]]"
                 :type="getCarType(idx)"
                 :carInfo="item"
+            />
+        </div>
+
+        <div :class="$style.mouseTooltip" v-show="curDragItem" ref="mouseTooltip">
+            <Car
+                :class="[$style[`car_body`]]"
+                type="body"
+                :carInfo="curDragItem"
+                v-if="curDragItem"
             />
         </div>
     </div>
@@ -34,14 +45,27 @@ export default {
         onClickList: {
             type: Function,
             default: () => {}
+        },
+        isAllowDrag: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
-        return {};
+        return {
+            curDragItem: null
+        };
     },
-    computed: {},
+    computed: {
+        carList() {
+            return [...this.list];
+        }
+    },
     methods: {
         clickList(info) {
+            // 排序中，不允许点击跳转
+            if (this.isAllowDrag) return;
+
             this.onClickList(info);
         },
         // 判断car的类型，车头 | 车身 | 车位
@@ -55,7 +79,48 @@ export default {
                 default:
                     return "body";
             }
+        },
+
+        resort(target) {
+            let { curDragItem } = this;
+        },
+
+        setTooltipDomPosition(ev) {
+            if (!this.tooltopDom) {
+                this.tooltopDom = this.$refs.mouseTooltip;
+            }
+            this.tooltopDom.style.top = ev.y + 10 + "px";
+            this.tooltopDom.style.left = ev.x + 10 + "px";
+        },
+
+        onMouseMove(ev) {
+            this.setTooltipDomPosition(ev);
+        },
+
+        onCarMouseDown(ev, item) {
+            if (!this.isAllowDrag) return;
+
+            let self = this;
+            this.setTooltipDomPosition(ev);
+            self.curDragItem = item;
+
+            document.addEventListener("mousemove", self.onMouseMove);
+            document.addEventListener("mouseup", self.onCarMouseUp);
+        },
+
+        onCarMouseUp(ev, item) {
+            if (!this.isAllowDrag) return;
+
+            if (!item) {
+                this.curDragItem = null;
+                return;
+            }
+            this.resort(item);
+            document.removeEventListener("mousemove", this.onMouseMove);
         }
+    },
+    mounted() {
+        this.tooltopDom = this.$refs.mouseTooltip;
     }
 };
 </script>
@@ -76,6 +141,9 @@ export default {
     .car_body {
         width: 140px;
         height: 60px;
+    }
+    .mouseTooltip {
+        position: fixed;
     }
 }
 </style>
