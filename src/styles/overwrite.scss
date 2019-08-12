@@ -57,4 +57,8 @@ body {
   .el-drawer__body {
     overflow: auto;
   }
+
+  .el-input-number .el-input__inner {
+    text-align: left;
+  }
 }

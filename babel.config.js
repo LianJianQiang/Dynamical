@@ -15,7 +15,7 @@ module.exports = {
         }]
     ],
     plugins: [
-        "transform-remove-console",         // 删除后ie白屏
+        // "transform-remove-console",         // 删除后ie白屏
         [
             "component",
             {

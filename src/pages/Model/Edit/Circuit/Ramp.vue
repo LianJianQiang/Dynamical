@@ -1,13 +1,12 @@
 <template>
     <div>
-        <span class="cursor-p hover-heighlight" @click="showDrawer=true">设置</span>
+        <!-- <span class="cursor-p hover-heighlight" @click="showDrawer=true">设置</span> -->
         <el-drawer
             ref="rampDrawer"
             custom-class="rampDrawer"
             title="坡道设置"
             :visible.sync="showDrawer"
             direction="rtl"
-            :before-close="handleClose"
         >
             <div class="rampDrawContent">
                 <div class="methodWrap">
@@ -15,28 +14,28 @@
                     <el-select v-model="rampMethod" placeholder="请选择" class="m-l-5">
                         <el-option
                             v-for="item in rampMethods"
-                            :key="item.value"
+                            :key="item.id"
                             :label="item.name"
-                            :value="item.value"
+                            :value="item.id"
                         ></el-option>
                     </el-select>
                 </div>
 
                 <div class="drawerContent">
                     <!-- 常规定义法 -->
-                    <el-form :model="form" v-if="rampMethod ==='normal'">
+                    <el-form :model="formData" v-if="rampMethod === 1">
                         <el-form-item label="长度(m)" :label-width="formLabelWidth">
-                            <el-input v-model="form.len"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model="formData.lInitial"></el-input-number>
                         </el-form-item>
                         <el-form-item label="坡度(ppt)" :label-width="formLabelWidth">
-                            <el-input v-model="form.ramp"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model="formData.gradient"></el-input-number>
                         </el-form-item>
                         <el-form-item label="过渡曲线半径(m)" :label-width="formLabelWidth">
-                            <el-input v-model="form.r"></el-input>
+                            <el-input-number :controls="false" :min="0" v-model="formData.radius"></el-input-number>
                         </el-form-item>
                     </el-form>
                     <!-- 逐点定义法 -->
-                    <div v-if="rampMethod ==='point'">
+                    <div v-if="rampMethod === 2">
                         <div class="btnGroup">
                             <span class="btn-mini" @click="tableAdd">+</span>
                             <span class="btn-mini" @click="tableDel">-</span>
@@ -44,9 +43,9 @@
                                 <el-select v-model="selType" placeholder="请选择" class="selType">
                                     <el-option
                                         v-for="item in typeList"
-                                        :key="item.value"
+                                        :key="item.id"
                                         :label="item.name"
-                                        :value="item.value"
+                                        :value="item.id"
                                     ></el-option>
                                 </el-select>
                             </span>
@@ -108,11 +107,7 @@
                         <div></div>
                     </div>
                     <div class="drawerFooter" v-if="rampMethod">
-                        <el-button
-                            class="btn-xl"
-                            type="primary"
-                            @click="$refs.rampDrawer.closeDrawer()"
-                        >保存</el-button>
+                        <el-button class="btn-xl" type="primary" @click="saveData">保存</el-button>
                         <el-button class="btn-xl" @click="showDrawer = false">取消</el-button>
                     </div>
                 </div>
@@ -122,15 +117,17 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import { isNil } from "utils/util";
 import LineCharts from "components/Charts";
 
 const rampMethods = [
-    { value: "normal", name: "常坡度定义" },
-    { value: "point", name: "逐点定义" }
+    { id: 1, name: "常坡度定义" },
+    { id: 2, name: "逐点定义" }
 ];
 
-const typeList = [{ value: "line", name: "Line" }];
+const typeList = [{ id: "line", name: "Line" }];
 
 let chartsOptions = {
     xAxis: {
@@ -157,14 +154,14 @@ export default {
     data() {
         return {
             rampMethods,
-            rampMethod: "",
+            rampMethod: rampMethods[0].id,
             showDrawer: false,
 
             // 常坡度定义
-            form: {
-                len: "", // 长度
-                ramp: "", // 坡度
-                r: "" // 过渡曲线半径
+            formData: {
+                lInitial: 100, // 长度
+                gradient: 0, // 坡度
+                radius: 0 // 过渡曲线半径
             },
             formLabelWidth: "120px",
 
@@ -175,23 +172,27 @@ export default {
             pointTableData: []
         };
     },
+    watch: {
+        visible() {
+            this.showDrawer = this.visible;
+        }
+    },
     props: {
         dataSource: {
             type: Object,
             default: () => ({})
+        },
+        visible: {
+            type: Boolean,
+            default: false
         }
     },
-    methods: {
-        // 关闭坡道设置
-        handleClose(done) {
-            this.$confirm("确认关闭？")
-                .then(_ => {
-                    done();
-                })
-                .catch(_ => {});
-        },
+    computed: {
+        ...mapState("models", ["curModelId"])
+    },
 
-        // 逐点定义
+    methods: {
+        // 逐点定义 添加
         tableAdd() {
             let last = this.pointTableData[0];
             let order;
@@ -202,14 +203,18 @@ export default {
             }
             this.pointTableData.unshift({
                 order,
-                type: "Line",
+                type: typeList[0].id,
                 smooth: "Yes"
             });
         },
+
+        // 逐点定义 删除
         tableDel() {
             if (this.pointTableData.length === 0) return;
             this.pointTableData.shift();
         },
+
+        // 逐点定义 图表联动
         charTableChange() {
             let data = this.pointTableData;
             let xAxisData = [];
@@ -220,9 +225,97 @@ export default {
             });
             this.chartsOptions.xAxis.data = xAxisData;
             this.chartsOptions.series[0].data = yAxisData;
+        },
+
+        // 保存常规定义数据
+        saveType1Data() {
+            let { formData, curModelId } = this;
+            for (let i in formData) {
+                if (formData[i] !== 0 && !formData[i]) {
+                    this.$message({
+                        message: "请将数据填写完整",
+                        type: "error"
+                    });
+                    return null;
+                }
+            }
+
+            // lineDef 线路方式:线路设置1,线路设置2
+            return [
+                {
+                    ...formData,
+                    type: this.rampMethod,
+                    lineDef: 1,
+                    modelId: curModelId
+                }
+            ];
+        },
+
+        // 保存逐点定义数据
+        saveType2Data() {
+            let { rampMethod, pointTableData, curModelId } = this;
+            let len = pointTableData.length - 1;
+            let result = [];
+
+            for (let i = len; i >= 1; i--) {
+                let curData = pointTableData[i];
+                if (!curData.x || !curData.y) {
+                    this.$message({
+                        message: "请将数据填写完整",
+                        type: "error"
+                    });
+                    return null;
+                }
+
+                let pro = pointTableData[i - 1];
+
+                if (pro.y === curData.y) {
+                    this.$message({
+                        message: "相邻两行的Y值不能相同",
+                        type: "error"
+                    });
+                    return null;
+                }
+
+                // row里的默认数据
+                let json = {
+                    type: rampMethod,
+                    lineDef: 1,
+                    modelId: curModelId
+                };
+
+                // 长度
+                json.lInitial = pro.x - curData.x;
+
+                // 坡度
+                json.gradient = (
+                    ((pro.y - curData.y) / (pro.x - curData.x)) *
+                    1000
+                ).toFixed(2);
+                result.unshift(json);
+            }
+
+            return result;
+        },
+
+        // 保存数据
+        saveData() {
+            // this.$refs.rampDrawer.closeDrawer();
+            let { rampMethod } = this;
+            let data = null; // []
+            if (rampMethod === 1) {
+                // 常规定义
+                data = this.saveType1Data();
+            } else if (rampMethod === 2) {
+                // 逐点定义
+                data = this.saveType2Data();
+            }
+
+            if (!data) return;
+
+            this.$emit("saveData", data);
         }
     },
-    computed: {},
     mounted() {
         this.charTableChange();
     }

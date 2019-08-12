@@ -13,7 +13,7 @@
             </el-select>
         </div>
         <div :class="$style.content">
-            <Scheme1 v-if="scheme === 'scheme1'" />
+            <Scheme1 v-if="scheme === 'scheme1'" ref="scheme1" />
             <Scheme2 v-if="scheme === 'scheme2'" />
 
             <div :class="$style.footer" v-if="scheme">
@@ -50,7 +50,11 @@ export default {
     },
     props: {},
     methods: {
-        save() {},
+        save() {
+            if (this.scheme === "scheme1") {
+                this.$refs.scheme1.saveData();
+            }
+        },
         cancel() {}
     },
     computed: {},
