@@ -1,151 +1,156 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.train" class="cursor-p" :style="bodyBGImg">
+        <div
+            :class="$style.train"
+            class="cursor-p"
+            :style="bodyBGImg"
+            @dblclick.stop="onDblclickBody"
+        >
             <div>
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-前端"
                     :class="[$style.frontHC,$style.hc,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.hcq)"
                     :src="Img['hc']"
                     title="缓冲器-后端"
                     :class="[$style.backHC,$style.hc,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-前端"
                     :class="[$style.frontXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.xjzc)"
                     :src="Img['xjth']"
                     title="橡胶弹簧-后端"
                     :class="[$style.backXJTH,$style.xjth,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-前端"
                     :class="[$style.frontYK,$style.yk,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.ykg)"
                     :src="Img['yk']"
                     title="压馈管-后端"
                     :class="[$style.backYK,$style.yk,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-前端"
                     :class="[$style.frontGZ,$style.gz,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.gzbh)"
                     :src="Img['gz']"
                     title="过载保护-后端"
                     :class="[$style.backGZ,$style.gz,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-前端"
                     :class="[$style.frontFP,$style.fp,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.fpq)"
                     :src="Img['fp']"
                     title="防爬-后端"
                     :class="[$style.backFP,$style.fp,$style.connectEle]"
                 />
                 <div
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.diy1)"
                     :class="[$style.diy,$style.connectDiy,$style.frontDIY1,$style.connectEle]"
                 >diy1</div>
                 <div
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.diy2)"
                     :class="[$style.diy,$style.connectDiy,$style.frontDIY2,$style.connectEle]"
                 >diy2</div>
                 <div
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.diy1)"
                     :class="[$style.diy,$style.connectDiy,$style.backDIY1,$style.connectEle]"
                 >diy1</div>
                 <div
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.diy2)"
                     :class="[$style.diy,$style.connectDiy,$style.backDIY2,$style.connectEle]"
                 >diy2</div>
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-前端"
                     :class="[$style.frontFD,$style.fd,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.fd)"
                     :src="Img['fd']"
                     title="风挡-后端"
                     :class="[$style.backFD,$style.fd,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(frontKey, connectEleDict.cjjz)"
                     :src="Img['cjjz']"
                     title="车间减震-前端"
                     :class="[$style.frontCJJZ,$style.cjjz,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('connect')"
+                    @dblclick.stop="onDblclick('connect')"
                     v-if="isShowEle(backKey, connectEleDict.cjjz)"
                     :src="Img['cjjz']"
                     title="车间减震-后端"
                     :class="[$style.backCJJZ,$style.cjjz,$style.connectEle]"
                 />
                 <img
-                    @dblclick="onDblclick('vehicle')"
+                    @dblclick.stop="onDblclick('vehicle')"
                     :src="Img['qy']"
                     title="牵引系统"
                     :class="[$style.qy,$style.btmEle]"
                     v-if="isShowEle(infoKey, vehicleEleDict.qyxt)"
                 />
                 <img
-                    @dblclick="onDblclick('vehicle')"
+                    @dblclick.stop="onDblclick('vehicle')"
                     :src="Img['zd']"
                     title="制动系统"
                     :class="[$style.zd,$style.btmEle]"
                     v-if="isShowEle(infoKey, vehicleEleDict.zdxt)"
                 />
                 <div
-                    @dblclick="onDblclick('vehicle')"
+                    @dblclick.stop="onDblclick('vehicle')"
                     :class="[$style.diy,$style.carDiy,$style.btmDIY1,$style.btmEle]"
                     v-if="isShowEle(infoKey, vehicleEleDict.diy1)"
                 >diy1</div>
                 <div
-                    @dblclick="onDblclick('vehicle')"
+                    @dblclick.stop="onDblclick('vehicle')"
                     :class="[$style.diy,$style.carDiy,$style.btmDIY2,$style.btmEle]"
                     v-if="isShowEle(infoKey, vehicleEleDict.diy2)"
                 >diy2</div>
                 <div
-                    @dblclick="onDblclick('vehicle')"
+                    @dblclick.stop="onDblclick('vehicle')"
                     :class="[$style.diy,$style.carDiy,$style.btmDIY3,$style.btmEle]"
                     v-if="isShowEle(infoKey, vehicleEleDict.diy3)"
                 >diy3</div>
@@ -197,6 +202,7 @@ export default {
 
         isShowEle() {
             return (type, ele) => {
+                return true;
                 if (type === this.infoKey) {
                     return this.vehicleEleIsShow(type, ele);
                 }
@@ -206,6 +212,11 @@ export default {
     },
     methods: {
         ...mapActions("models", ["setCurTreeNodeId"]),
+
+        // 双击车身
+        onDblclickBody() {
+            console.log("onDblclickBody");
+        },
 
         // 双击图标
         onDblclick(eleType) {
@@ -355,9 +366,9 @@ export default {
     }
 
     .train {
-        width: 666px;
+        width: 600px;
         height: 288px;
-        margin: 50px 100px 150px;
+        margin: 50px 0 120px;
         position: relative;
         background-repeat: no-repeat;
         background-size: 100%;
@@ -378,7 +389,7 @@ export default {
     .hc {
         width: 20px;
         height: 16px;
-        margin-top: -8px;
+        margin-top: -24px;
     }
 
     .frontHC {
@@ -392,7 +403,7 @@ export default {
     .xjth {
         width: 30px;
         height: 10px;
-        margin-top: -5px;
+        margin-top: -20px;
     }
     .frontXJTH {
         left: 146px;
@@ -404,7 +415,7 @@ export default {
     .yk {
         width: 20px;
         height: 30px;
-        margin-top: -15px;
+        margin-top: -32px;
     }
     .frontYK {
         left: 180px;
@@ -416,7 +427,7 @@ export default {
     .gz {
         width: 10px;
         height: 30px;
-        margin-top: -15px;
+        margin-top: -32px;
     }
     .frontGZ {
         left: 208px;
@@ -426,7 +437,7 @@ export default {
     }
 
     .connectDiy {
-        margin-top: -9px;
+        margin-top: -25px;
     }
     .frontDIY1 {
         left: 224px;
@@ -444,7 +455,7 @@ export default {
     .fd {
         width: 20px;
         height: 25px;
-        bottom: 42px;
+        bottom: 68px;
         top: auto;
     }
     .frontFD {
@@ -457,7 +468,7 @@ export default {
     .fp {
         width: 20px;
         height: 20px;
-        margin-top: -10px;
+        margin-top: -25px;
     }
     .frontFP {
         left: -30px;
