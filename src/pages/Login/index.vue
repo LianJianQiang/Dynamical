@@ -37,7 +37,7 @@
 
 <script>
 import Logo from "assets/images/logo2.png";
-import { login } from "api";
+// import { login } from "api";
 
 import { SESSION_USERINFO_KEY } from "common/constants";
 
@@ -83,6 +83,7 @@ export default {
                     );
 
                     this.$router.push("/page");
+                    console.log(JSON.stringify({ username, password }));
 
                     // login.signIn({ username, password }).then(res => {
                     //     if (!res) return;

@@ -167,7 +167,7 @@ export default {
                 interpolationMethod
             };
 
-            if (this.type) result.curveType = type;
+            if (this.type) result.curveType = this.type;
 
             return result;
         }

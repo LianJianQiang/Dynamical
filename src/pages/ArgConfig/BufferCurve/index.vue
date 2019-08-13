@@ -54,8 +54,6 @@ const symmetryTypeList = [
     { type: "2", name: "非对称曲线" }
 ];
 
-const curveTypeList = [{ type: 1, name: "拉伸" }, { type: 2, name: "压缩" }];
-
 const needEvalField = [
     "pointAllotDataYs",
     "pointAllotDataLs",

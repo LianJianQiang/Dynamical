@@ -14,11 +14,6 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
-import { MODEL_TREE_TYPE, getTreeNodeByType } from "common/constants";
-
-import _util from "utils/util";
-
 import Tree from "./Tree";
 
 export default {
@@ -30,75 +25,9 @@ export default {
         Tree
     },
     props: {},
-    computed: {
-    },
-    watch: {
-        // curTreeNodeId() {
-        //     this.$refs.rightWrap.scrollTop = 0;
-        // }
-    },
-    methods: {
-        // ...mapActions("models", ["createModel"]),
-
-        // // 打开模型
-        // openModel() {
-        //     this.$router.push("/page/model/open");
-        // },
-
-        // // 新建模型
-        // newModel() {
-        //     this.setModelName({
-        //         success: name => {
-        //             // this.$router.push("/model/edit");
-        //             // this.createModel(name);
-        //             this.createSuccessCb(name);
-        //         }
-        //     });
-        // },
-
-        /**
-         * 设置模型名称
-         */
-        // setModelName: function({ success }) {
-        //     this.$prompt("请输入模型名称", {
-        //         confirmButtonText: "确定",
-        //         cancelButtonText: "取消",
-        //         inputValidator: this.validatorModelname
-        //     })
-        //         .then(({ value }) => {
-        //             typeof success === "function" && success(value);
-        //         })
-        //         .catch(e => {
-        //             console.log(e);
-        //         });
-        // },
-
-        // /**
-        //  * 校验模型名称
-        //  */
-        // validatorModelname: function(value) {
-        //     if (!_util.isNumZhEn(value)) {
-        //         return "名称为只能包含汉字、数字、字母";
-        //     }
-
-        //     // if (this.isRepeat({ name: value })) return "模型名称重复";
-
-        //     return true;
-        // },
-
-        // createSuccessCb(name) {
-
-        //     let arr =
-        //         getTreeNodeByType( MODEL_TREE_TYPE.basic) || [];
-        //     let newBasic = arr[0] || {};
-
-        //     let { id, modelName, type } = newBasic;
-        //     this.$router.push({
-        //         path: "/pagge/model/edit",
-        //         query: { type, name: modelName, id }
-        //     });
-        // }
-    }
+    computed: {},
+    watch: {},
+    methods: {}
 };
 </script>
 

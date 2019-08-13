@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 import _util from "utils/util";
 import { MODEL_TREE_TYPE } from "common/constants";
@@ -102,7 +102,6 @@ import { carArg } from "api";
 import Traction from "./Traction";
 import Brakes from "./Brakes";
 import Diy from "./Diy";
-import { type } from "os";
 // import Traction from "./Traction";
 
 // 自定义验证规则

@@ -18,7 +18,7 @@ module.exports = {
     // 输出文件目录
     outputDir: 'dist',
     // eslint-loader 是否在保存的时候检查
-    lintOnSave: false,
+    lintOnSave: process.env.NODE_ENV !== 'production',
     assetsDir: '', // 相对于outputDir的静态资源(js、css、img、fonts)目录
     runtimeCompiler: true, // 是否使用包含运行时编译器的 Vue 构建版本
     // 生产环境是否生成 sourceMap 文件
@@ -57,6 +57,9 @@ module.exports = {
             .set('lib', resolve('src/lib'))
             .set('store', resolve('src/store'));
 
+        // config.externals = {
+        //     'element-ui': 'element-ui'
+        // };
 
         // 压缩图片 ie9不兼容
         // config.module
@@ -72,18 +75,18 @@ module.exports = {
         //     });
 
         // 打包分析
-        if (process.env.IS_ANALYZ) {
+        if (process.env.NODE_ENV === 'production') {
             config.plugin('webpack-report')
                 .use(BundleAnalyzerPlugin, [{
                     analyzerMode: 'static'
                 }]);
         }
     },
-    transpileDependencies: [
-        'vue-echarts',
-        'resize-detector',
-        'webpack-dev-server/client'
-    ],
+    // transpileDependencies: [
+    //     'axios',
+    //     'echarts',
+    //     'element-ui'
+    // ],
 
     configureWebpack: config => {
         if (IS_PROD) {
@@ -104,7 +107,7 @@ module.exports = {
             ];
         }
     },
-    parallel: require('os').cpus().length > 1,
+    parallel: require('os').cpus().length > 1
 
     // devServer: {
     //     // open: process.platform === 'darwin', // 配置自动启动浏览器

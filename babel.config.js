@@ -1,8 +1,17 @@
 
-// const plugins = [];
-// if (['production', 'prod'].includes(process.env.NODE_ENV)) {
-//     plugins.push("transform-remove-console")
-// }
+const plugins = [
+    [
+        "component",
+        {
+            "libraryName": "element-ui",
+            "styleLibraryName": "theme-chalk"
+        }
+    ],
+    'equire'
+];
+if (['production', 'prod'].includes(process.env.NODE_ENV)) {
+    plugins.push("transform-remove-console")            // 可解决 ie9 白屏
+}
 
 module.exports = {
     presets: [
@@ -14,15 +23,5 @@ module.exports = {
             ]
         }]
     ],
-    plugins: [
-        // "transform-remove-console",         // 删除后ie白屏
-        [
-            "component",
-            {
-                "libraryName": "element-ui",
-                "styleLibraryName": "theme-chalk"
-            }
-        ],
-        'equire'
-    ]
+    plugins: plugins
 }
