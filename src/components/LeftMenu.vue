@@ -5,57 +5,58 @@
                 :class="[$style.menuItem, getMenuItemStatus(item,'active')]"
                 class="cursor-p"
                 v-for="item in menuList"
-                :key="item.key"
+                :key="item.menuId"
                 @click="onClickMenuItem(item)"
             >
                 <!-- src 临时方案，优化 -->
-                <img :src="active===item.key ? item.activeIcon : item.icon" alt />
-                <span :class="getMenuItemStatus(item,'active')">{{ item.name }}</span>
+                <img
+                    :src="active===item.menuId ? menuIcon[item.activeIcon] : menuIcon[item.icon]"
+                    alt
+                />
+                <span :class="getMenuItemStatus(item, 'active')">{{ item.menuName }}</span>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import { MENU_LIST } from "common/constants";
+import { getMenuList } from "utils/util";
+import Icon from "assets/icon";
 
 export default {
     name: "LeftMenu",
     data() {
         return {
-            menuList: MENU_LIST,
-            active: ""
+            menuList: [],
+            active: "",
+            menuIcon: Icon
         };
     },
     methods: {
         getMenuItemStatus: function(item = {}, y = "", n = "") {
-            return this.active === item.key ? y : n;
+            return this.active === item.menuId ? y : n;
         },
 
         // 点击跳转
         onClickMenuItem: function(item) {
-            this.active = item.key;
-            this.$router.push(item.url);
+            this.active = item.menuId;
+            this.$router.push(item.key);
         },
 
         // 初始化页面，默认选中
         initActive: function() {
             const { path } = this.$route;
-            let idx = path.indexOf("/", 1);
-            let curPath = path;
-            if (idx !== -1) {
-                curPath = path.substring(0, idx);
-            }
 
-            const curMenuItem = MENU_LIST.find(item => {
-                return item.url === curPath;
+            const curMenuItem = this.menuList.find(item => {
+                return path.indexOf(item.key) !== -1;
             });
 
-            curMenuItem && (this.active = curMenuItem.key);
+            curMenuItem && (this.active = curMenuItem.menuId);
         }
     },
     computed: {},
     mounted() {
+        this.menuList = getMenuList();
         this.initActive();
     }
 };

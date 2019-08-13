@@ -1,35 +1,52 @@
 <template>
     <div :class="$style.root" class="clearfix">
-        <div style="font-size:20px;color:#fff">header</div>
+        <!-- <div style="font-size:20px;color:#fff">header</div> -->
 
-        <!-- <div :class="$style.logo" class="fll">
+        <div :class="$style.logo" class="fll">
             <img :src="logoImg" alt />
         </div>
         <div :class="$style.title" class="fll">客运列车纵向动力学软件系统</div>
         <div :class="$style.user" class="flr">
             <div :class="$style.avatar" class="fll">
                 <div :class="$style.imgWrap">
-                    <img :src="userAvatar" alt />
+                    <div v-if="username">{{userAvatar}}</div>
+                    <img v-else :src="userAvatar" alt />
                 </div>
             </div>
             <div :class="$style.username" class="flr">{{username}}</div>
-        </div> -->
+        </div>
     </div>
 </template>
 
 <script>
 import logoImg from "assets/images/logo.png";
+import defaultUser from "assets/images/logo2.png";
+
+import { getUserInfo } from "utils/util";
+
 export default {
     name: "Header",
     data() {
         return {
             logoImg,
-            username: "Lian",
-            userAvatar: logoImg
+            username: ""
+            // userAvatar: logoImg
         };
+    },
+    computed: {
+        userAvatar() {
+            let { username } = this;
+            if (!username) return defaultUser;
+            return username.substring(0, 1);
+        }
     },
     props: {
         msg: String
+    },
+    mounted() {
+        let userInfo = getUserInfo();
+        let { name = "" } = userInfo;
+        this.username = name;
     }
 };
 </script>
@@ -79,6 +96,13 @@ $font-color: #fff;
             height: 100%;
             border-radius: 50%;
             overflow: hidden;
+            div {
+                width: 100%;
+                line-height: 50px;
+                font-size: 30px;
+                color: #fff;
+                text-align: center;
+            }
         }
     }
 

@@ -1,13 +1,6 @@
 import Icon from 'assets/icon';
 
 export const MENU_LIST = [
-    // {
-    //     name: '参数配置',
-    //     key: 'home',
-    //     icon: Icon['home'],
-    //     activeIcon: Icon['homeActive'],
-    //     url: '/arg-cfg'
-    // },
     {
         name: '模型建设',
         key: 'model',
@@ -41,6 +34,7 @@ export const MENU_LIST = [
 // }
 
 export const SESSION_USERINFO_KEY = '__USERINFO__';
+export const SESSION_USER_MENULIST = '__USER_MENULIST__';
 
 
 export const MODEL_TREE_TYPE = {

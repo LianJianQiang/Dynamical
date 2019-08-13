@@ -1,4 +1,4 @@
-import { OPEN_CAR_DETAIL, MODEL_SAVE_CONNECT_DEFINED } from 'store/mutation-types.js';
+import { OPEN_CAR_DETAIL, MODEL_SAVE_CONNECT_DEFINED, CLEAR_ALL_DATA_UISTATE } from 'store/mutation-types.js';
 import { CAR_ELE_DICT } from 'common/constants'
 
 // state
@@ -42,6 +42,9 @@ const actions = {
     // 保存已定义的连接系统 列表
     saveDefinedConnect({ commit }, data) {
         commit({ type: MODEL_SAVE_CONNECT_DEFINED, data })
+    },
+    clearAllDataUIState({ commit }) {
+        commit({ type: CLEAR_ALL_DATA_UISTATE })
     }
 }
 
@@ -68,6 +71,12 @@ const mutations = {
         }
 
         state.carDetailInfo = carDetailInfo;
+    },
+
+    // 清空数据
+    [CLEAR_ALL_DATA_UISTATE](state) {
+        state.carDetail = {};
+        state.carDetailInfo = {};
     }
 }
 

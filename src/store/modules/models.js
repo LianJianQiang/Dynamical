@@ -1,5 +1,5 @@
 
-import { MODEL_SAVE_TREE_DATA, MODEL_SET_CUR_MODEL_ID, MODEL_SET_CUR_MODEL_NODE } from 'store/mutation-types.js';
+import { MODEL_SAVE_TREE_DATA, MODEL_SET_CUR_MODEL_ID, MODEL_SET_CUR_MODEL_NODE, CLEAR_ALL_DATA_MODELS } from 'store/mutation-types.js';
 import { MODEL_TREE_TYPE } from 'common/constants';
 
 import { handleTreeData } from 'utils/util';
@@ -139,6 +139,9 @@ const actions = {
     // 当前选中的treeNode
     setCurTreeNodeId({ commit }, id) {
         commit({ type: MODEL_SET_CUR_MODEL_NODE, id })
+    },
+    clearAllDataModels({ commit }) {
+        commit({ type: CLEAR_ALL_DATA_MODELS })
     }
 }
 
@@ -161,6 +164,16 @@ const mutations = {
     // 当前选中的treeNode
     [MODEL_SET_CUR_MODEL_NODE](state, { id }) {
         state.curTreeNodeId = id;
+    },
+
+    // 清空数据
+    [CLEAR_ALL_DATA_MODELS](state) {
+        state.modelsData = {};
+        state.modelTreeCache = [];
+        state.modelsTree = [];
+        state.curModelId = '';
+        state.curTreeNodeId = "";
+        window.__ALL_CAR_DATA__ = null;
     }
 }
 

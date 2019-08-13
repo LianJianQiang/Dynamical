@@ -6,8 +6,8 @@
                     <img :src="Logo" alt />
                 </div>
                 <div class="fll">
-                    <div :class="$style.title">国铁吉讯</div>
-                    <div :class="$style.desc">让服务联网 让出行智慧</div>
+                    <div :class="$style.title">中国中车</div>
+                    <div :class="$style.desc">客运列车纵向动力学软件系统</div>
                 </div>
             </div>
             <el-form :model="loginForm" status-icon :rules="rules" ref="loginForm">
@@ -37,9 +37,10 @@
 
 <script>
 import Logo from "assets/images/logo2.png";
-// import { login } from "api";
+import { login } from "api";
 
-import { SESSION_USERINFO_KEY } from "common/constants";
+import { SESSION_USERINFO_KEY, SESSION_USER_MENULIST } from "common/constants";
+import { mapActions } from "vuex";
 
 export default {
     name: "Login",
@@ -72,23 +73,29 @@ export default {
         };
     },
     methods: {
+        ...mapActions("uiState", ["clearAllDataUIState"]),
+        ...mapActions("models", ["clearAllDataModels"]),
         submitForm(formName) {
             let { username, password } = this.loginForm;
             this.$refs[formName].validate(valid => {
                 if (valid) {
-                    // TODO 测试
-                    window.sessionStorage.setItem(
-                        SESSION_USERINFO_KEY,
-                        JSON.stringify({ userId: "1" })
-                    );
+                    login
+                        .signIn({ userName: username, passWord: password })
+                        .then(res => {
+                            if (!res) return;
+                            let { data = {} } = res;
+                            let { menuList, ...userInfo } = data;
 
-                    this.$router.push("/page");
-                    console.log(JSON.stringify({ username, password }));
-
-                    // login.signIn({ username, password }).then(res => {
-                    //     if (!res) return;
-                    //     this.$router.push("/page");
-                    // });
+                            window.sessionStorage.setItem(
+                                SESSION_USERINFO_KEY,
+                                JSON.stringify(userInfo)
+                            );
+                            window.sessionStorage.setItem(
+                                SESSION_USER_MENULIST,
+                                JSON.stringify(menuList)
+                            );
+                            this.$router.push("/page");
+                        });
                 } else {
                     return false;
                 }
@@ -97,6 +104,12 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         }
+    },
+    mounted() {
+        window.sessionStorage.removeItem(SESSION_USERINFO_KEY);
+        window.sessionStorage.removeItem(SESSION_USER_MENULIST);
+        this.clearAllDataUIState();
+        this.clearAllDataModels();
     }
 };
 </script>

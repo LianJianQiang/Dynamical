@@ -21,22 +21,22 @@ import VueRouter from 'vue-router';
 // import Login from 'pages/Login';
 // import App from 'pages';
 
-const ArgConfig = () => import('pages/ArgConfig');
-const Model = () => import('pages/Model');
-const Report = () => import('pages/Report');
+const ArgConfig = resolve => require(['pages/ArgConfig'], resolve);
+const Model = resolve => require(['pages/Model'], resolve);
+const Report = resolve => require(['pages/Report'], resolve);
 
-const NotFound = () => import('pages/NotFound');
-const Waiting = () => import('pages/Waiting');
+const NotFound = resolve => require(['pages/NotFound'], resolve);
+const Waiting = resolve => require(['pages/Waiting'], resolve);
 
-const EditModel = () => import('pages/Model/Edit');
-const OpenModel = () => import('pages/Model/Open');
+const EditModel = resolve => require(['pages/Model/Edit'], resolve);
+const OpenModel = resolve => require(['pages/Model/Open'], resolve);
 
-const BufferCurve = () => import('pages/ArgConfig/BufferCurve');
-const BufferPiecewise = () => import('pages/ArgConfig/BufferPiecewise');
-const YKGTemp = () => import('pages/ArgConfig/YKGTemp');
+const BufferCurve = resolve => require(['pages/ArgConfig/BufferCurve'], resolve);
+const BufferPiecewise = resolve => require(['pages/ArgConfig/BufferPiecewise'], resolve);
+const YKGTemp = resolve => require(['pages/ArgConfig/YKGTemp'], resolve);
 
-const Login = () => import('pages/Login');
-const App = () => import('pages');
+const Login = resolve => require(['pages/Login'], resolve);
+const App = resolve => require(['pages'], resolve);
 
 
 

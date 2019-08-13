@@ -1,4 +1,4 @@
-import { SESSION_USERINFO_KEY } from 'common/constants';
+import { SESSION_USERINFO_KEY, SESSION_USER_MENULIST } from 'common/constants';
 
 export const getDomRect = (dom) => {
     if (!dom) return {};
@@ -132,8 +132,8 @@ export const getUserInfo = () => {
 
 export const getUserIdAndType = () => {
     let userInfo = getUserInfo();
-    let { userId, userType = 2 } = userInfo;
-    return { userId, userType }
+    let { id, roleCode } = userInfo;
+    return { userId: id, userType: roleCode }
 }
 
 export const getObjFromStr = (str) => {
@@ -147,6 +147,12 @@ export const filterJson = (json) => {
         json[i] && (result[i] = json[i])
     }
     return result;
+}
+
+export const getMenuList = () => {
+    let menuList = window.sessionStorage.getItem(SESSION_USER_MENULIST);
+    if (!menuList) return [];
+    return JSON.parse(menuList);
 }
 
 /**
@@ -179,7 +185,8 @@ export default {
     getUserIdAndType,
     getObjFromStr,
     filterJson,
-    randomString
+    randomString,
+    getMenuList
 }
 
 

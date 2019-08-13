@@ -1,7 +1,7 @@
 import home from './icon-home.png';
 import homeActive from './icon-home_active.png';
-import arg from './icon-arg.png';
-import argActive from './icon-arg_active.png';
+import argcfg from './icon-arg.png';
+import argcfgActive from './icon-arg_active.png';
 import model from './icon-model.png';
 import modelActive from './icon-model_active.png';
 import report from './icon-report.png';
@@ -16,8 +16,8 @@ export default {
     reportActive,
     model,
     modelActive,
-    arg,
-    argActive,
+    argcfg,
+    argcfgActive,
     close,
     file
 }
