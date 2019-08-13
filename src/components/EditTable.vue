@@ -30,7 +30,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="请选择曲线" :visible.sync="curveDialogVisible" :modal="false">
+        <el-dialog title="请选择曲线" :visible.sync="curveDialogVisible" :modal="false" :append-to-body="true">
             <ul :class="$style.tractionList" class="clearfix">
                 <li
                     class="fll cursor-p"

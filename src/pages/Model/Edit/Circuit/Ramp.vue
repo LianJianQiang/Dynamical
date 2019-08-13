@@ -11,7 +11,7 @@
             <div class="rampDrawContent">
                 <div class="methodWrap">
                     <label>请坡道设置方法</label>
-                    <el-select v-model="rampMethod" placeholder="请选择" class="m-l-5">
+                    <el-select v-model="rampMethod" placeholder="请选择" class="m-l-5 rampMethodSel">
                         <el-option
                             v-for="item in rampMethods"
                             :key="item.id"
@@ -108,7 +108,7 @@
                     </div>
                     <div class="drawerFooter" v-if="rampMethod">
                         <el-button class="btn-xl" type="primary" @click="saveData">保存</el-button>
-                        <el-button class="btn-xl" @click="showDrawer = false">取消</el-button>
+                        <el-button class="btn-xl" @click="$emit('cancel')">取消</el-button>
                     </div>
                 </div>
             </div>
@@ -326,10 +326,14 @@ export default {
 <style lang="scss">
 .rampDrawer {
     overflow: auto;
+    width: 354px !important;
     :global {
         .el-drawer__header {
             font-size: 20px;
             margin-bottom: 20px;
+        }
+        .rampMethodSel {
+            width: 158px;
         }
         .rampDrawContent {
             padding: 0 20px 20px;

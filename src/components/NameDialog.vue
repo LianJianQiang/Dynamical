@@ -5,6 +5,7 @@
         :visible.sync="dialogVisible"
         :modal="false"
         @close="onCancel"
+        :append-to-body="true"
     >
         <el-input v-model="name"></el-input>
         <span slot="footer" class="dialog-footer">

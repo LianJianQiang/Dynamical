@@ -27,29 +27,33 @@
                 </el-table>
             </div>
             <div :class="$style.scaleWrap">
-                <span>x比例：1:</span>
-                <el-input-number
-                    :controls="false"
-                    v-model="xProportion"
-                    :min="0"
-                    :class="$style.scaleInp"
-                />
-                <span>f(x)比例：1:</span>
-                <el-input-number
-                    :controls="false"
-                    v-model="fxProportion"
-                    :min="0"
-                    :class="$style.scaleInp"
-                />
-                <span>插值方法</span>
-                <el-select v-model="interpolationMethod" :class="$style.inter">
-                    <el-option
-                        v-for="item in interList"
-                        :key="item.id"
-                        :label="item.name"
-                        :value="item.id"
-                    ></el-option>
-                </el-select>
+                <div style="margin-bottom: 10px">
+                    <span>x比例：1:</span>
+                    <el-input-number
+                        :controls="false"
+                        v-model="xProportion"
+                        :min="0"
+                        :class="$style.scaleInp"
+                    />
+                    <span>f(x)比例：1:</span>
+                    <el-input-number
+                        :controls="false"
+                        v-model="fxProportion"
+                        :min="0"
+                        :class="$style.scaleInp"
+                    />
+                </div>
+                <div>
+                    <span>插值方法</span>
+                    <el-select v-model="interpolationMethod" :class="$style.inter">
+                        <el-option
+                            v-for="item in interList"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        ></el-option>
+                    </el-select>
+                </div>
             </div>
         </div>
     </div>
@@ -180,13 +184,14 @@ export default {
 
 <style module lang="scss">
 .root {
+    margin-bottom: 20px;
     .chartWrap {
-        width: 450px;
+        width: 46%;
         height: 450px;
     }
 
     .rightWrap {
-        width: 50%;
+        width: 46%;
     }
     .typeWrap {
         font-size: 16px;
@@ -206,14 +211,14 @@ export default {
     }
 
     .inter {
-        width: 100px;
+        width: 66px;
         height: 20px;
-        margin-left: 20px;
+        margin-left: 10px;
     }
 
     :global {
         .el-input-number {
-            margin-left: 5px;
+            margin-left: 10px;
         }
         .el-input-number.is-without-controls .el-input__inner {
             padding: 0 4px;

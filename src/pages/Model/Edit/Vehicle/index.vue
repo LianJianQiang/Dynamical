@@ -9,32 +9,32 @@
                 :rules="rules"
                 label-width="120px"
             >
-                <el-col :span="8">
+                <el-col :span="10">
                     <el-form-item label="车辆质量:" prop="m">
                         <el-input v-model="formData.m" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" :offset="2">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="车体刚度:" prop="kcar">
                         <el-input v-model="formData.kcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="10">
                     <el-form-item label="牵引系统:">
                         <Traction />
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" :offset="2">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="车体强度:" prop="qcar">
                         <el-input v-model="formData.qcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="10">
                     <el-form-item label="制动系统:">
                         <Brakes />
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" :offset="2">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义1:">
                         <Diy
                             field="diy1Tcsd"
@@ -44,7 +44,7 @@
                         />
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="10">
                     <el-form-item label="用户自定义2:">
                         <Diy
                             field="diy2Tcsd"
@@ -54,7 +54,7 @@
                         />
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" :offset="2">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义3:">
                         <Diy
                             field="diy3Tcsd"
@@ -250,7 +250,6 @@ export default {
 <style module lang="scss">
 .root {
     padding: 20px 30px;
-    min-width: 758px;
     background: #fff;
     border-radius: $raduis_1;
 

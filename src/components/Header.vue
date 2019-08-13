@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style module lang="scss">
-$user-img-h: 60px;
+$user-img-h: 48px;
 $font-color: #fff;
 
 .root {
@@ -61,7 +61,7 @@ $font-color: #fff;
     .logo {
         width: 144px;
         height: 44px;
-        margin-top: 16px;
+        margin-top: 12px;
         margin-right: 12px;
         img {
             width: 100%;
@@ -72,7 +72,7 @@ $font-color: #fff;
     .title {
         height: $header-H;
         line-height: $header-H;
-        font-size: 30px;
+        font-size: 24px;
         color: $font-color;
     }
 
@@ -85,7 +85,7 @@ $font-color: #fff;
     }
 
     .avatar {
-        width: 60px;
+        width: $user-img-h;
         height: $user-img-h;
         border-radius: 50%;
         background-color: #3d94b6;
@@ -98,8 +98,8 @@ $font-color: #fff;
             overflow: hidden;
             div {
                 width: 100%;
-                line-height: 50px;
-                font-size: 30px;
+                line-height: 38px;
+                font-size: 26px;
                 color: #fff;
                 text-align: center;
             }

@@ -6,12 +6,14 @@
             </div>
         </div>
         <div :class="$style.right" ref="rightWrap">
-            <div :class="$style.btnWrap">
-                <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
-                <el-button class="btn-xl" @click="newModel">新建模型</el-button>
-            </div>
-            <div class="rightCont">
-                <router-view></router-view>
+            <div :class="$style.rightContWrap">
+                <div :class="$style.btnWrap">
+                    <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
+                    <el-button class="btn-xl" @click="newModel">新建模型</el-button>
+                </div>
+                <div class="rightCont">
+                    <router-view></router-view>
+                </div>
             </div>
         </div>
         <el-dialog title="请选择要编辑的模型树" :visible.sync="dialogVisible">
@@ -166,6 +168,7 @@ $left-width: 222px;
 .root {
     width: 100%;
     height: 100%;
+
     position: relative;
     .left {
         vertical-align: top;
@@ -184,13 +187,16 @@ $left-width: 222px;
     }
     .right {
         height: 100%;
-        padding: 20px $wrap-pad 20px 20px;
+        padding: 20px;
         overflow: auto;
         position: absolute;
         top: 0;
         left: $left-width;
         right: 0;
         bottom: 0;
+        .rightContWrap {
+            min-width: 758px;
+        }
         .btnWrap {
             margin-bottom: 20px;
         }

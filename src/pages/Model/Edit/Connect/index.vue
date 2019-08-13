@@ -5,7 +5,7 @@
             <el-button class="btn-default">文件</el-button>
         </div>-->
         <el-row :class="$style.content" class="clearfix">
-            <el-col :class="$style.front" :span="8">
+            <el-col :class="$style.front" :span="10">
                 <div :class="$style.title">前端面</div>
                 <el-form ref="frontForm" :model="frontData" label-width="120px">
                     <el-form-item label="缓冲器:">
@@ -69,14 +69,14 @@
                     </el-form-item>
                 </el-form>
             </el-col>
-            <el-col :span="2" :offset="2" :class="$style.copyArea">
+            <el-col :span="2" :offset="1" :class="$style.copyArea">
                 <div>复制区</div>
                 <div class="clearfix" :class="$style.imgWrap">
                     <img class="fll" :src="Img['copyLeft']" alt @click="copyItem('left')" />
                     <img class="flr" :src="Img['copyRight']" alt @click="copyItem('right')" />
                 </div>
             </el-col>
-            <el-col :class="$style.back" :span="8" :offset="2">
+            <el-col :class="$style.back" :span="10" :offset="1">
                 <div :class="$style.title">后端面</div>
                 <el-form ref="frontForm" :model="backData" label-width="120px">
                     <el-form-item label="缓冲器:">
@@ -365,7 +365,6 @@ export default {
 <style module lang="scss">
 .root {
     padding: 20px 30px;
-    min-width: 758px;
     background: #fff;
     border-radius: $raduis_1;
 
@@ -389,12 +388,12 @@ export default {
     }
 
     .copyArea {
-        font-size: 26px;
+        font-size: 18px;
         font-weight: 500;
         text-align: center;
         padding-top: 300px;
         .imgWrap {
-            width: 86px;
+            width: 100%;
             height: 64px;
             cursor: pointer;
             img {
@@ -428,6 +427,12 @@ export default {
             .el-input__icon {
                 line-height: 22px;
             }
+        }
+    }
+
+    :global {
+        .el-form-item__label {
+            text-align: center;
         }
     }
 }

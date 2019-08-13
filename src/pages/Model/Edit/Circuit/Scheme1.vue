@@ -55,7 +55,7 @@
                 </template>
             </el-table-column>
         </el-table>
-        <Ramp :visible="rampVisible" @saveData="saveRampData" />
+        <Ramp :visible="rampVisible" @saveData="saveRampData" @cancel="rampVisible=false"/>
     </div>
 </template>
 

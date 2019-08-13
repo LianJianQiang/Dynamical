@@ -41,6 +41,7 @@ export default {
 
         nodeClick(nodeData) {
             let { type, id } = nodeData;
+            if (id === this.curTreeNodeId) return;
 
             if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
             this.setCurTreeNodeId(id);

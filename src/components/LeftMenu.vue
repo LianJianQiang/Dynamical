@@ -39,6 +39,7 @@ export default {
 
         // 点击跳转
         onClickMenuItem: function(item) {
+            if (item.menuId === this.active) return;
             this.active = item.menuId;
             this.$router.push(item.key);
         },

@@ -34,7 +34,7 @@ export default {
 #app {
     width: 100%;
     height: 100%;
-    min-width: $app-min-w;
+    // min-width: $app-min-w;
     overflow: auto;
 
     .nonsupport {

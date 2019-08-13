@@ -54,7 +54,7 @@ $left-width: 222px;
     }
     .right {
         height: 100%;
-        padding: 20px $wrap-pad 20px 20px;
+        padding: 20px;
         overflow: auto;
         position: absolute;
         top: 0;
@@ -71,6 +71,7 @@ $left-width: 222px;
                 background-color: #fff;
                 padding: 20px;
                 overflow: auto;
+                min-width: 758px;
             }
         }
     }
