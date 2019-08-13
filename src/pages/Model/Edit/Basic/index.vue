@@ -149,7 +149,6 @@
 import { mapActions, mapState } from "vuex";
 
 import _util from "utils/util";
-import { MODEL_TREE_TYPE } from "common/constants";
 
 import { model } from "api";
 
@@ -241,8 +240,8 @@ export default {
                                 if (!res) return;
                                 let { data = {} } = res;
 
-                                this.no1 = { ...this.no1, id: res.data.v1Id };
-                                this.no2 = { ...this.no2, id: res.data.v2Id };
+                                this.no1 = { ...this.no1, id: data.v1Id };
+                                this.no2 = { ...this.no2, id: data.v2Id };
 
                                 // 基本参数变更以后，更新treeData
                                 this.getModelData(this.curModelId);

@@ -81,10 +81,6 @@ export default {
             }
         },
 
-        resort(target) {
-            let { curDragItem } = this;
-        },
-
         setTooltipDomPosition(ev) {
             if (!this.tooltopDom) {
                 this.tooltopDom = this.$refs.mouseTooltip;

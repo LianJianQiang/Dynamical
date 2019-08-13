@@ -134,17 +134,12 @@
 </template>
 
 <script>
-import { mapActions, mapState } from "vuex";
+import { mapState } from "vuex";
 
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
 
-import { getUserInfo } from "utils/util";
-
 import { model } from "api";
-import { Promise } from "q";
-
-const userId = getUserInfo().userId;
 
 export default {
     name: "Traction",

@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions, mapState } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 // import CarList from "components/CarList";
 import Car from "components/CarBody";

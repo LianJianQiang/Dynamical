@@ -45,7 +45,6 @@ export default {
     name: "Diy",
     mixins: [editTableMixin],
     data() {
-        let { dataSource } = this;
         let { xType = "", tcsdData = [] } = this;
 
         // 后端返回的tcsdData为字符串格式；需要进行eval处理；

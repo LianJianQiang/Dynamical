@@ -1,3 +1,3 @@
-import mixinSaveFunc from 'common/editTableMixin';;
+import mixinSaveFunc from 'common/editTableMixin';
 
 export default mixinSaveFunc;

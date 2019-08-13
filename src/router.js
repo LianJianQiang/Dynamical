@@ -5,25 +5,40 @@ import VueRouter from 'vue-router';
 // import { MENU_LIST } from 'common/constants';
 
 // 引入组件
-// import Home from 'pages/Home.vue';
-// import Argument from 'pages/Argument';
-import ArgConfig from 'pages/ArgConfig';
-import Model from 'pages/Model';
-import Report from 'pages/Report';
-import NotFound from 'pages/NotFound';
-import Waiting from 'pages/Waiting';
+// import ArgConfig from 'pages/ArgConfig';
+// import Model from 'pages/Model';
+// import Report from 'pages/Report';
+// import NotFound from 'pages/NotFound';
+// import Waiting from 'pages/Waiting';
 
-import EditModel from 'pages/Model/Edit';
-import OpenModel from 'pages/Model/Open';
+// import EditModel from 'pages/Model/Edit';
+// import OpenModel from 'pages/Model/Open';
 
-import BufferCurve from 'pages/ArgConfig/BufferCurve';
-import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
-import YKGTemp from 'pages/ArgConfig/YKGTemp';
-// import Traction from 'pages/ArgConfig/Traction';
+// import BufferCurve from 'pages/ArgConfig/BufferCurve';
+// import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
+// import YKGTemp from 'pages/ArgConfig/YKGTemp';
 
-import Login from 'pages/Login';
-import App from 'pages';
-// let redirectUrl = MENU_LIST[0].url || '';
+// import Login from 'pages/Login';
+// import App from 'pages';
+
+const ArgConfig = () => import('pages/ArgConfig');
+const Model = () => import('pages/Model');
+const Report = () => import('pages/Report');
+
+const NotFound = () => import('pages/NotFound');
+const Waiting = () => import('pages/Waiting');
+
+const EditModel = () => import('pages/Model/Edit');
+const OpenModel = () => import('pages/Model/Open');
+
+const BufferCurve = () => import('pages/ArgConfig/BufferCurve');
+const BufferPiecewise = () => import('pages/ArgConfig/BufferPiecewise');
+const YKGTemp = () => import('pages/ArgConfig/YKGTemp');
+
+const Login = () => import('pages/Login');
+const App = () => import('pages');
+
+
 
 // 要告诉 vue 使用 vueRouter
 Vue.use(VueRouter);

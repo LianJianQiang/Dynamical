@@ -228,7 +228,6 @@ export default {
             return `${curCarNum.row}-${curCarNum.cal}`;
         }
     },
-    mounted() {},
     methods: {
         ...mapActions("uiState", ["saveDefinedConnect"]),
 
@@ -356,6 +355,7 @@ export default {
             // this.backData = {};
         }
     },
+
     mounted() {
         this.initData();
     }

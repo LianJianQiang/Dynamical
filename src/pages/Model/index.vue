@@ -32,9 +32,8 @@
 import { mapActions, mapGetters } from "vuex";
 import { MODEL_TREE_TYPE } from "common/constants";
 
-import _util from "utils/util";
 import { model } from "api";
-import { getUserIdAndType } from "utils/util";
+import { getUserIdAndType, isNumZhEn } from "utils/util";
 
 import Tree from "./Tree";
 
@@ -99,6 +98,8 @@ export default {
          * 设置模型名称
          */
         setModelName: function({ success }) {
+            const { userId } = getUserIdAndType();
+
             this.$prompt("请输入模型名称", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
@@ -120,7 +121,7 @@ export default {
          * 校验模型名称
          */
         validatorModelname: function(value) {
-            if (!_util.isNumZhEn(value)) {
+            if (!isNumZhEn(value)) {
                 return "名称为只能包含汉字、数字、字母";
             }
 

@@ -32,10 +32,7 @@
 <script>
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
-import NameDialog from "components/NameDialog";
 
-import { model } from "api";
-import { getUserIdAndType } from "utils/util";
 
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
 
@@ -44,8 +41,6 @@ const options = [
     { label: "速度", value: 2 },
     { label: "时间", value: 3 }
 ];
-
-const { userId, userType } = getUserIdAndType();
 
 export default {
     name: "Diy",
@@ -58,8 +53,7 @@ export default {
     },
     components: {
         DropDown,
-        EditTable,
-        NameDialog
+        EditTable
     },
     props: {
         size: {
