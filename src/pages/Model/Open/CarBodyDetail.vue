@@ -202,7 +202,6 @@ export default {
 
         isShowEle() {
             return (type, ele) => {
-                return true;
                 if (type === this.infoKey) {
                     return this.vehicleEleIsShow(type, ele);
                 }

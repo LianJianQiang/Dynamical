@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div class="page_root">
         <Layout v-if="support" />
         <div v-else class="nonsupport">请选用高版本浏览器，告别IE</div>
     </div>
@@ -8,7 +8,8 @@
 <script>
 import Layout from "components/Layout.vue";
 
-import { IEVersion } from "utils/util";
+import { IEVersion, getUserIdAndType } from "utils/util";
+import { setTimeout } from "timers";
 
 window.__IEVersion__ = IEVersion();
 
@@ -26,12 +27,21 @@ export default {
     },
     components: {
         Layout
+    },
+    mounted() {
+        let { userId } = getUserIdAndType();
+        if (!userId) {
+            this.$message.error("请重新登录");
+            setTimeout(() => {
+                this.$router.push("/login");
+            }, 1000);
+        }
     }
 };
 </script>
 
 <style lang="scss">
-#app {
+.page_root {
     width: 100%;
     height: 100%;
     // min-width: $app-min-w;
