@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 import _util from "utils/util";
 import { MODEL_TREE_TYPE } from "common/constants";
@@ -138,7 +138,6 @@ export default {
     },
     props: {},
     computed: {
-        ...mapState("models", ["modelsData"]),
         ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
 
         trainList() {

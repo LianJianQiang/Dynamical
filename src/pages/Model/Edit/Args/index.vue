@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapGetters } from "vuex";
 // import { MODEL_TREE_TYPE } from "common/constants";
 // import CarBody from "./CarBody";
 import CarList from "components/CarList";
@@ -67,13 +67,13 @@ export default {
     methods: {
         // 获取车辆数据
         getCarData(id, field) {
-            let datas = this.getNodeArgs(id);
-            return datas[field] || "";
+            // let datas = this.getNodeArgs(id);
+            // return datas[field] || "";
+            return "";
         }
     },
     computed: {
-        ...mapGetters("models", ["getCarListData", "getNodeArgs"]),
-        ...mapState("models", ["modelsData"]),
+        ...mapGetters("models", ["getCarListData"]),
 
         // 车辆速度，临时方案
         // getCarSpeed() {

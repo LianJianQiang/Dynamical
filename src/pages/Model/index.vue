@@ -19,7 +19,7 @@
         <el-dialog title="请选择要编辑的模型树" :visible.sync="dialogVisible" :append-to-body="true">
             <ul :class="$style.modelsContent" class="clearfix" v-if="modelsList.length > 0">
                 <li
-                    class="fll"
+                    class="fll cursor-p"
                     v-for="item in modelsList"
                     :key="item.id"
                     @click="onSelectModel(item)"

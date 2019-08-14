@@ -57,9 +57,11 @@ module.exports = {
             .set('lib', resolve('src/lib'))
             .set('store', resolve('src/store'));
 
-        // config.externals = {
-        //     'element-ui': 'element-ui'
-        // };
+
+        // 移除 prefetch 插件
+        config.plugins.delete('prefetch')
+        // 移除 preload 插件
+        config.plugins.delete('preload');
 
         // 压缩图片 ie9不兼容
         // config.module
@@ -106,6 +108,15 @@ module.exports = {
                 ...plugins
             ];
         }
+
+        config.externals = {
+            'vue': 'Vue'
+            // 'axios': 'axios',
+            // 'vue-router': 'VueRouter',
+            // 'vuex': 'vuex'
+            // 'element-ui': 'ELEMENT',
+            // "echarts": "echarts"
+        };
     },
     parallel: require('os').cpus().length > 1
 

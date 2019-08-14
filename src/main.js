@@ -20,12 +20,14 @@ Es6Promise.polyfill();
 Vue.config.productionTip = false;
 
 
-window.onload = function () {
-    new Vue({
-        store,
-        router,
-        render: h => h(App)
-    }).$mount('#app')
-}
+
+
+// window.onload = function () {
+new Vue({
+    store,
+    router,
+    render: h => h(App)
+}).$mount('#app')
+// }
 
 

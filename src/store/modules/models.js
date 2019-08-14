@@ -17,15 +17,6 @@ const state = {
 
 // getters
 const getters = {
-
-    // TODO 根据id获取数据   模型参数表中有用到，后期删除
-    getNodeArgs(state) {
-        return (id) => {
-            let datas = state['modelsData'][id] || {};
-            return datas;
-        }
-    },
-
     getTreeNodeByType(state) {
         let { modelTreeCache } = state;
         return (type) => {
@@ -168,7 +159,6 @@ const mutations = {
 
     // 清空数据
     [CLEAR_ALL_DATA_MODELS](state) {
-        state.modelsData = {};
         state.modelTreeCache = [];
         state.modelsTree = [];
         state.curModelId = '';

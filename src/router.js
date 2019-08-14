@@ -2,25 +2,6 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 
-// import { MENU_LIST } from 'common/constants';
-
-// 引入组件
-// import ArgConfig from 'pages/ArgConfig';
-// import Model from 'pages/Model';
-// import Report from 'pages/Report';
-// import NotFound from 'pages/NotFound';
-// import Waiting from 'pages/Waiting';
-
-// import EditModel from 'pages/Model/Edit';
-// import OpenModel from 'pages/Model/Open';
-
-// import BufferCurve from 'pages/ArgConfig/BufferCurve';
-// import BufferPiecewise from 'pages/ArgConfig/BufferPiecewise';
-// import YKGTemp from 'pages/ArgConfig/YKGTemp';
-
-// import Login from 'pages/Login';
-// import App from 'pages';
-
 const ArgConfig = resolve => require(['pages/ArgConfig'], resolve);
 const Model = resolve => require(['pages/Model'], resolve);
 const Report = resolve => require(['pages/Report'], resolve);

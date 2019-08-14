@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui';
 import loading from 'utils/loading';
 
+
 const instance = axios.create({
     timeout: 30000,
     headers: {
