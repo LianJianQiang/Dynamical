@@ -1,4 +1,4 @@
-import { Loading } from 'element-ui';
+// import { Loading } from 'element-ui';
 
 class CustomLoading {
     num = 0;
@@ -6,7 +6,7 @@ class CustomLoading {
 
     show = () => {
         this.num++;
-        this.loading = Loading.service({
+        this.loading = ELEMENT.Loading.service({
             customClass: 'globalLoading',
             lock: true,
             text: '加载中...',

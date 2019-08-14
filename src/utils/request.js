@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui';
+// import { Message } from 'element-ui';
 import loading from 'utils/loading';
 
 
@@ -29,13 +29,13 @@ const instance = axios.create({
 instance.interceptors.response.use(function (response) {
     const { data = {} } = response;
     if (response.status !== 200) {
-        Message({
+        ELEMENT.Message({
             message: response.statusText || "数据请求失败",
             type: 'error'
         });
     }
     if (data.code !== '200') {
-        Message({
+        ELEMENT.Message({
             message: data.message || '系统异常',
             type: 'error'
         });

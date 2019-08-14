@@ -7,7 +7,7 @@ import router from './router.js'
 import store from './store'
 
 
-import './plugins/element.js';
+// import './plugins/element.js';
 // import './plugins/vueGridLayout';
 // import './plugins/vueDragResize';
 // import './plugins/echarts';

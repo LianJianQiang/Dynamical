@@ -110,11 +110,11 @@ module.exports = {
         }
 
         config.externals = {
-            'vue': 'Vue'
-            // 'axios': 'axios',
-            // 'vue-router': 'VueRouter',
-            // 'vuex': 'vuex'
-            // 'element-ui': 'ELEMENT',
+            'vue': 'Vue',
+            'axios': 'axios',
+            'vue-router': 'VueRouter',
+            'vuex': 'Vuex'
+            // 'element-ui': 'ELEMENT'
             // "echarts": "echarts"
         };
     },
