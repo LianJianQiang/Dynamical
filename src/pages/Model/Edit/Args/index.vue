@@ -49,10 +49,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState } from "vuex";
 // import { MODEL_TREE_TYPE } from "common/constants";
 // import CarBody from "./CarBody";
 import CarList from "components/CarList";
+
+import { model } from "api";
 
 export default {
     name: "Args",
@@ -64,16 +66,8 @@ export default {
         return {};
     },
     props: {},
-    methods: {
-        // 获取车辆数据
-        getCarData(id, field) {
-            // let datas = this.getNodeArgs(id);
-            // return datas[field] || "";
-            return "";
-        }
-    },
     computed: {
-        ...mapGetters("models", ["getCarListData"]),
+        ...mapState("models", ["curModelId"]),
 
         // 车辆速度，临时方案
         // getCarSpeed() {
@@ -83,7 +77,7 @@ export default {
         // },
 
         listData() {
-            return this.getCarListData({ modelName: "ces" });
+            return [];
         },
         tableData() {
             let list = this.listData;
@@ -108,8 +102,42 @@ export default {
             return result;
         }
     },
+
+    methods: {
+        // 获取车辆数据
+        getCarData(id, field) {
+            // let datas = this.getNodeArgs(id);
+            // return datas[field] || "";
+            return "";
+        },
+
+        refreshTemp(cb) {
+            let modelId = this.curModelId;
+            model.compAllcouptypeTemp({ modelId }).then(res => {
+                console.log(res);
+                if (!res) return;
+                typeof cb === "function" && cb(modelId);
+            });
+        },
+
+        getPageData(modelId) {
+            modelId = modelId || this.curModelId;
+            Promise.all([
+                model.getAllCoupTypeList({ modelId }),
+                model.getAllcouptypeTemp({ modelId })
+            ]).then(result => {
+                console.log(result);
+            });
+        },
+
+        initData() {
+            this.refreshTemp(this.getPageData);
+        }
+    },
+
     mounted() {
         // console.log(this.getCarSpeed)
+        this.initData();
     }
 };
 </script>

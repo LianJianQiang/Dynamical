@@ -201,14 +201,14 @@ $left-width: 222px;
             margin-bottom: 20px;
         }
     }
+}
 
-    .modelsContent {
-        max-height: 300px;
-        overflow: auto;
-        li {
-            padding: 10px 30px;
-            cursor: pointer;
-        }
+.modelsContent {
+    max-height: 300px;
+    overflow: auto;
+    li {
+        padding: 10px 30px;
+        cursor: pointer;
     }
 }
 </style>

@@ -45,6 +45,24 @@ const getAllCoupTypeView = (params) => request(`${config.baseUrl}/allcouptype/ge
 const getAllCoupTypeByModelId = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeByModelId`, { ...params });
 
 
+// 比对钩缓数据
+const compAllcouptypeTemp = (params) => request(`${config.baseUrl}/allcouptype/compAllcouptypeTemp`, { ...params }, {
+    method: 'post'
+});
+
+// 获取车间连接端面列表
+// 模型参数，图形展示
+const getAllCoupTypeList = (params) => request(`${config.baseUrl}/allcouptype/getAllCoupTypeByModelId`, { ...params }, {
+    method: 'post'
+});
+
+// 根据模型id获取标准钩缓模版
+const getAllcouptypeTemp = (params) => request(`${config.baseUrl}/allcouptype/getAllcouptypeTemp`, { ...params }, {
+    method: 'post'
+});
+
+
+
 
 export default {
     // 模型树
@@ -65,5 +83,10 @@ export default {
     // 车间链接系统
     saveAllCoupType,
     getAllCoupTypeView,
-    getAllCoupTypeByModelId
+    getAllCoupTypeByModelId,
+
+    // 模型参数
+    getAllCoupTypeList,
+    getAllcouptypeTemp,
+    compAllcouptypeTemp
 }
