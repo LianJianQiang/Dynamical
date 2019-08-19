@@ -61,6 +61,11 @@ const getAllcouptypeTemp = (params) => request(`${config.baseUrl}/allcouptype/ge
     method: 'post'
 });
 
+// 模型参数 -- 车辆参数
+const getAllCarDatas = (params) => request(`${config.baseUrl}/ve1/modelData`, { ...params }, {
+    method: 'post'
+});
+
 
 
 
@@ -88,5 +93,6 @@ export default {
     // 模型参数
     getAllCoupTypeList,
     getAllcouptypeTemp,
-    compAllcouptypeTemp
+    compAllcouptypeTemp,
+    getAllCarDatas
 }
