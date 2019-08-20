@@ -252,7 +252,7 @@ export default {
     },
 
     mounted() {
-        // this.initData();
+        this.initData();
     }
 };
 </script>

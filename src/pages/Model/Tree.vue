@@ -4,6 +4,7 @@
         <div :class="$style.treeWrap">
             <div :class="$style.noData" v-if="modelsTree.length === 0">暂无数据</div>
             <el-tree
+                :key="curTreeNodeId"
                 v-else
                 :data="modelsTree"
                 node-key="id"
