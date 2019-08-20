@@ -1,7 +1,10 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.info">
-            <div class="clearfix">
+        <div :class="$style.info" v-if="showInfoCard">
+            <div :class="$style.saveTableDataBtn" class="clearfix" v-if="showSaveTableBtn">
+                <div class="btn-default flr" @click="saveTableData">保存数据</div>
+            </div>
+            <div class="clearfix" v-if="tableData.length > 0">
                 <div
                     class="fll"
                     :class="$style.tableWrap"
@@ -12,15 +15,17 @@
                     <div :class="$style.desc">车辆质量</div>
                     <el-table :data="item.columns" border size="medium">
                         <el-table-column
-                            v-for="(col,i) in item.columns[0]"
-                            :key="i"
-                            :prop="col.m"
+                            v-for="(col) in item.columns[0]"
+                            :key="col.id"
                             :label="col.carNum"
                             width="100"
                         >
-                            <template slot-scope="scope">
-                                <el-input-number :controls="false" v-model="scope.row.m" :min="0"></el-input-number>
-                            </template>
+                            <el-input-number
+                                :controls="false"
+                                v-model="col.m"
+                                :min="0"
+                                @change="vehicleArgChange"
+                            ></el-input-number>
                         </el-table-column>
                     </el-table>
                     <div :class="$style.speed">
@@ -29,6 +34,7 @@
                             :class="$style.speedInp"
                             :controls="false"
                             v-model="item.v"
+                            @change="vehicleArgChange"
                             :min="0"
                         />
                     </div>
@@ -44,7 +50,7 @@
                 </div>
             </div>
         </div>
-        <div :class="$style.legend" class="clearfix">
+        <div :class="$style.legend" class="clearfix" v-if="chartList.length > 0">
             <div v-for="(item, idx) in chartList" :key="idx" :class="$style.legendBox" class="fll">
                 <div :class="$style.carListWrap">
                     <CarList :list="item[1]" />
@@ -56,8 +62,7 @@
 
 <script>
 import { mapState } from "vuex";
-// import { MODEL_TREE_TYPE } from "common/constants";
-// import CarBody from "./CarBody";
+
 import { model } from "api";
 
 import CarList from "./CarList";
@@ -73,20 +78,58 @@ export default {
         return {
             tableData: [],
             descList: [],
-            chartList: []
+            chartList: [],
+
+            showSaveTableBtn: false
         };
     },
     props: {},
     computed: {
-        ...mapState("models", ["curModelId"])
+        ...mapState("models", ["curModelId"]),
+        showInfoCard() {
+            return this.tableData.length > 0 || this.descList.length > 0;
+        }
     },
 
     methods: {
+        vehicleArgChange() {
+            this.showSaveTableBtn = true;
+        },
+
+        // 保存编辑后的数据
+        saveTableData() {
+            let { tableData, curModelId } = this;
+
+            // TODO 测试
+            // curModelId = "1158299331507040256";
+
+            let params = { modelId: curModelId, ves: [], cas: [] };
+
+            tableData.map(item => {
+                params.ves.push({ row: item.row, v: item.v });
+                let columns = item.columns[0];
+                columns.map(cols => {
+                    params.cas.push({
+                        row: item.row,
+                        cal: cols.cal,
+                        m: cols.m
+                    });
+                });
+            });
+
+            model.saveAllCarDatas(params).then(res => {
+                if (!res) return;
+                this.$message.success("操作成功");
+                this.showSaveTableBtn = false;
+            });
+        },
+
+        // 刷新后端计算数据
         refreshTemp(cb) {
             let modelId = this.curModelId;
 
             // TODO 测试
-            modelId = "1158299331507040256";
+            // modelId = "1158299331507040256";
 
             model.compAllcouptypeTemp({ modelId }).then(res => {
                 if (!res) return;
@@ -97,7 +140,7 @@ export default {
         getPageData(modelId) {
             modelId = modelId || this.curModelId;
             Promise.all([
-                model.getAllCarDatas({ id: this.curModelId }),
+                model.getAllCarDatas({ modelId }), // 表格数据
                 model.getAllCoupTypeList({ modelId }), // 图形数据
                 model.getAllcouptypeTemp({ modelId }) // 文案数据
             ]).then(result => {
@@ -107,13 +150,14 @@ export default {
             });
         },
 
+        // 处理table数据
         handleCarTableData(res) {
             if (!res) return;
             let { ve1 = {}, ve2 = {}, caList = [] } = res.data || {};
 
             let result = [
-                { ...ve1, name: "第1列", columns: [[]] },
-                { ...ve2, name: "第2列", columns: [[]] }
+                { ...ve1, name: "第1列", row: "1", columns: [[]] },
+                { ...ve2, name: "第2列", row: "2", columns: [[]] }
             ];
             caList.map(item => {
                 if (!item.m) item.m = 0;
@@ -129,6 +173,7 @@ export default {
             this.tableData = result;
         },
 
+        // 处理图形数据
         handleChartData(res) {
             if (!res) return;
             let data = res.data || [];
@@ -175,6 +220,8 @@ export default {
 
             this.chartList = Object.entries(obj);
         },
+
+        // 处理文案数据
         handleOfficialData(res) {
             if (!res) return;
             let data = res.data || [];
@@ -205,8 +252,7 @@ export default {
     },
 
     mounted() {
-        // console.log(this.getCarSpeed)
-        this.initData();
+        // this.initData();
     }
 };
 </script>
@@ -223,11 +269,16 @@ export default {
         background: #fff;
         border-radius: $raduis_1;
         margin-bottom: 20px;
+        position: relative;
 
         .title {
             font-size: 14px;
             font-weight: 500;
             margin-bottom: 20px;
+        }
+
+        .saveTableDataBtn {
+            margin-bottom: 10px;
         }
     }
     .tableWrap {

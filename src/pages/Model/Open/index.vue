@@ -35,6 +35,7 @@ export default {
     props: {},
     methods: {
         ...mapActions("uiState", ["saveCurCarDetail"]),
+        ...mapActions("models", ["setCurTreeNodeId"]),
 
         onClickList(info) {
             this.saveCurCarDetail(info);
@@ -44,7 +45,10 @@ export default {
         ...mapGetters("uiState", ["isOpenCarDetail"]),
         ...mapState("uiState", ["carDetail"])
     },
-    mounted() {}
+    mounted() {
+        console.log('init open page')
+        this.setCurTreeNodeId("");
+    }
 };
 </script>
 
