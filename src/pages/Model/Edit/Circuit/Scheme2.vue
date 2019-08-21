@@ -1,48 +1,29 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.notice">请依次选取下列文件，选取完毕后，点击‘合成线路信息计算’按钮，等待文件下载完成后，打开确认</div>
-        <ul :class="$style.fileList" class="clearfix">
-            <el-upload
-                :class="$style.fileUpload"
-                class="fll cursor-p"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :multiple="false"
-                :before-upload="beforeUpload"
-                :on-success="onSuccess"
-            >
-                <el-button size="small" type="primary">线路坡道信息文件</el-button>
-            </el-upload>
-            <!-- <li class="fll cursor-p" :class="$style.fileUpload">线路坡道信息文件</li> -->
-
-            <el-upload
-                :class="$style.fileUpload"
-                class="fll cursor-p"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :multiple="false"
-                :before-upload="beforeUpload"
-                :on-success="onSuccess"
-            >
-                <el-button size="small" type="primary">线路曲线信息文件</el-button>
-            </el-upload>
-            <!-- <li class="fll cursor-p" :class="$style.fileUpload">线路曲线信息文件</li> -->
-
-            <el-upload
-                :class="$style.fileUpload"
-                class="fll cursor-p"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :show-file-list="false"
-                :multiple="false"
-                :before-upload="beforeUpload"
-                :on-success="onSuccess"
-            >
-                <el-button size="small" type="primary">线路隧道信息文件</el-button>
-            </el-upload>
-            <!-- <li class="fll cursor-p" :class="$style.fileUpload">线路隧道信息文件</li> -->
+        <ul>
+            <li
+                v-for="(file, idx) in files"
+                :key="idx"
+            >{{file.name}} - Error: {{file.error}}, Success: {{file.success}}</li>
         </ul>
-
-        <div :class="$style.submitBtn" class="cursor-p">合成线路信息计算</div>
+        <file-upload
+            ref="upload"
+            v-model="files"
+            post-action="/post.method"
+            put-action="/put.method"
+            @input-file="inputFile"
+            @input-filter="inputFilter"
+        >上传文件</file-upload>
+        <button
+            v-show="!$refs.upload || !$refs.upload.active"
+            @click.prevent="$refs.upload.active = true"
+            type="button"
+        >开始上传</button>
+        <button
+            v-show="$refs.upload && $refs.upload.active"
+            @click.prevent="$refs.upload.active = false"
+            type="button"
+        >停止上传</button>
     </div>
 </template>
 

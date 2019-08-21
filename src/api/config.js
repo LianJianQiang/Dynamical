@@ -1,4 +1,4 @@
 export default {
-    baseUrl: 'http://txh.logimis.com'
-    // baseUrl: '/api'
+    // baseUrl: 'http://txh.logimis.com'
+    baseUrl: '/api'
 }

@@ -118,21 +118,21 @@ module.exports = {
             // "echarts": "echarts"
         };
     },
-    parallel: require('os').cpus().length > 1
+    parallel: require('os').cpus().length > 1,
 
-    // devServer: {
-    //     // open: process.platform === 'darwin', // 配置自动启动浏览器
-    //     // host: 'localhost',
-    //     port: 8080,
-    //     proxy: {
-    //         '/api': {
-    //             target: 'http://txh.logimis.com/', // 对应自己的接口
-    //             changeOrigin: true,
-    //             ws: true,
-    //             pathRewrite: {
-    //                 '^/api': ''
-    //             }
-    //         }
-    //     }
-    // }
+    devServer: {
+        // open: process.platform === 'darwin', // 配置自动启动浏览器
+        // host: 'localhost',
+        port: 8081,
+        proxy: {
+            '/api': {
+                target: 'http://txh.logimis.com/', // 对应自己的接口
+                changeOrigin: true,
+                ws: true,
+                pathRewrite: {
+                    '^/api': ''
+                }
+            }
+        }
+    }
 }

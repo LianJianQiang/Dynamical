@@ -12,13 +12,14 @@ import store from './store'
 // import './plugins/vueDragResize';
 // import './plugins/echarts';
 
+import './plugins/upload';
+
 // 全局样式
 import 'styles/index.scss';
 
 Es6Promise.polyfill();
 
 Vue.config.productionTip = false;
-
 
 
 

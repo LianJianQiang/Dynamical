@@ -14,9 +14,18 @@ const saveCircleData = (params) => request(`${config.baseUrl}/lp/saveLp`, { ...p
 // 线路参数 删除线路参数
 const delCircleRow = (params) => request(`${config.baseUrl}/lp/delLp`, { ...params });
 
+// 线路2：合成线路信息计算
+const calculateExcel = (params) => request(`${config.baseUrl}/lp/calculateExcel`, { ...params });
+
+// 线路2：上传线路文件
+const uploadExcel = (params) => request(`${config.baseUrl}/lp/uploadExcel`, { ...params });
+
 
 export default {
     getCircleData,
     saveCircleData,
-    delCircleRow
+    delCircleRow,
+
+    calculateExcel,
+    uploadExcel
 }
