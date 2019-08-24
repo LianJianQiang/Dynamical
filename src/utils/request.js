@@ -4,7 +4,7 @@ import loading from 'utils/loading';
 
 
 const instance = axios.create({
-    timeout: 30000,
+    timeout: 100000,
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
@@ -53,7 +53,7 @@ export function openLogin() {
     window.location.href = '/';
 }
 
-export function request(url, data = {}, { method = 'post', showLoading = true } = {}) {
+export function request(url, data = {}, { method = 'post', showLoading = true, ...otherCfg } = {}) {
     showLoading && loading.show();
     // 通用参数
     let common = {};
@@ -63,6 +63,7 @@ export function request(url, data = {}, { method = 'post', showLoading = true } 
 
     // axios配置
     const config = {
+        ...otherCfg,
         method,
         url,
         data: requestData

@@ -18,7 +18,7 @@ const delCircleRow = (params) => request(`${config.baseUrl}/lp/delLp`, { ...para
 const calculateExcel = (params) => request(`${config.baseUrl}/lp/calculateExcel`, { ...params });
 
 // 线路2：上传线路文件
-const uploadExcel = (params) => request(`${config.baseUrl}/lp/uploadExcel`, { ...params });
+// const uploadExcel = (params) => request(`${config.baseUrl}/lp/uploadExcel`, { ...params });
 
 
 export default {
@@ -26,6 +26,6 @@ export default {
     saveCircleData,
     delCircleRow,
 
-    calculateExcel,
-    uploadExcel
+    calculateExcel
+    // uploadExcel
 }

@@ -21,8 +21,6 @@ Es6Promise.polyfill();
 
 Vue.config.productionTip = false;
 
-
-
 // window.onload = function () {
 new Vue({
     store,
