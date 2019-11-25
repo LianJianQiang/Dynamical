@@ -1,52 +1,78 @@
 <template>
     <div :class="$style.root">
-        <el-cascader :options="options" :props="props" collapse-tags clearable></el-cascader>
+        <el-cascader :props="cascaderProps" clearable @change="this.onChange"></el-cascader>
     </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
+import { report } from "api";
+import { getUserIdAndType } from "utils/util";
+
 export default {
     name: "NotFound",
     data() {
         return {
-            props: { multiple: true },
-            options: [
-                {
-                    value: 1,
-                    label: "东南",
-                    children: [
-                        {
-                            value: 2,
-                            label: "上海"
-                        },
-                        {
-                            value: 7,
-                            label: "江苏"
-                        },
-                        {
-                            value: 12,
-                            label: "浙江"
-                        }
-                    ]
-                },
-                {
-                    value: 17,
-                    label: "西北",
-                    children: [
-                        {
-                            value: 18,
-                            label: "陕西"
-                        },
-                        {
-                            value: 21,
-                            label: "新疆维吾尔族自治区"
-                        }
-                    ]
+            cascaderProps: {
+                lazy: true,
+                lazyLoad: (node, resolve) => {
+                    if (node.root === true) {
+                        return this.getArgsList(resolve);
+                    }
+                    this.getCarList({
+                        argCode: node.value,
+                        resolveCb: resolve
+                    });
                 }
-            ]
+            }
         };
     },
-    props: {}
+    computed: {
+        ...mapState("models", ["curModelId"])
+    },
+    methods: {
+        getArgsList(resolveCb) {
+            const { userId } = getUserIdAndType();
+            report
+                .getArgsList({ modelId: this.curModelId, userID: userId })
+                .then(res => {
+                    if (!res || res.code !== "200") return;
+                    const data = res.data || [];
+                    const nodes = data.map(item => {
+                        return {
+                            value: item.key,
+                            label: item.name,
+                            leaf: false
+                        };
+                    });
+
+                    resolveCb(nodes);
+                });
+        },
+
+        getCarList(params = {}) {
+            const { argCode, resolveCb } = params;
+            if (!argCode) return;
+            report
+                .getCaListBYCode({ modelId: this.curModelId, code: argCode })
+                .then(res => {
+                    if (!res || res.code !== "200") return;
+                    const data = res.data || [];
+                    const nodes = data.map(item => ({
+                        value: item,
+                        label: item,
+                        leaf: true
+                    }));
+                    resolveCb(nodes);
+                });
+        },
+
+        onChange(node) {
+            this.$emit("onChange", node);
+        }
+    },
+    created() {}
 };
 </script>
 

@@ -6,17 +6,17 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="初始位置">
-                            <el-input v-model="searchForm.start"></el-input>
+                            <el-input v-model="searchForm.initialLocation"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-form-item label="积分条件">
                             <el-col :span="11">
-                                <el-input v-model="searchForm.integral1" placeholder="积分时长"></el-input>
+                                <el-input v-model="searchForm.integralTimes" placeholder="积分时长"></el-input>
                             </el-col>
                             <el-col :class="$style.division" :span="2">～</el-col>
                             <el-col :span="11">
-                                <el-input v-model="searchForm.integral2" placeholder="积分步长"></el-input>
+                                <el-input v-model="searchForm.integralStep" placeholder="积分步长"></el-input>
                             </el-col>
                         </el-form-item>
                     </el-col>
@@ -24,7 +24,7 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label="显示参数">
-                            <Cascader />
+                            <Cascader @onChange="onArgsChange" />
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
@@ -47,15 +47,20 @@
                     </el-col>
                 </el-row>
                 <el-form-item :class="$style.subForm">
-                    <span :class="[$style.btn,$style.saveBtn]" type="primary">数据保存</span>
+                    <span
+                        :class="[$style.btn,$style.saveBtn]"
+                        type="primary"
+                        @click="getCalculateResults"
+                    >计算</span>
                     <span :class="[$style.btn,$style.exportBtn]">导出数据</span>
                 </el-form-item>
             </el-form>
         </div>
         <div :class="$style.charts">
             <div :class="$style.chartsCont">
-                <Chart />
-                <Chart />
+                <Chart v-for="item in chartsData" :key="item.chartKey" :chartInfo="item" />
+                <!-- <Chart /> -->
+
                 <!-- <DragResize /> -->
                 <!-- <GridLayout v-if="IEVersion<0" :layout="chartsLayout"> -->
                 <!-- <Chart /> -->
@@ -66,6 +71,11 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
+import { report } from "api";
+import { getUserIdAndType } from "utils/util";
+
 import Chart from "./Charts";
 
 import Cascader from "./Cascader";
@@ -92,12 +102,73 @@ export default {
     data() {
         return {
             // IEVersion,
-            searchForm: {}
+            searchForm: {},
+            chartsData: []
 
             // chartsLayout: testLayout
         };
     },
-    props: {}
+    props: {},
+    computed: {
+        ...mapState("models", ["curModelId"])
+    },
+    methods: {
+        onArgsChange(args) {
+            const code = args[0];
+            const vc = args[1].replace("车辆", "");
+
+            const ve = vc.charAt(0);
+            const ca = vc.substring(1);
+
+            this.searchForm = {
+                ...this.searchForm,
+                code,
+                ve,
+                ca
+            };
+        },
+
+        getCalculateResults() {
+            const { userId } = getUserIdAndType();
+            const { searchForm } = this;
+            const {
+                initialLocation = "",
+                integralTimes = "",
+                integralStep = "",
+                ve = "",
+                ca = "",
+                code = ""
+            } = searchForm;
+            report
+                .getCalculateResults({
+                    initialLocation,
+                    integralTimes,
+                    integralStep,
+                    modelId: this.curModelId,
+                    userID: userId
+                })
+                .then(res => {
+                    if (!res || res.code !== "200") return;
+
+                    const chartData = {
+                        chartKey: `${this.curModelId}-${ve}-${ca}-${code}-${initialLocation}-${integralTimes}-${integralStep}`,
+                        ...this.searchForm,
+                        modelId: this.curModelId
+                    };
+
+                    // 所填参数已经生成一个图表
+                    // 将该图表删除，然后在第一位再插入
+                    const oldChartIdx = this.chartsData.findIndex(
+                        item => item.chartKey === chartData.chartKey
+                    );
+
+                    if (oldChartIdx !== -1) {
+                        this.chartsData.splice(oldChartIdx, 1);
+                    }
+                    this.chartsData.unshift(chartData);
+                });
+        }
+    }
 };
 </script>
 

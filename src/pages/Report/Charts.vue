@@ -1,6 +1,16 @@
 <template>
     <div :class="$style.root" @contextmenu.prevent="onContextmenu" ref="root">
-        <Charts :options="chartsOptions" />
+        <div :class="$style.title">
+            <div :class="$style.carInfo">第{{chartInfo.ve}}列 第{{chartInfo.ca}}辆</div>
+            <div :class="$style.argInfo" class="clearfix">
+                <div>初始位置：{{chartInfo.initialLocation || ''}}</div>
+                <div>积分时长：{{chartInfo.integralTimes || ''}}</div>
+                <div>积分步长：{{chartInfo.integralStep || ''}}</div>
+            </div>
+        </div>
+        <div :class="$style.chartWrap">
+            <Charts :options="chartsOptions" @datazoom="datazoomChange" />
+        </div>
         <div
             v-show="contextmenuShow"
             :class="$style.contextmenu"
@@ -8,7 +18,7 @@
             @contextmenu.prevent.stop="()=>{}"
         >
             <ul>
-                <Drawer>
+                <Drawer :dataSource="chartsData">
                     <li @click="onClickContextMenu">自定义</li>
                 </Drawer>
             </ul>
@@ -18,50 +28,62 @@
 </template>
 
 <script>
+import { report } from "api";
+
 import Charts from "components/Charts";
 import DragResize from "lib/dragResize";
 
 import Drawer from "./ChartsDiy";
-import data from "./data";
 
-let chartsOptions = {
-    tooltip: {
-        trigger: "axis"
-    },
-    legend: {
-        data: ["Y"]
-    },
-    xAxis: {
-        type: "category",
-        name: "x",
-        // splitLine: { show: false },
-        data: data.map(function(item) {
-            return item[0];
-        })
-    },
-    yAxis: {
-        mame: "fx",
-        type: "value",
-        nameLocation: "left"
-    },
-    dataZoom: [
-        {
-            startValue: "2014-11-01"
+const initChartsOptions = params => {
+    const {
+        name,
+        xAxis,
+        xAxisUnit,
+        series,
+        seriesUnit,
+        dataZoomStart,
+        dataZoomEnd
+    } = params;
+
+    return {
+        tooltip: {
+            trigger: "axis"
         },
-        {
-            type: "inside"
-        }
-    ],
-    series: [
-        {
-            name: "Y",
-            type: "line",
-            data: data.map(function(item) {
-                return item[1];
-            }),
-            smooth: true
-        }
-    ]
+        legend: {
+            data: [name]
+        },
+        xAxis: {
+            type: "category",
+            name: xAxisUnit,
+            // splitLine: { show: false },
+            data: xAxis
+        },
+        yAxis: {
+            name: `${name}(${seriesUnit})`,
+            type: "value",
+            nameLocation: "end"
+        },
+        dataZoom: [
+            {
+                start: dataZoomStart,
+                end: dataZoomEnd
+            },
+            {
+                type: "inside",
+                start: dataZoomStart,
+                end: dataZoomEnd
+            }
+        ],
+        series: [
+            {
+                name: name,
+                type: "line",
+                data: series,
+                smooth: true
+            }
+        ]
+    };
 };
 
 export default {
@@ -72,11 +94,19 @@ export default {
     },
     data() {
         return {
-            chartsOptions,
-            contextmenuShow: false
+            chartsOptions: {},
+            contextmenuShow: false,
+            currentPage: 1,
+            chartsData: {
+                seriesUnit: "",
+                xAxis: [],
+                series: [],
+                name: "",
+                xAxisUnit: ""
+            }
         };
     },
-    props: {},
+    props: ["chartInfo"],
     methods: {
         hideContextmenu() {
             this.contextmenuShow = false;
@@ -89,7 +119,94 @@ export default {
         onClickContextMenu() {
             // 点击完成后因此contextmenu
             this.hideContextmenu();
+        },
+        datazoomChange(params) {
+            const { xAxis } = this.chartsData;
+
+            const start = xAxis[0];
+            const end = xAxis[xAxis.length - 1];
+            const xAValue = end - start;
+
+            if (params.end === 100) {
+                this.datazoom = {
+                    ...params,
+                    endValue: (xAValue * params.end) / 100,
+                    startValue: (xAValue * params.start) / 100
+                };
+                this.reloardChartData();
+            }
+        },
+
+        getResultInfo(params = {}) {
+            if (this.noData) return;
+            const { modelId, ve, ca, code } = this.chartInfo;
+
+            const pageSize = 50;
+            const currentPage = this.currentPage;
+
+            report
+                .getResultInfo({
+                    ve,
+                    ca,
+                    code,
+                    modelId,
+                    currentPage,
+                    pageSize
+                })
+                .then(res => {
+                    if (!res || res.code !== "200") return;
+
+                    if (!res.data || res.data.xAxis.length === 0) {
+                        this.noData = true;
+                    }
+
+                    const data = res.data || {};
+                    const { chartsData } = this;
+
+                    let {
+                        seriesUnit = "",
+                        xAxis = [],
+                        series = [],
+                        name = "",
+                        xAxisUnit = ""
+                    } = data;
+
+                    const newData = {
+                        name: chartsData.name || name,
+                        seriesUnit: chartsData.seriesUnit || seriesUnit,
+                        xAxisUnit: chartsData.nxAxisUnitame || xAxisUnit,
+                        xAxis: chartsData.xAxis.concat(xAxis),
+                        series: chartsData.series.concat(series)
+                    };
+
+                    const start = newData.xAxis[0];
+                    const end = newData.xAxis[newData.xAxis.length - 1];
+                    const xAValue = end - start;
+
+                    let dataZoomStart = 0;
+                    let dataZoomEnd = 30;
+                    if (this.datazoom) {
+                        const { startValue, endValue } = this.datazoom;
+                        dataZoomStart = (startValue / xAValue) * 100;
+                        dataZoomEnd = (endValue / xAValue) * 100;
+                    }
+
+                    this.chartsOptions = initChartsOptions({
+                        ...newData,
+                        dataZoomStart,
+                        dataZoomEnd
+                    });
+                    this.chartsData = newData;
+                });
+        },
+
+        reloardChartData() {
+            this.currentPage = this.currentPage + 1;
+            this.getResultInfo();
         }
+    },
+    created() {
+        this.chartsOptions = {};
     },
     mounted() {
         DragResize.init({
@@ -97,6 +214,8 @@ export default {
             resizeDom: this.$refs.root
         });
         document.body.addEventListener("click", this.hideContextmenu);
+
+        this.getResultInfo();
     },
     beforeDestroy() {
         document.body.removeEventListener("click", this.hideContextmenu);
@@ -110,8 +229,9 @@ export default {
     display: inline-block;
     width: 48%;
     margin: 10px 1%;
-    height: 300px;
+    height: 350px;
     position: relative;
+    padding: 12px;
     .contextmenu {
         position: absolute;
         z-index: 16777271;
@@ -124,6 +244,27 @@ export default {
             width: 100px;
             text-align: center;
         }
+    }
+
+    .title {
+        margin-bottom: 10px;
+        .carInfo {
+            font-size: 16px;
+            text-align: center;
+        }
+        .argInfo {
+            font-size: 14px;
+            text-align: left;
+            & > div {
+                width: 33.3%;
+                float: left;
+            }
+        }
+    }
+
+    .chartWrap {
+        width: 100%;
+        height: calc(100% - 50px);
     }
 
     .dragDom {

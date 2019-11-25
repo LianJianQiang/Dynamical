@@ -1,8 +1,8 @@
 <template>
     <div :class="$style.root" class="clearfix">
-        <div style="font-size:20px;color:#fff">header</div>
+        <!-- <div style="font-size:20px;color:#fff">header</div> -->
 
-        <!-- <div :class="$style.logo" class="fll">
+        <div :class="$style.logo" class="fll">
             <img :src="logoImg" alt />
         </div>
         <div :class="$style.title" class="fll">客运列车纵向动力学软件系统</div>
@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div :class="$style.username" class="flr">{{username}}</div>
-        </div> -->
+        </div>
     </div>
 </template>
 

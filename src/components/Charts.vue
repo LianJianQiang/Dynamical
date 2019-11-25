@@ -52,10 +52,13 @@ export default {
 
             // chart根据容器自适应
             let listener = () => {
-                console.log("resize");
                 this.chart.resize();
             };
             EleResize.on(this.$refs.myEchart, listener);
+
+            this.chart.on("datazoom", params => {
+                this.$emit("datazoom", params);
+            });
         },
 
         // 深度监听options的变化

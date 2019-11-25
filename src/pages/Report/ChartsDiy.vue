@@ -14,11 +14,11 @@
                 <div class="limitValue clearfix">
                     <div class="fll">
                         <label>最大值:</label>
-                        <span>10000</span>
+                        <span>{{max || ''}}</span>
                     </div>
                     <div class="fll">
                         <label>最小值:</label>
-                        <span>10000</span>
+                        <span>{{min || ''}}</span>
                     </div>
                 </div>
                 <el-table :data="tableDataSource" border max-height="250" size="mini">
@@ -69,10 +69,6 @@
 </template>
 
 <script>
-const tableColumn = [
-    { prop: "s", label: "时间(s)" },
-    { prop: "m", label: "距离(m)" }
-];
 
 const xList = [{ key: "time", label: "时间" }];
 
@@ -84,14 +80,12 @@ export default {
     data() {
         return {
             showDrawer: false,
-            tableColumn,
-            tableDataSource: [
-                { s: 0, m: 100 },
-                { s: 10, m: 100 },
-                { s: 20, m: 100 },
-                { s: 30, m: 100 },
-                { s: 40, m: 100 }
-            ],
+            tableColumn: [],
+            tableDataSource: [],
+
+            max: "",
+            min: "",
+
             xList,
             xAxisKey: xList[0].key,
 
@@ -106,7 +100,35 @@ export default {
         }
     },
     methods: {},
-    computed: {},
+    watch: {
+        dataSource() {
+            const {
+                name,
+                xAxis,
+                xAxisUnit,
+                series,
+                seriesUnit
+            } = this.dataSource;
+
+            const tableDatas = [];
+            for (let i = 0; i < xAxis.length; i++) {
+                tableDatas.push({
+                    x: xAxis[i],
+                    y: series[i]
+                });
+            }
+
+            this.tableDataSource = tableDatas;
+            this.tableColumn = [
+                { prop: "x", label: xAxisUnit },
+                { prop: "y", label: `${name}(${seriesUnit})` }
+            ];
+
+            const newSeries = [...series].sort((a, b) => a - b);
+            this.max = newSeries[newSeries.length - 1] + "";
+            this.min = newSeries[0] + "";
+        }
+    },
     mounted() {}
 };
 </script>

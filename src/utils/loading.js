@@ -21,10 +21,10 @@ class CustomLoading {
             return;
         }
         this.num = 0;
-        setTimeout(() => {
-            this.loading && this.loading.close();
-            this.loading = null;
-        }, 500);
+        // setTimeout(() => {
+        this.loading && this.loading.close();
+        this.loading = null;
+        // }, 100);
     };
 }
 
