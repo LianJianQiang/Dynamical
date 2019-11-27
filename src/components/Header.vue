@@ -7,13 +7,24 @@
         </div>
         <div :class="$style.title" class="fll">客运列车纵向动力学软件系统</div>
         <div :class="$style.user" class="flr">
-            <div :class="$style.avatar" class="fll">
-                <div :class="$style.imgWrap">
-                    <div v-if="username">{{userAvatar}}</div>
-                    <img v-else :src="userAvatar" alt />
+            <el-dropdown
+                :hide-on-click="false"
+                :class="$style.dropdownWrap"
+                @command="handleCommand"
+            >
+                <div>
+                    <div :class="$style.avatar" class="fll">
+                        <div :class="$style.imgWrap">
+                            <div v-if="username">{{userAvatar}}</div>
+                            <img v-else :src="userAvatar" alt />
+                        </div>
+                    </div>
+                    <div :class="$style.username" class="flr">{{username}}</div>
                 </div>
-            </div>
-            <div :class="$style.username" class="flr">{{username}}</div>
+                <el-dropdown-menu slot="dropdown" :class="$style.dropdownMenu">
+                    <el-dropdown-item command="logout">退出</el-dropdown-item>
+                </el-dropdown-menu>
+            </el-dropdown>
         </div>
     </div>
 </template>
@@ -47,6 +58,13 @@ export default {
         let userInfo = getUserInfo();
         let { name = "" } = userInfo;
         this.username = name;
+    },
+    methods: {
+        handleCommand(command) {
+            if (command === "logout") {
+                this.$router.push('/login')
+            }
+        }
     }
 };
 </script>
@@ -110,5 +128,14 @@ $font-color: #fff;
         font-size: 18px;
         color: $font-color;
     }
+
+    .dropdownWrap {
+        height: 48px;
+    }
+}
+
+.dropdownMenu {
+    width: 150px;
+    text-align: center;
 }
 </style>
