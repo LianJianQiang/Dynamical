@@ -91,6 +91,30 @@ import Cascader from "./Cascader";
 //     { x: 6, y: 12, w: 6, h: 8, i: "3", static: false }
 // ];
 
+const varifyArgs = [
+    { key: "initialLocation", msg: "请输入初始位置" },
+    { key: "integralTimes", msg: "请输入积分时长" },
+    { key: "integralStep", msg: "请输入积分步长" },
+    { key: "ve", msg: "请选择显示参数" },
+    { key: "ca", msg: "请选择显示参数" },
+    { key: "code", msg: "请选择显示参数" }
+];
+
+const varifyArgsFns = (arg = {}, obj) => {
+    const { key, msg } = arg;
+    if (!key) return true;
+
+    if (!obj[key]) {
+        ELEMENT.Message({
+            message: msg || "请输入正确的查询条件",
+            type: "error"
+        });
+        return false;
+    }
+
+    return true;
+};
+
 export default {
     name: "Report",
     components: {
@@ -114,6 +138,16 @@ export default {
     },
     methods: {
         onArgsChange(args) {
+            if (args.length === 0) {
+                this.searchForm = {
+                    ...this.searchForm,
+                    code: "",
+                    ve: "",
+                    ca: ""
+                };
+                return;
+            }
+
             const code = args[0];
             const vc = args[1].replace("车辆", "");
 
@@ -139,6 +173,12 @@ export default {
                 ca = "",
                 code = ""
             } = searchForm;
+
+            // 校验参数不为空
+            for (let i = 0; i < varifyArgs.length; i++) {
+                if (!varifyArgsFns(varifyArgs[i], searchForm)) return;
+            }
+
             report
                 .getCalculateResults({
                     initialLocation,
