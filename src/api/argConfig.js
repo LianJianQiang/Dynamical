@@ -34,7 +34,7 @@ const saveCoupFdhsfTemp = (params) => request(`${config.baseUrl}/coupFdhsfTemp/s
 
 
 /**
- * 锚点法
+ * 描点法
  */
 // 查询缓冲器描点法模版列表
 const getCoupMdfTempList = (params) => request(`${config.baseUrl}/coupMdfTemp/getCoupMdfTempData`, { ...params });
@@ -62,7 +62,7 @@ export default {
     delCoupFdhsfTemp,
     saveCoupFdhsfTemp,
 
-    // 缓冲器 锚点法
+    // 缓冲器 描点法
     getCoupMdfTempList,
     getCoupMdfTempView,
     delCoupMdfTemp,

@@ -10,7 +10,7 @@ export const TreeData = [
                     {
                         id: "/page/arg-cfg/buffer-curve",
                         url: "/page/arg-cfg/buffer-curve",
-                        label: "锚点法设置"
+                        label: "描点法设置"
                     },
                     {
                         id: "/page/arg-cfg/buffer-piecewise",

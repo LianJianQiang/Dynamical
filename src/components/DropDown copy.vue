@@ -1,18 +1,15 @@
 <template>
-    <div :class="[$style.root]" class="cursor-p" ref="root">
-        <div slot="reference" class="link inp-border" ref="reference" @click="visible = true">
-            <span
-                :class="{[$style.haveData]:$attrs.isHaveData, [$style.noData]:!$attrs.isHaveData}"
-            >{{$attrs.isHaveData ? '参数设置（已设置）' : '参数设置（未设置）'}}</span>
-            <span class="triangle-down-6 downIcon"></span>
-        </div>
-        <el-drawer
-            :visible.sync="visible"
-            :with-header="false"
-            custom-class="editArgsDrawer"
-            :title="title"
+    <div :class="[$style.root, size === 'mini' ? $style.mini : '']" class="cursor-p" ref="root">
+        <el-popover
+            popper-class="drop-down-popover"
+            placement="bottom"
+            v-on:show="showPop"
+            :width="popoverWidth"
+            trigger="click"
+            :visible-arrow="false"
+            v-model="visible"
         >
-            <div class="editArgsDrawerBody">
+            <div>
                 <slot></slot>
                 <div class="subBtnWrap">
                     <el-button class="btn-default" @click="clickSave">应用</el-button>
@@ -20,7 +17,11 @@
                     <el-button class="btn-default" @click="clickCancel">取消</el-button>
                 </div>
             </div>
-        </el-drawer>
+            <div slot="reference" class="link inp-border" ref="reference">
+                <span>{{placeholder}}</span>
+                <span class="triangle-down-6 downIcon"></span>
+            </div>
+        </el-popover>
     </div>
 </template>
 
@@ -37,10 +38,6 @@ export default {
         size: {
             type: String,
             default: "default"
-        },
-        title: {
-            type: String,
-            default: ""
         },
         placeholder: {
             type: String,
@@ -90,15 +87,7 @@ $height: 28px;
     height: $height;
     line-height: $height - 2px;
     position: relative;
-    // margin-top: 4px;
-
-    .haveData {
-        color: #4baed0;
-    }
-
-    .noData {
-        color: #999;
-    }
+    margin-top: 4px;
 
     &.mini {
         height: 18px;
@@ -128,38 +117,13 @@ $height: 28px;
 }
 
 :global {
-    .editArgsDrawer {
-        width: 200px;
+    .drop-down-popover {
+        min-width: 250px !important;
+        max-height: 220px !important;
         overflow: auto;
-
-        .editArgsDrawerBody {
-            padding: 0 20px 20px;
-        }
-
-        .el-drawer__header {
-            font-size: 16px;
-        }
-
         .subBtnWrap {
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: center;
-        }
-
-        .el-form-item__label,
-        .el-checkbox__label {
-            font-size: 12px;
-            color: $label-color_1;
-        }
-        .el-form-item {
-            margin-bottom: 10px;
-        }
-
-        .radioWrap {
-            margin-bottom: 10px;
-        }
-
-        .listWrap {
-            margin-bottom: 20px;
         }
     }
 }

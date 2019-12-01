@@ -49,13 +49,24 @@
                     >插入</span>
                     <span
                         class="cursor-p hover-heighlight"
+                        :class="[$style.insert,$style.editBtn]"
+                        @click="tableEdit(scope.$index,scope.row)"
+                    >修改</span>
+                    <span
+                        class="cursor-p hover-heighlight"
                         :class="[$style.del,$style.editBtn]"
                         @click="deleteRow(scope.$index,scope.row)"
                     >删除</span>
                 </template>
             </el-table-column>
         </el-table>
-        <Ramp :visible="rampVisible" @saveData="saveRampData" @cancel="rampVisible=false"/>
+        <Ramp
+            :type="rampType"
+            :visible="rampVisible"
+            :dataSource="rampDataSource"
+            @saveData="saveRampData"
+            @cancel="rampVisible=false"
+        />
     </div>
 </template>
 
@@ -64,6 +75,7 @@ import { mapState } from "vuex";
 // import { MODEL_TREE_TYPE } from "common/constants";
 
 import { circuit } from "api";
+import { isNil } from "utils/util";
 
 import Ramp from "./Ramp";
 
@@ -76,6 +88,8 @@ export default {
         return {
             tableData: [],
             rampVisible: false,
+            rampDataSource: {},
+            rampType: "",
             insertIdx: 0 // 插入数据的位置，默认第一行
         };
     },
@@ -86,16 +100,6 @@ export default {
     methods: {
         resetTableData() {
             let { tableData } = this;
-            // console.log(JSON.parse(JSON.stringify(tableData)));
-            // if (tableData.length === 1) {
-            //     tableData[0]["xInitial"] = 0;
-            // } else if (tableData.length > 1) {
-            //     for (let i = tableData.length - 1; i > 0; i--) {
-            //         let cur = tableData[i];
-            //         let pro = tableData[i - 1];
-            //         pro.xInitial = cur.xInitial + cur.lInitial;
-            //     }
-            // }
 
             let len = tableData.length - 1;
             for (let i = len; i >= 0; i--) {
@@ -117,6 +121,18 @@ export default {
             let idx = this.insertIdx || 0;
             this.tableData.splice(idx, 0, ...row);
             this.resetTableData();
+            return true;
+        },
+
+        // 修改行数据
+        editRowData([data]) {
+            const _editIdx = data._editIdx;
+            if (isNil(_editIdx)) return false;
+
+            delete data._editIdx;
+            this.tableData.splice(_editIdx, 1, data);
+            this.resetTableData();
+            return true;
         },
 
         // 删除一行数据
@@ -125,24 +141,19 @@ export default {
                 if (!res) return;
                 this.initData();
             });
-            // this.tableData.splice(idx, 1);
-            // this.resetTableData();
+        },
+
+        tableEdit(idx, row) {
+            this.rampVisible = true;
+            this.rampDataSource = { ...row, _editIdx: idx };
+            this.rampType = "edit";
         },
 
         // 表头添加按钮，默认添加一条数据到第一行
         tableAdd(idx = 0) {
             this.rampVisible = true;
             this.insertIdx = idx;
-            // if (this.tableData.length === 0) {
-            //     this.tableData.unshift({ xInitial: 0, lInitial: 100 });
-            //     return;
-            // }
-            // let last = this.tableData[0];
-
-            // this.tableData.unshift({
-            //     xInitial: last.lInitial + last.xInitial,
-            //     lInitial: 100
-            // });
+            this.rampType = "add";
         },
 
         // 表头删除按钮，默认删除第一条数据
@@ -154,7 +165,15 @@ export default {
         },
 
         saveRampData(data) {
-            this.insertRow(data);
+            let isSuccess = false;
+            if (this.rampType === "edit") {
+                isSuccess = this.editRowData(data);
+            } else {
+                isSuccess = this.insertRow(data);
+            }
+
+            if (!isSuccess) return;
+
             this.$message.success("操作成功");
             this.rampVisible = false;
         },

@@ -75,6 +75,7 @@ const getters = {
         }
 
         let list = Object.entries(result);
+
         // 按row进行排序；
         list.sort((a, b) => a[0] - b[0]);
 

@@ -1,6 +1,6 @@
 <template>
     <div :class="$style.root">
-        <div :class="$style.title">缓冲器型号设置-锚点法</div>
+        <div :class="$style.title">缓冲器型号设置-描点法</div>
         <div :class="$style.curBuffer">
             <label>请选择缓冲器型号</label>
             <el-select v-model="curTempId" placeholder="请选择" class="m-l-5">

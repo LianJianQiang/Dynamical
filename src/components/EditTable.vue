@@ -6,9 +6,9 @@
             <el-button v-if="showOpen" class="btn-mini" @click="onOpenCurve">打开</el-button>
             <el-button v-if="showSave" class="btn-mini" @click="onSaveCurve">保存</el-button>
         </div>
-        <el-table :data="tableData" :height="height" border size="mini">
-            <el-table-column prop="number" label="序号" align="center" width="75" />
-            <el-table-column prop="x" label="x" align="center" width="75">
+        <el-table :data="tableData" :height="height" border size="mini" style="width: 100%">
+            <el-table-column prop="number" label="序号" align="center" />
+            <el-table-column prop="x" label="x" align="center">
                 <template slot-scope="scope">
                     <el-input-number
                         :controls="false"
@@ -18,7 +18,7 @@
                     ></el-input-number>
                 </template>
             </el-table-column>
-            <el-table-column prop="f" label="fx" align="center" width="75">
+            <el-table-column prop="f" label="fx" align="center">
                 <template slot-scope="scope">
                     <el-input-number
                         v-model="scope.row.f"
@@ -30,7 +30,12 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="请选择曲线" :visible.sync="curveDialogVisible" :modal="false" :append-to-body="true">
+        <el-dialog
+            title="请选择曲线"
+            :visible.sync="curveDialogVisible"
+            :modal="false"
+            :append-to-body="true"
+        >
             <ul :class="$style.tractionList" class="clearfix">
                 <li
                     class="fll cursor-p"
@@ -96,7 +101,7 @@ export default {
         },
         height: {
             type: String,
-            default: "85"
+            default: "150"
         },
         showOpen: {
             type: Boolean,
@@ -118,10 +123,6 @@ export default {
             type: Function,
             default: () => {}
         },
-        // onSave: {
-        //     type: Function,
-        //     default: () => {}
-        // }
         onSaveCb: {
             type: Function,
             default: () => {}
@@ -155,11 +156,13 @@ export default {
         tableAdd() {
             let { tableData } = this;
             tableData.unshift({
-                number: tableData.length + 1,
                 x: 0,
                 f: 0
             });
-            this.tableData = tableData;
+
+            this.resetOrder();
+
+            // this.tableData = tableData;
             this.tableDataChange(this.tableData);
         },
 
@@ -167,8 +170,15 @@ export default {
         tableDel() {
             let { tableData } = this;
             tableData.shift();
-            this.tableData = tableData;
+            this.resetOrder();
+            // this.tableData = tableData;
             this.tableDataChange(this.tableData);
+        },
+
+        resetOrder() {
+            this.tableData.map((item, idx) => {
+                item.number = idx + 1;
+            });
         },
 
         // 打开曲线
@@ -283,26 +293,17 @@ export default {
         margin-bottom: 10px;
     }
 
-    .tractionList {
-        max-height: 300px;
-        overflow: auto;
-        li {
-            padding: 10px 20px;
-            margin: 0 5px;
-        }
-    }
-
     :global {
         .el-input-number.is-without-controls .el-input__inner {
             padding: $input-pad-s;
         }
-        .el-form-item__label,
-        .el-form-item__content,
-        .el-input,
-        .el-input__inner {
-            height: 18px;
-            line-height: 18px;
-        }
+        // .el-form-item__label,
+        // .el-form-item__content,
+        // .el-input,
+        // .el-input__inner {
+        //     height: 18px;
+        //     line-height: 18px;
+        // }
         .el-input__inner {
             padding: 0 5px;
         }
@@ -320,6 +321,17 @@ export default {
                 line-height: 20px;
             }
         }
+    }
+}
+
+.tractionList {
+    max-height: 300px;
+    overflow: auto;
+    li {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 20px;
+        margin: 0 5px;
     }
 }
 </style>

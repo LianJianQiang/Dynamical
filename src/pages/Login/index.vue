@@ -75,6 +75,7 @@ export default {
     methods: {
         ...mapActions("uiState", ["clearAllDataUIState"]),
         ...mapActions("models", ["clearAllDataModels"]),
+
         submitForm(formName) {
             let { username, password } = this.loginForm;
             this.$refs[formName].validate(valid => {

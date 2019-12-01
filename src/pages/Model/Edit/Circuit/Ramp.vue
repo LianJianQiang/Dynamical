@@ -7,11 +7,17 @@
             title="坡道设置"
             :visible.sync="showDrawer"
             direction="rtl"
+            @close="$emit('cancel')"
         >
             <div class="rampDrawContent">
                 <div class="methodWrap">
                     <label>请坡道设置方法</label>
-                    <el-select v-model="rampMethod" placeholder="请选择" class="m-l-5 rampMethodSel">
+                    <el-select
+                        v-model="rampMethod"
+                        placeholder="请选择"
+                        class="m-l-5 rampMethodSel"
+                        :disabled="$attrs.type === 'edit'"
+                    >
                         <el-option
                             v-for="item in rampMethods"
                             :key="item.id"
@@ -108,6 +114,7 @@
                     </div>
                     <div class="drawerFooter" v-if="rampMethod">
                         <el-button class="btn-xl" type="primary" @click="saveData">保存</el-button>
+                        <el-button class="btn-xl" type="primary" @click="resetData">重置</el-button>
                         <el-button class="btn-xl" @click="$emit('cancel')">取消</el-button>
                     </div>
                 </div>
@@ -146,6 +153,12 @@ let chartsOptions = {
     ]
 };
 
+const defaultFormData = {
+    lInitial: 100, // 长度
+    gradient: 0, // 坡度
+    radius: 0 // 过渡曲线半径
+};
+
 export default {
     name: "Ramp",
     components: {
@@ -158,11 +171,7 @@ export default {
             showDrawer: false,
 
             // 常坡度定义
-            formData: {
-                lInitial: 100, // 长度
-                gradient: 0, // 坡度
-                radius: 0 // 过渡曲线半径
-            },
+            formData: { ...defaultFormData },
             formLabelWidth: "120px",
 
             // 逐点定义
@@ -175,6 +184,10 @@ export default {
     watch: {
         visible() {
             this.showDrawer = this.visible;
+        },
+
+        dataSource() {
+            this.formData = { ...this.dataSource };
         }
     },
     props: {
@@ -259,7 +272,7 @@ export default {
 
             for (let i = len; i >= 1; i--) {
                 let curData = pointTableData[i];
-                if (!curData.x || !curData.y) {
+                if (isNil(curData.x) || isNil(curData.y)) {
                     this.$message({
                         message: "请将数据填写完整",
                         type: "error"
@@ -314,6 +327,11 @@ export default {
             if (!data) return;
 
             this.$emit("saveData", data);
+        },
+
+        resetData() {
+            this.formData = { ...defaultFormData };
+            this.pointTableData = [];
         }
     },
     mounted() {

@@ -1,7 +1,13 @@
 <template>
-    <DropDown :save="save" :size="size" :placeholder="placeholder">
-        <div class="dropPanel clearfix" :class="$style.root">
-            <el-row :class="$style.row">
+    <DropDown
+        :save="save"
+        :resetData="resetData"
+        :placeholder="placeholder"
+        :title="$attrs.title"
+        :isHaveData="isHaveData"
+    >
+        <div class="clearfix" :class="$style.root">
+            <el-row class="listWrap">
                 <label for>选择型号</label>
                 <el-select
                     :class="$style.sel"
@@ -59,7 +65,12 @@ export default {
         margin-bottom: 10px;
     }
     .sel {
-        width: 100px;
+        width: 250px;
+    }
+    label {
+        display: inline-block;
+        height: 28px;
+        line-height: 28px;
     }
 }
 </style>

@@ -1,4 +1,4 @@
-import { SESSION_USERINFO_KEY, SESSION_USER_MENULIST } from 'common/constants';
+import { SESSION_USERINFO_KEY, SESSION_USER_MENULIST, MODEL_TREE_TYPE } from 'common/constants';
 
 export const getDomRect = (dom) => {
     if (!dom) return {};
@@ -92,6 +92,20 @@ export const handleTreeData = (dataList = []) => {
     let item = null;
     let idMap = {}; // key:id,value:item
 
+    const veIdx = dataList.findIndex(item => item.type === MODEL_TREE_TYPE.basic && item.pid === MODEL_TREE_TYPE.train);
+    if (veIdx !== -1) {
+        const veItem = dataList.splice(veIdx, 1)[0];
+        dataList.unshift(veItem)
+    }
+
+    // 车辆按 列 辆 排序
+    dataList.sort((a, b) => {
+        if (a.row === b.row) {
+            return a.cal - b.cal;
+        }
+        return a.row - b.row;
+    })
+
     // 将所有的菜单保存到idMap,如果是一级菜单，还要存放到items数组
     for (let i = 0; i < dataList.length; i++) {
         let row = dataList[i];
@@ -120,6 +134,8 @@ export const handleTreeData = (dataList = []) => {
             pitem.children.push(item);
         }
     }
+
+    console.log(items);
 
     return items;
 }

@@ -1,13 +1,18 @@
 <!-- 车辆参数 制动系统弹层 -->
 <template>
-    <DropDown :save="save">
+    <DropDown :save="save" :resetData="resetData" :title="$attrs.title" :isHaveData="isHaveData">
         <div :class="$style.root">
-            <el-row :class="$style.curveWrap">
-                <el-radio v-model="formData.coupdef" :label="1">锚点法设置</el-radio>
+            <el-row class="listWrap">
+                <!-- <el-radio v-model="formData.coupdef" :label="1">描点法设置</el-radio> -->
+                <el-checkbox
+                    class="radioWrap"
+                    :value="formData.coupdef===1"
+                    :label="1"
+                    @change="()=>onCheckboxChange(1)"
+                >牵引力曲线自定义1</el-checkbox>
                 <el-form
                     class="clearfix"
                     ref="form"
-                    :class="$style.form"
                     label-position="left"
                     :model="formData"
                     label-width="120px"
@@ -33,12 +38,35 @@
                     </el-form-item>
                 </el-form>
             </el-row>
-            <el-row :class="$style.curveWrap" class="clearfix">
-                <el-radio v-model="formData.coupdef" :label="2">分段函数法设置</el-radio>
-
-                <div :class="$style.typeWrap">
+            <el-row class="listWrap">
+                <!-- <el-radio v-model="formData.coupdef" :label="2">分段函数法设置</el-radio> -->
+                <el-checkbox
+                    class="radioWrap"
+                    :value="formData.coupdef===2"
+                    :label="2"
+                    @change="()=>onCheckboxChange(2)"
+                >分段函数法设置</el-checkbox>
+                <div>
                     <div class="clearfix">
-                        <div class="fll">型号选择</div>
+                        <el-form
+                            class="clearfix"
+                            ref="form"
+                            label-position="left"
+                            :model="formData"
+                            label-width="120px"
+                        >
+                            <el-form-item label="型号选择">
+                                <el-select v-model="formData.couMdfId" placeholder="请选择">
+                                    <el-option
+                                        v-for="item in curveList"
+                                        :key="item.id"
+                                        :label="item.name"
+                                        :value="item.id"
+                                    ></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-form>
+                        <!-- <div class="fll">型号选择</div>
                         <el-select v-model="formData.couFdhsfId" placeholder="请选择" class="flr">
                             <el-option
                                 v-for="item in piecewiseLsit"
@@ -46,14 +74,19 @@
                                 :label="item.name"
                                 :value="item.id"
                             ></el-option>
-                        </el-select>
+                        </el-select>-->
                     </div>
                 </div>
             </el-row>
-            <el-row :class="$style.curveWrap" class="clearfix">
+            <el-row class="listWrap">
                 <div class="clearfix">
-                    <el-radio v-model="formData.coupdef" :label="3">缓冲器本构</el-radio>
-
+                    <!-- <el-radio v-model="formData.coupdef" :label="3">缓冲器本构</el-radio> -->
+                    <el-checkbox
+                        class="radioWrap"
+                        :value="formData.coupdef===3"
+                        :label="3"
+                        @change="()=>onCheckboxChange(3)"
+                    >缓冲器本构</el-checkbox>
                     <el-input-number
                         class="flr"
                         :controls="false"
@@ -62,13 +95,7 @@
                         style="width:88px;margin-bottom:6px"
                     ></el-input-number>
                 </div>
-                <el-form
-                    ref="form"
-                    :class="$style.form"
-                    label-position="left"
-                    :model="formData"
-                    label-width="120px"
-                >
+                <el-form ref="form" label-position="left" :model="formData" label-width="120px">
                     <el-form-item label="钩缓质量" label-position="left">
                         <el-input-number :controls="false" v-model="formData.couQuality" :min="0"></el-input-number>
                     </el-form-item>
@@ -93,7 +120,7 @@ export default {
     mixins: [mixin, mixinData],
     data() {
         return {
-            curveList: [], // 锚点list
+            curveList: [], // 描点list
             piecewiseLsit: [] // 分段函数list
         };
     },
@@ -102,6 +129,14 @@ export default {
     },
     computed: {},
     methods: {
+        onCheckboxChange(value) {
+            if (this.formData.coupdef === value) {
+                delete this.formData.coupdef;
+                return;
+            }
+            this.formData.coupdef = value;
+        },
+
         // 查询缓冲器分段函数法模版列表
         getCoupFdhsfTempList() {
             argConfig
@@ -131,109 +166,14 @@ export default {
 
 <style module lang="scss">
 .root {
-    width: 100%;
-    height: 100%;
-    font-size: 12px;
-    line-height: 20px;
-
-    input {
-        font-size: 12px;
-    }
-
-    .speedbox {
-        width: 30px;
-    }
-
     .form {
         margin-left: 22px;
-    }
-    .curveWrap {
-        margin-top: 10px;
-        .curveInfo {
-            // padding-left: 16px;
-            li {
-                margin-bottom: 4px;
-                font-size: 12px;
-            }
-
-            .btnGroup {
-                margin-bottom: 10px;
-            }
-
-            :global {
-                .el-form-item {
-                    display: inline-block;
-                }
-            }
-        }
-    }
-
-    .subBtnWrap {
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .dropbox {
-        line-height: 20px;
-        :global {
-            .downIcon {
-                top: 9px;
-            }
-        }
-    }
-
-    .typeWrap {
-        margin-left: 22px;
-    }
-
-    .lineSet {
-        font-size: 12px;
-        cursor: pointer;
-    }
-
-    :global {
-        .m-l-5 {
-            margin-left: 5px;
-        }
-        .el-input-number.is-without-controls .el-input__inner {
-            padding: $input-pad-s;
-        }
-        .el-form-item__label,
-        .el-form-item__content,
-        .el-input,
-        .el-input__inner {
-            height: 18px;
-            line-height: 18px;
-        }
-        .el-input__inner {
-            padding: 0 5px;
-        }
-        .el-form-item__label,
-        .el-checkbox__label {
-            font-size: 12px;
-            color: $label-color_1;
-        }
-        .el-form-item {
-            margin-bottom: 4px;
-        }
     }
 
     :global {
         .el-select {
-            width: 90px;
-            margin-right: 10px;
-        }
-        .el-input__inner,
-        .el-input__icon {
-            height: 20px;
-            line-height: 20px;
-            font-size: 12px;
+            width: 100%;
         }
     }
-}
-
-.brakeDiyDown {
-    padding-left: 132px;
-    width: 100%;
 }
 </style>

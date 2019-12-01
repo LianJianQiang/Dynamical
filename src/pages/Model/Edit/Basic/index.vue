@@ -138,7 +138,7 @@
                         type="primary"
                         @click="submitForm"
                     >保存</el-button>
-                    <el-button class="btn-xl" @click="resetForm">取消</el-button>
+                    <el-button class="btn-xl" @click="resetForm">重置</el-button>
                 </el-col>
             </el-row>
         </div>
@@ -210,8 +210,14 @@ export default {
                 if (!res) return;
 
                 let { data = {} } = res;
-                this.no1 = data.ve1 || {};
-                this.no2 = data.ve2 || {};
+                const no1 = data.ve1 || {};
+                const no2 = data.ve2 || {};
+
+                this.no1 = no1;
+                this.no2 = no2;
+
+                this.cacheNo1 = { ...no1 };
+                this.cacheNo2 = { ...no2 };
             });
         },
 
@@ -258,8 +264,8 @@ export default {
          * 取消输入
          */
         resetForm: function() {
-            this.$refs.no1Form.resetFields();
-            this.$refs.no2Form.resetFields();
+            this.no1 = { ...this.cacheNo1 };
+            this.no2 = { ...this.cacheNo2 };
         },
 
         saveTractionData(params) {

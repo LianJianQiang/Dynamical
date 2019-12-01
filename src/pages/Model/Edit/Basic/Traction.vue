@@ -1,26 +1,33 @@
 <!-- 牵引力特征曲线参数设置 -->
 <template>
-    <DropDown :save="save">
+    <DropDown :save="save" title="牵引力特征曲线" :isHaveData="isHaveData">
         <div :class="$style.root">
-            <el-form ref="form" label-position="left" :model="datas" label-width="160px">
-                <el-form-item label="整列最大载客工况总质量">
-                    <el-input-number :controls="false" v-model="datas.massMax" :min="0"></el-input-number>
-                </el-form-item>
-                <el-form-item label="整列车回转质量">
-                    <el-input-number :controls="false" v-model="datas.massRotating" :min="0"></el-input-number>
-                </el-form-item>
-                <el-form-item label="整列车牵引电机数量">
-                    <el-input-number :controls="false" v-model="datas.motorNum" :min="0"></el-input-number>
-                </el-form-item>
-                <el-form-item label="牵引指令下达后的延长时间">
-                    <el-input-number :controls="false" v-model="datas.delayTime" :min="0"></el-input-number>
-                </el-form-item>
-                <el-form-item label="冲击率">
-                    <el-input-number :controls="false" v-model="datas.rampFun" :min="0"></el-input-number>
-                </el-form-item>
-            </el-form>
-            <el-row :class="$style.curveWrap">
-                <el-radio v-model="characteristics" :label="1">牵引力曲线自定义1</el-radio>
+            <el-row class="listWrap">
+                <el-form ref="form" label-position="left" :model="datas" label-width="160px">
+                    <el-form-item label="整列最大载客工况总质量">
+                        <el-input-number :controls="false" v-model="datas.massMax" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="整列车回转质量">
+                        <el-input-number :controls="false" v-model="datas.massRotating" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="整列车牵引电机数量">
+                        <el-input-number :controls="false" v-model="datas.motorNum" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="牵引指令下达后的延长时间">
+                        <el-input-number :controls="false" v-model="datas.delayTime" :min="0"></el-input-number>
+                    </el-form-item>
+                    <el-form-item label="冲击率">
+                        <el-input-number :controls="false" v-model="datas.rampFun" :min="0"></el-input-number>
+                    </el-form-item>
+                </el-form>
+            </el-row>
+            <el-row class="listWrap">
+                <el-checkbox
+                    class="radioWrap"
+                    :value="characteristics===1"
+                    :label="1"
+                    @change="()=>onCheckboxChange(1)"
+                >牵引力曲线自定义1</el-checkbox>
 
                 <ul :class="$style.curveInfo">
                     <el-form :model="datas">
@@ -118,14 +125,22 @@
                     </el-form>
                 </ul>
             </el-row>
-            <el-row :class="$style.curveWrap">
-                <el-radio v-model="characteristics" :label="2">牵引力曲线自定义2</el-radio>
+            <el-row class="listWrap">
+                <el-checkbox
+                    class="radioWrap"
+                    :value="characteristics===2"
+                    :label="2"
+                    @change="()=>onCheckboxChange(2)"
+                >牵引力曲线自定义2</el-checkbox>
+
                 <div :class="$style.curveInfo">
                     <EditTable
                         ref="editTable"
                         :type="4"
-                        :tableDataChange="tableDataChange"
                         :onSaveCb="onSaveCb"
+                        :tcsdData="tcsd"
+                        :dataSource="tcsd.tcsdData"
+                        :tableDataChange="tableDataChange"
                     />
                 </div>
             </el-row>
@@ -138,6 +153,7 @@ import { mapState } from "vuex";
 
 import DropDown from "components/DropDown.vue";
 import EditTable from "components/EditTable";
+import { getObjFromStr } from "utils/util";
 
 import { model } from "api";
 
@@ -154,7 +170,9 @@ export default {
             tractionTableName: "",
 
             // 牵引力曲线列表
-            tractionList: []
+            tractionList: [],
+
+            isHaveData: false
         };
     },
     components: {
@@ -181,8 +199,17 @@ export default {
                 .then(res => {
                     if (!res) return;
                     let { data = {} } = res;
+
+                    if (data && JSON.stringify(data) !== "{}") {
+                        this.isHaveData = true;
+                    }
+
+                    if (data.tcsd && data.tcsd.tcsdData) {
+                        data.tcsd.tcsdData = getObjFromStr(data.tcsd.tcsdData);
+                    }
+
                     this.datas = data;
-                    this.characteristics = data.characteristics || 0;
+                    this.characteristics = data.characteristics || "";
                     this.tcsd = data.tcsd || {};
                 });
         },
@@ -198,6 +225,13 @@ export default {
             this.tcsdId = id;
         },
 
+        onCheckboxChange(value) {
+            if (this.characteristics === value) {
+                return (this.characteristics = 0);
+            }
+            this.characteristics = value;
+        },
+
         // 保存数据
         save() {
             return new Promise(resolve => {
@@ -210,19 +244,26 @@ export default {
                     type: this.type,
                     vtrInfo: {
                         ...this.datas,
-                        modelId: this.curModelId,
-                        characteristics: this.characteristics
+                        modelId: this.curModelId
                     }
                 };
-                this.tcsdId && (params.tcsdId = this.tcsdId);
+
+                if (this.characteristics) {
+                    params.vtrInfo.characteristics = this.characteristics;
+                }
+
+                this.tcsdId &&
+                    (params.tcsdId = this.tcsdId) &&
+                    (params.vtrInfo.tcsdId = this.tcsdId);
+
                 model.tractionSave(params).then(res => {
                     if (!res) return;
-
-                    resolve(true);
                     this.$message({
                         message: "保存成功",
                         type: "success"
                     });
+                    this.isHaveData = true;
+                    resolve(true);
                 });
             });
         }
@@ -235,81 +276,40 @@ export default {
     width: 100%;
     height: 100%;
 
-    input {
-        font-size: 12px;
-    }
-
     .speedbox {
-        width: 30px;
-    }
-
-    .curveWrap {
-        margin-top: 10px;
-        .curveInfo {
-            // padding-left: 16px;
-            li {
-                margin-bottom: 4px;
-                font-size: 12px;
-            }
-
-            .btnGroup {
-                margin-bottom: 10px;
-            }
-
-            :global {
-                .el-form-item {
-                    display: inline-block;
-                }
-            }
+        width: 50px;
+        input {
+            padding-left: 5px !important;
+            padding-right: 5px !important;
         }
     }
 
-    .subBtnWrap {
-        margin-top: 10px;
-        text-align: center;
-    }
-
-    .tractionList {
-        max-height: 300px;
-        overflow: auto;
+    .curveInfo {
         li {
-            padding: 10px 20px;
-            margin: 0 5px;
-        }
-    }
-
-    .nameDialog {
-        :global {
-            .el-input,
-            .el-input__inner {
-                height: 32px;
-                line-height: 32px;
-            }
-        }
-    }
-
-    :global {
-        .el-input-number.is-without-controls .el-input__inner {
-            padding: $input-pad-s;
-        }
-        .el-form-item__label,
-        .el-form-item__content,
-        .el-input,
-        .el-input__inner {
-            height: 18px;
-            line-height: 18px;
-        }
-        .el-input__inner {
-            padding: 0 5px;
-        }
-        .el-form-item__label,
-        .el-checkbox__label {
             font-size: 12px;
             color: $label-color_1;
         }
-        .el-form-item {
-            margin-bottom: 4px;
+
+        .btnGroup {
+            margin-bottom: 10px;
+        }
+
+        :global {
+            .el-form-item {
+                display: inline-block;
+            }
         }
     }
+
+    // :global {
+    // .el-form-item__label,
+    // .el-checkbox__label {
+    //     font-size: 12px;
+    //     color: $label-color_1;
+    // }
+    // .el-form-item {
+    //     margin-bottom: 10px;
+    // }
+    // }
 }
 </style>

@@ -20,15 +20,8 @@
                             </el-col>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row>
                     <el-col :span="8">
-                        <el-form-item label="显示参数">
-                            <Cascader @onChange="onArgsChange" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
-                        <el-form-item label="生成报告">
+                        <el-form-item label="选择报告模版">
                             <el-select v-model="searchForm.temp" placeholder>
                                 <el-option label="坡道救援(紧急制动)报告模版" value="temp1"></el-option>
                                 <el-option label="坡道救援(普通制动)报告模版" value="temp2"></el-option>
@@ -52,19 +45,25 @@
                         type="primary"
                         @click="getCalculateResults"
                     >计算</span>
-                    <span :class="[$style.btn,$style.exportBtn]">导出数据</span>
+                    <span :class="[$style.btn,$style.exportBtn]">生成报告</span>
                 </el-form-item>
             </el-form>
         </div>
+        <div :class="[$style.chartFormWrap, 'clearfix']">
+            <div class="fll">显示参数</div>
+            <div class="fll">
+                <Cascader @onChange="onArgsChange" />
+            </div>
+            <span :class="[$style.btn, $style.saveBtn]" @click="createChartsList">生成图表</span>
+        </div>
         <div :class="$style.charts">
             <div :class="$style.chartsCont">
-                <Chart v-for="item in chartsData" :key="item.chartKey" :chartInfo="item" />
-                <!-- <Chart /> -->
-
-                <!-- <DragResize /> -->
-                <!-- <GridLayout v-if="IEVersion<0" :layout="chartsLayout"> -->
-                <!-- <Chart /> -->
-                <!-- </GridLayout> -->
+                <Chart
+                    v-for="item in chartsData"
+                    :key="item.chartKey"
+                    :chartInfo="item"
+                    @onClose="onCloseCharts"
+                />
             </div>
         </div>
     </div>
@@ -79,25 +78,14 @@ import { getUserIdAndType } from "utils/util";
 import Chart from "./Charts";
 
 import Cascader from "./Cascader";
-// import GridLayout from "./GridLayout";
-// import DragResize from "./DragResize";
-
-// const IEVersion = window.__IEVersion__;
-
-// const testLayout = [
-//     { x: 0, y: 0, w: 6, h: 8, i: "0", static: false },
-//     { x: 6, y: 0, w: 6, h: 8, i: "1", static: false },
-//     { x: 0, y: 12, w: 6, h: 8, i: "2", static: false },
-//     { x: 6, y: 12, w: 6, h: 8, i: "3", static: false }
-// ];
 
 const varifyArgs = [
     { key: "initialLocation", msg: "请输入初始位置" },
     { key: "integralTimes", msg: "请输入积分时长" },
-    { key: "integralStep", msg: "请输入积分步长" },
-    { key: "ve", msg: "请选择显示参数" },
-    { key: "ca", msg: "请选择显示参数" },
-    { key: "code", msg: "请选择显示参数" }
+    { key: "integralStep", msg: "请输入积分步长" }
+    // { key: "ve", msg: "请选择显示参数" },
+    // { key: "ca", msg: "请选择显示参数" },
+    // { key: "code", msg: "请选择显示参数" }
 ];
 
 const varifyArgsFns = (arg = {}, obj) => {
@@ -127,7 +115,8 @@ export default {
         return {
             // IEVersion,
             searchForm: {},
-            chartsData: []
+            chartsData: [],
+            allowCreateCharts: false
 
             // chartsLayout: testLayout
         };
@@ -149,10 +138,10 @@ export default {
             }
 
             const code = args[0];
-            const vc = args[1].replace("车辆", "");
+            const vc = args[1].split("-");
 
-            const ve = vc.charAt(0);
-            const ca = vc.substring(1);
+            const ve = vc[0];
+            const ca = vc[1];
 
             this.searchForm = {
                 ...this.searchForm,
@@ -168,16 +157,13 @@ export default {
             const {
                 initialLocation = "",
                 integralTimes = "",
-                integralStep = "",
-                ve = "",
-                ca = "",
-                code = ""
+                integralStep = ""
             } = searchForm;
 
             // 校验参数不为空
-            for (let i = 0; i < varifyArgs.length; i++) {
-                if (!varifyArgsFns(varifyArgs[i], searchForm)) return;
-            }
+            // for (let i = 0; i < varifyArgs.length; i++) {
+            //     if (!varifyArgsFns(varifyArgs[i], searchForm)) return;
+            // }
 
             report
                 .getCalculateResults({
@@ -189,24 +175,57 @@ export default {
                 })
                 .then(res => {
                     if (!res || res.code !== "200") return;
-
-                    const chartData = {
-                        chartKey: `${this.curModelId}-${ve}-${ca}-${code}-${initialLocation}-${integralTimes}-${integralStep}`,
-                        ...this.searchForm,
-                        modelId: this.curModelId
-                    };
-
-                    // 所填参数已经生成一个图表
-                    // 将该图表删除，然后在第一位再插入
-                    const oldChartIdx = this.chartsData.findIndex(
-                        item => item.chartKey === chartData.chartKey
-                    );
-
-                    if (oldChartIdx !== -1) {
-                        this.chartsData.splice(oldChartIdx, 1);
-                    }
-                    this.chartsData.unshift(chartData);
+                    this.allowCreateCharts = true;
                 });
+        },
+
+        createChartsList() {
+            if (!this.allowCreateCharts) {
+                this.$message("请先输入计算参数并点击计算");
+                return;
+            }
+
+            const { searchForm } = this;
+            const {
+                initialLocation = "",
+                integralTimes = "",
+                integralStep = "",
+                ve = "",
+                ca = "",
+                code = ""
+            } = searchForm;
+
+            if (!ve || !ca || !code) {
+                this.$message("请先选择参数");
+                return;
+            }
+
+            const chartData = {
+                chartKey: `${this.curModelId}-${ve}-${ca}-${code}-${initialLocation}-${integralTimes}-${integralStep}`,
+                ...this.searchForm,
+                modelId: this.curModelId
+            };
+
+            // 所填参数已经生成一个图表
+            // 将该图表删除，然后在第一位再插入
+            const oldChartIdx = this.chartsData.findIndex(
+                item => item.chartKey === chartData.chartKey
+            );
+
+            if (oldChartIdx !== -1) {
+                this.chartsData.splice(oldChartIdx, 1);
+            }
+            this.chartsData.unshift(chartData);
+        },
+
+        // 关闭单个图表
+        onCloseCharts(chartInfo) {
+            const closedChart = this.chartsData.findIndex(
+                item => item.chartKey === chartInfo.chartKey
+            );
+            if (closedChart !== -1) {
+                this.chartsData.splice(closedChart, 1);
+            }
         }
     }
 };
@@ -263,8 +282,26 @@ export default {
         background-color: #36a7e3;
     }
 
+    .chartFormWrap {
+        background-color: #fff;
+        padding: 20px;
+        line-height: 30px;
+        margin: 20px 0;
+        overflow: hidden;
+
+        & > div:not(:last-child) {
+            margin-right: 10px;
+        }
+
+        .btn {
+            height: 30px;
+            line-height: 30px;
+        }
+    }
+
     .charts {
-        padding-top: 20px;
+        // padding-top: 20px;
+        // margin-top: 20px;
         .chartsCont {
             position: relative;
         }
@@ -273,6 +310,11 @@ export default {
     :global {
         .el-select {
             width: 100%;
+        }
+
+        .el-col {
+            height: 50px;
+            overflow: hidden;
         }
 
         .el-input__icon,

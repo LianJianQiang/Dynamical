@@ -57,7 +57,7 @@
         </div>
         <div :class="$style.footer">
             <el-button class="btn-xl" type="primary" @click="save">保存</el-button>
-            <el-button class="btn-xl" @click="cancel">取消</el-button>
+            <el-button class="btn-xl" @click="resetData">重置</el-button>
         </div>
 
         <NameDialog
@@ -169,7 +169,12 @@ export default {
 
             this.saveData(this.formData.name);
         },
-        cancel() {}
+        resetData() {
+            this.curYKGType = "";
+            this.formData = {};
+            this.isDiy = false;
+            this.nameDialogVisible = false;
+        }
     },
     mounted() {
         this.getYKGTempList();

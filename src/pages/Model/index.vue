@@ -18,12 +18,21 @@
         </div>
         <el-dialog title="请选择要编辑的模型树" :visible.sync="dialogVisible" :append-to-body="true">
             <ul :class="$style.modelsContent" class="clearfix" v-if="modelsList.length > 0">
-                <li
+                <!-- <li
                     class="fll cursor-p"
                     v-for="item in modelsList"
                     :key="item.id"
                     @click="onSelectModel(item)"
-                >{{item.name}}</li>
+                >{{item.name}}</li>-->
+
+                <el-tag
+                    class="cursor-p"
+                    v-for="item in modelsList"
+                    :key="item.id"
+                    closable
+                    @close="onCloseTag(item)"
+                    @click="onSelectModel(item)"
+                >{{item.name}}</el-tag>
             </ul>
             <dir v-else class="noData">暂无数据</dir>
         </el-dialog>
@@ -123,10 +132,10 @@ export default {
          * 校验模型名称
          */
         validatorModelname: function(value) {
+            if (!value) return "请输入名称";
             if (!isNumZhEn(value)) {
                 return "名称为只能包含汉字、数字、字母";
             }
-
             return true;
         },
 
@@ -158,6 +167,11 @@ export default {
                 path: `/page/model/edit`,
                 query: { type, id }
             });
+        },
+
+        onCloseTag(item) {
+            console.log(item);
+            this.$message(`删除 ${item.name}`);
         }
     }
 };
@@ -207,8 +221,16 @@ $left-width: 222px;
     max-height: 300px;
     overflow: auto;
     li {
-        padding: 10px 30px;
+        height: 40px;
+        line-height: 40px;
+        padding: 0 30px;
         cursor: pointer;
+    }
+    :global {
+        .el-tag {
+            margin-right: 10px;
+            background-color: transparent;
+        }
     }
 }
 </style>

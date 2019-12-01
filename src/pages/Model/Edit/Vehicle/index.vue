@@ -21,7 +21,7 @@
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="牵引系统:">
-                        <Traction />
+                        <Traction title="牵引力系统" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
@@ -31,15 +31,16 @@
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="制动系统:">
-                        <Brakes />
+                        <Brakes title="牵引力系统" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义1:">
                         <Diy
+                            title="用户自定义1"
                             field="diy1Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy1'})"
-                            :dataSource="diyData.diy1TcsdData"
+                            :dataSource="{tcsdId: diyData.diy1Tcsd}"
                             :type="7"
                         />
                     </el-form-item>
@@ -47,9 +48,10 @@
                 <el-col :span="10">
                     <el-form-item label="用户自定义2:">
                         <Diy
+                            title="用户自定义2"
                             field="diy2Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy2'})"
-                            :dataSource="diyData.diy2TcsdData"
+                            :dataSource="{tcsdId: diyData.diy2Tcsd}"
                             :type="8"
                         />
                     </el-form-item>
@@ -57,9 +59,10 @@
                 <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义3:">
                         <Diy
+                            title="用户自定义3"
                             field="diy3Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy3'})"
-                            :dataSource="diyData.diy3TcsdData"
+                            :dataSource="{tcsdId: diyData.diy3Tcsd}"
                             :type="9"
                         />
                     </el-form-item>
@@ -85,7 +88,7 @@
                     type="primary"
                     @click="submitForm"
                 >保存</el-button>
-                <el-button class="btn-xl" @click="resetForm">取消</el-button>
+                <el-button class="btn-xl" @click="resetForm">重置</el-button>
             </el-col>
         </el-row>
     </div>
@@ -155,7 +158,10 @@ export default {
 
             return carArg.vehicleView({ id }).then(res => {
                 if (!res) return;
-                this.formData = res.data || {};
+                const data = res.data || {};
+
+                this.formData = { ...data };
+                this.cacheFromData = { ...data };
             });
         },
 
@@ -164,7 +170,11 @@ export default {
             if (!id) return;
             return carArg.diyView({ caId: id }).then(res => {
                 if (!res) return;
-                this.diyData = res.data || {};
+
+                const data = res.data || {};
+
+                this.diyData = { ...data };
+                this.cacheDiyData = { ...data };
             });
         },
 
@@ -173,7 +183,7 @@ export default {
             if (!this.copySource) {
                 this.$message("请先选择车辆");
                 return;
-            };
+            }
 
             // 获取复制源的基本信息
             let sourceInfo = this.trainList.find(
@@ -237,7 +247,8 @@ export default {
          * 取消输入
          */
         resetForm: function() {
-            // this.$refs.vehicleForm.resetFields();
+            this.formData = { ...this.cacheFromData };
+            this.diyData = { ...this.cacheDiyData };
         }
     },
     mounted() {

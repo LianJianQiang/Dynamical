@@ -1,5 +1,8 @@
 <template>
     <div :class="$style.root" @contextmenu.prevent="onContextmenu" ref="root">
+        <div :class="$style.closeBtn" class="cursor-p" @click="onClickClose">
+            <img :src="closeIcon" alt />
+        </div>
         <div :class="$style.title">
             <div :class="$style.carInfo">第{{chartInfo.ve}}列 第{{chartInfo.ca}}辆</div>
             <div :class="$style.argInfo" class="clearfix">
@@ -32,6 +35,8 @@ import { report } from "api";
 
 import Charts from "components/Charts";
 import DragResize from "lib/dragResize";
+
+import Img from "assets/icon";
 
 import Drawer from "./ChartsDiy";
 
@@ -94,6 +99,8 @@ export default {
     },
     data() {
         return {
+            closeIcon: Img["close"],
+
             chartsOptions: {},
             contextmenuShow: false,
             currentPage: 1,
@@ -203,6 +210,11 @@ export default {
         reloardChartData() {
             this.currentPage = this.currentPage + 1;
             this.getResultInfo();
+        },
+
+        // 关闭charts
+        onClickClose() {
+            this.$emit("onClose", this.chartInfo);
         }
     },
     created() {
@@ -228,10 +240,23 @@ export default {
     background-color: #fff;
     display: inline-block;
     width: 48%;
-    margin: 10px 1%;
+    margin: 10px;
     height: 350px;
     position: relative;
     padding: 12px;
+
+    .closeBtn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 14px;
+        height: 14px;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
     .contextmenu {
         position: absolute;
         z-index: 16777271;

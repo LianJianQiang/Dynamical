@@ -14,6 +14,19 @@ body {
   }
   .el-input-number {
     width: 100%;
+    height: 28px;
+    line-height: 26px;
+  }
+  .el-form-item__content {
+    height: 28px;
+    line-height: 26px;
+  }
+  .el-form-item__label {
+    height: 28px;
+    line-height: 28px;
+  }
+  .el-input__icon {
+    line-height: 28px;
   }
   input {
     padding: 0 $input-pad-default;

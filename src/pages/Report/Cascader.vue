@@ -59,11 +59,18 @@ export default {
                 .then(res => {
                     if (!res || res.code !== "200") return;
                     const data = res.data || [];
-                    const nodes = data.map(item => ({
-                        value: item,
-                        label: item,
-                        leaf: true
-                    }));
+                    const nodes = data.map(item => {
+                        const vc = item.replace("车辆", "");
+
+                        const ve = vc.charAt(0);
+                        const ca = vc.substring(1);
+
+                        return {
+                            value: `${ve}-${ca}`,
+                            label: `第${ve}列 第${ca}辆`,
+                            leaf: true
+                        };
+                    });
                     resolveCb(nodes);
                 });
         },
