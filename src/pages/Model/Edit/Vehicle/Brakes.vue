@@ -45,7 +45,7 @@
                     :saveData="saveDiyData"
                     :class="$style.diyDown"
                     :type="6"
-                    :dataSource="{tcsdId: diyDataSource.id}"
+                    :dataSource="diyDataSource"
                 />
             </el-row>
         </div>
@@ -88,16 +88,17 @@ export default {
                     this.isHaveData = true;
                 }
 
-                this.formData = { ...data };
-                this.cacheData = { ...data };
+                this.formData = { brakedef: "", ...data };
+                this.cacheData = { brakedef: "", ...data };
 
-                this.diyDataSource = { ...diyData };
+                this.diyDataSource = { ...diyData, tcsdId: diyData.id };
             });
         },
 
         onCheckboxChange(value) {
             if (this.formData.brakedef === value) {
-                delete formData.brakedef;
+                this.formData.brakedef = "";
+                // delete this.formData.brakedef;
                 return;
             }
             this.formData.brakedef = value;
@@ -107,7 +108,7 @@ export default {
             this.formData = { ...this.cacheData };
 
             let diyData = this.cacheData.tcsd || {};
-            this.diyDataSource = { ...diyData };
+            this.diyDataSource = { ...diyData, tcsdId: diyData.id };
         },
 
         // 保存数据
@@ -115,7 +116,14 @@ export default {
             return new Promise(resolve => {
                 let { formData } = this;
 
-                carArg.brakesEdit({ ...formData }).then(res => {
+                let params = {};
+                for (let i in formData) {
+                    if (formData[i] === 0 || formData[i]) {
+                        params[i] = formData[i];
+                    }
+                }
+
+                carArg.brakesEdit({ ...params }).then(res => {
                     if (!res) {
                         resolve(false);
                         return;

@@ -227,7 +227,7 @@ export default {
 
         onCheckboxChange(value) {
             if (this.characteristics === value) {
-                return (this.characteristics = 0);
+                return (this.characteristics = "");
             }
             this.characteristics = value;
         },

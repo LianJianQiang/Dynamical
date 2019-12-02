@@ -45,7 +45,16 @@
                         type="primary"
                         @click="getCalculateResults"
                     >计算</span>
-                    <span :class="[$style.btn,$style.exportBtn]">生成报告</span>
+                    <a
+                        v-if="allowCreateCharts"
+                        :class="[$style.btn,$style.exportBtn]"
+                        href="/api/resultrecord/exportReport"
+                    >生成报告</a>
+                    <a
+                        v-else
+                        :class="[$style.btn,$style.exportBtn]"
+                        @click="$message('请先进行计算')"
+                    >生成报告</a>
                 </el-form-item>
             </el-form>
         </div>

@@ -24,8 +24,15 @@ export default {
                     ...this.formData
                 };
 
+                let params = {};
+                for (let i in datas) {
+                    if (datas[i] === 0 || datas[i]) {
+                        params[i] = datas[i];
+                    }
+                }
+
                 this.isHaveData = true;
-                this.saveData({ datas });
+                this.saveData({ datas: params });
                 resolve(true);
             })
         },

@@ -135,8 +135,6 @@ export const handleTreeData = (dataList = []) => {
         }
     }
 
-    console.log(items);
-
     return items;
 }
 

@@ -64,7 +64,7 @@
                     :saveData="saveDiyData"
                     :class="$style.diyDown"
                     :type="5"
-                    :dataSource="{tcsdId: diyDataSource.id}"
+                    :dataSource="diyDataSource"
                 />
             </el-row>
         </div>
@@ -108,9 +108,9 @@ export default {
                     this.isHaveData = true;
                 }
 
-                this.formData = { ...data };
-                this.cacheData = { ...data };
-                this.diyDataSource = { ...diyData };
+                this.formData = { tracdef: "", ...data };
+                this.cacheData = { tracdef: "", ...data };
+                this.diyDataSource = { ...diyData, tcsdId: diyData.id };
             });
         },
 
@@ -118,12 +118,13 @@ export default {
             this.formData = { ...this.cacheData };
 
             let diyData = this.cacheData.tcsd || {};
-            this.diyDataSource = { ...diyData };
+            this.diyDataSource = { ...diyData, tcsdId: diyData.id };
         },
 
         onCheckboxChange(value) {
             if (this.formData.tracdef === value) {
-                delete formData.tracdef;
+                this.formData.tracdef = "";
+                // delete this.formData.tracdef;
                 return;
             }
             this.formData.tracdef = value;
@@ -134,7 +135,14 @@ export default {
             return new Promise(resolve => {
                 let { formData } = this;
 
-                carArg.tractionEdit({ ...formData }).then(res => {
+                let params = {};
+                for (let i in formData) {
+                    if (formData[i] === 0 || formData[i]) {
+                        params[i] = formData[i];
+                    }
+                }
+
+                carArg.tractionEdit({ ...params }).then(res => {
                     if (!res) {
                         resolve(false);
                         return;

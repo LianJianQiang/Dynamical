@@ -8,7 +8,7 @@
                     class="radioWrap"
                     :value="formData.coupdef===1"
                     :label="1"
-                    @change="()=>onCheckboxChange(1)"
+                    @change="onCheckboxChange(1)"
                 >牵引力曲线自定义1</el-checkbox>
                 <el-form
                     class="clearfix"
@@ -44,7 +44,7 @@
                     class="radioWrap"
                     :value="formData.coupdef===2"
                     :label="2"
-                    @change="()=>onCheckboxChange(2)"
+                    @change="onCheckboxChange(2)"
                 >分段函数法设置</el-checkbox>
                 <div>
                     <div class="clearfix">
@@ -83,9 +83,9 @@
                     <!-- <el-radio v-model="formData.coupdef" :label="3">缓冲器本构</el-radio> -->
                     <el-checkbox
                         class="radioWrap"
-                        :value="formData.coupdef===3"
+                        :value="formData.coupdef === 3"
                         :label="3"
-                        @change="()=>onCheckboxChange(3)"
+                        @change="onCheckboxChange(3)"
                     >缓冲器本构</el-checkbox>
                     <el-input-number
                         class="flr"
@@ -121,17 +121,25 @@ export default {
     data() {
         return {
             curveList: [], // 描点list
-            piecewiseLsit: [] // 分段函数list
+            piecewiseLsit: [], // 分段函数list
+
+            checkedValue: ""
         };
     },
     components: {
         DropDown
     },
+    watch: {
+        dataSource() {
+            this.formData = { coupdef: "", ...this.dataSource };
+            this.cacheFormData = { coupdef: "", ...this.dataSource };
+        }
+    },
     computed: {},
     methods: {
         onCheckboxChange(value) {
             if (this.formData.coupdef === value) {
-                delete this.formData.coupdef;
+                this.formData.coupdef = "";
                 return;
             }
             this.formData.coupdef = value;

@@ -207,24 +207,32 @@ export default {
     methods: {
         // 逐点定义 添加
         tableAdd() {
-            let last = this.pointTableData[0];
-            let order;
-            if (!last) {
-                order = 1;
-            } else {
-                order = last.order + 1;
-            }
+            // let last = this.pointTableData[0];
+            // let order;
+            // if (!last) {
+            //     order = 1;
+            // } else {
+            //     order = last.order + 1;
+            // }
             this.pointTableData.unshift({
-                order,
+                // order,
                 type: typeList[0].id,
                 smooth: "Yes"
             });
+            this.resetOrder();
         },
 
         // 逐点定义 删除
         tableDel() {
             if (this.pointTableData.length === 0) return;
             this.pointTableData.shift();
+            this.resetOrder();
+        },
+
+        resetOrder() {
+            this.pointTableData.map((item, idx) => {
+                item.order = idx + 1;
+            });
         },
 
         // 逐点定义 图表联动

@@ -71,7 +71,10 @@ const saveAllCarDatas = (params) => request(`${config.baseUrl}/ve1/updateModelDa
     method: 'post'
 });
 
-
+// 删除模型
+const delModal = (params) => request(`${config.baseUrl}/model/delete`, { ...params }, {
+    method: 'post'
+});
 
 export default {
     // 模型树
@@ -99,5 +102,7 @@ export default {
     getAllcouptypeTemp,
     compAllcouptypeTemp,
     getAllCarDatas,
-    saveAllCarDatas
+    saveAllCarDatas,
+
+    delModal
 }

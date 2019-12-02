@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 import { MODEL_TREE_TYPE } from "common/constants";
 
 import { model } from "api";
@@ -62,6 +62,8 @@ export default {
     props: {},
     computed: {
         ...mapGetters("models", ["getTreeNodeByType"]),
+        ...mapState("models", ["curModelId"]),
+
         curTreeNodeId() {
             return this.$route.query.id;
         }
@@ -75,7 +77,8 @@ export default {
         ...mapActions("models", [
             "saveModelTreeData",
             "setCurModelId",
-            "setCurTreeNodeId"
+            "setCurTreeNodeId",
+            "clearAllDataModels"
         ]),
 
         // 选择要打开的模型树
@@ -170,8 +173,19 @@ export default {
         },
 
         onCloseTag(item) {
-            console.log(item);
-            this.$message(`删除 ${item.name}`);
+            model.delModal({ id: item.id }).then(res => {
+                if (!res || res.code !== "200") return;
+                this.$message(`删除成功`);
+
+                const delIdx = this.modelsList.findIndex(
+                    list => list.id === item.id
+                );
+                this.modelsList.splice(delIdx, 1);
+
+                if (item.id === this.curModelId) {
+                    this.clearAllDataModels();
+                }
+            });
         }
     }
 };
