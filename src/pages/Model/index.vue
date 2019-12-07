@@ -243,6 +243,7 @@ $left-width: 222px;
     :global {
         .el-tag {
             margin-right: 10px;
+            margin-bottom: 10px;
             background-color: transparent;
         }
     }

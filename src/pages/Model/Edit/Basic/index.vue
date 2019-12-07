@@ -11,37 +11,37 @@
                                 <el-input v-model="no1.num" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="2">
+                        <!-- <el-col :span="10" :offset="2">
                             <el-form-item label="车辆长度:" prop="length">
                                 <el-input v-model="no1.length" clearable></el-input>
                             </el-form-item>
-                        </el-col>
-                        <el-col :span="10">
+                        </el-col>-->
+                        <el-col :span="10" :offset="2">
                             <el-form-item label="速度:" prop="v">
                                 <el-input v-model="no1.v" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="2">
+                        <el-col :span="10">
                             <el-form-item label="起动阻力:" prop="qdf">
                                 <el-input v-model="no1.qdf" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10">
+                        <el-col :span="10" :offset="2">
                             <el-form-item label="brakes(u):" prop="mu">
                                 <el-input v-model="no1.mu" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="2">
+                        <el-col :span="10">
                             <el-form-item label="作用速度:" prop="vlimit">
                                 <el-input v-model="no1.vlimit" clearable></el-input>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10">
+                        <el-col :span="10" :offset="2">
                             <el-form-item label="牵引力特征曲线:">
                                 <Traction parentField="no1" :saveData="saveTractionData" type="1" />
                             </el-form-item>
                         </el-col>
-                        <el-col :span="10" :offset="2">
+                        <el-col :span="10">
                             <el-form-item label="基本运行阻力:">
                                 <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                     <el-form-item label="A:">
@@ -73,32 +73,32 @@
                                     <el-input v-model="no2.num" clearable></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10" :offset="2">
+                            <!-- <el-col :span="10" :offset="2">
                                 <el-form-item label="车辆长度:" prop="length">
                                     <el-input v-model="no2.length" clearable></el-input>
                                 </el-form-item>
-                            </el-col>
-                            <el-col :span="10">
+                            </el-col>-->
+                            <el-col :span="10" :offset="2">
                                 <el-form-item label="速度:" prop="v">
                                     <el-input v-model="no2.v" clearable></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10" :offset="2">
+                            <el-col :span="10">
                                 <el-form-item label="起动阻力:" prop="qdf">
                                     <el-input v-model="no2.qdf" clearable></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="10" :offset="2">
                                 <el-form-item label="brakes(u):" prop="mu">
                                     <el-input v-model="no2.mu" clearable></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10" :offset="2">
+                            <el-col :span="10">
                                 <el-form-item label="作用速度:" prop="vlimit">
                                     <el-input v-model="no2.vlimit" clearable></el-input>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="10" :offset="2">
                                 <el-form-item label="牵引力特征曲线:">
                                     <Traction
                                         parentField="no2"
@@ -107,7 +107,7 @@
                                     />
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10" :offset="2">
+                            <el-col :span="10">
                                 <el-form-item label="基本运行阻力:">
                                     <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                         <el-form-item label="A:">
@@ -264,8 +264,7 @@ export default {
          * 取消输入
          */
         resetForm: function() {
-            this.no1 = { ...this.cacheNo1 };
-            this.no2 = { ...this.cacheNo2 };
+            this.initData();
         },
 
         saveTractionData(params) {

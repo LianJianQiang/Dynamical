@@ -15,26 +15,31 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
+                    <el-form-item label="车辆长度:" prop="l">
+                        <el-input v-model="formData.l" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="10">
                     <el-form-item label="车体刚度:" prop="kcar">
                         <el-input v-model="formData.kcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="牵引系统:">
                         <Traction title="牵引力系统" />
                     </el-form-item>
                 </el-col>
-                <el-col :span="10" :offset="2">
+                <el-col :span="10">
                     <el-form-item label="车体强度:" prop="qcar">
                         <el-input v-model="formData.qcar" clearable></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="制动系统:">
                         <Brakes title="牵引力系统" />
                     </el-form-item>
                 </el-col>
-                <el-col :span="10" :offset="2">
+                <el-col :span="10">
                     <el-form-item label="用户自定义1:">
                         <Diy
                             title="用户自定义1"
@@ -45,7 +50,7 @@
                         />
                     </el-form-item>
                 </el-col>
-                <el-col :span="10">
+                <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义2:">
                         <Diy
                             title="用户自定义2"
@@ -56,7 +61,7 @@
                         />
                     </el-form-item>
                 </el-col>
-                <el-col :span="10" :offset="2">
+                <el-col :span="10">
                     <el-form-item label="用户自定义3:">
                         <Diy
                             title="用户自定义3"
@@ -144,7 +149,9 @@ export default {
         ...mapGetters("models", ["getTreeNodeByType", "curTreeNodeInfo"]),
 
         trainList() {
-            return this.getTreeNodeByType(MODEL_TREE_TYPE.vehicle);
+            const list = this.getTreeNodeByType(MODEL_TREE_TYPE.vehicle) || [];
+            let trainList = [{ id: "all", name: "全部" }, ...list];
+            return trainList;
         }
     },
     methods: {
@@ -178,7 +185,7 @@ export default {
             });
         },
 
-        // 复制
+        // 点击复制按钮
         copyCar() {
             if (!this.copySource) {
                 this.$message("请先选择车辆");
@@ -189,10 +196,32 @@ export default {
             let sourceInfo = this.trainList.find(
                 item => item.id === this.copySource
             );
+
             if (!sourceInfo) return;
 
-            let { row, cal, id } = sourceInfo;
-            carArg.vehicleCopy({ id, carNums: `${row}-${cal}` }).then(res => {
+            this.$confirm(
+                `确认将“${this.curTreeNodeInfo.name}”的所有数据复制到“${sourceInfo.name}”么？`,
+                "",
+                {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    type: "warning"
+                }
+            )
+                .then(() => {
+                    this.sureCopy(sourceInfo)
+                })
+                .catch(() => {});
+        },
+
+        sureCopy(sourceInfo) {
+            let { row, cal, id, name } = sourceInfo;
+
+            // 默认复制全部
+            let carNums = name;
+            if (id !== "all") carNums = `${row}-${cal}`;
+
+            carArg.vehicleCopy({ id, carNums }).then(res => {
                 if (!res) return;
 
                 this.formKey = _util.randomString("vehicleForm_");

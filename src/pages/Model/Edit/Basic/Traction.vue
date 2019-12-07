@@ -192,6 +192,20 @@ export default {
     computed: {
         ...mapState("models", ["curModelId"])
     },
+    watch: {
+        "datas.characterV1"(val) {
+            this.datas.characterV3 = val;
+        },
+        "datas.characterV2"(val) {
+            this.datas.characterV5 = val;
+        },
+        "datas.characterV3"(val) {
+            this.datas.characterV1 = val;
+        },
+        "datas.characterV5"(val) {
+            this.datas.characterV2 = val;
+        }
+    },
     methods: {
         initData() {
             model
@@ -234,6 +248,22 @@ export default {
 
         // 保存数据
         save() {
+            const {
+                characterV1,
+                characterV3,
+                characterV2,
+                characterV5
+            } = this.datas;
+            if (characterV1 !== characterV3) {
+                this.$message("恒转速区速度下限值需和恒功率区速度上限值相同");
+                return;
+            }
+
+            if (characterV2 !== characterV5) {
+                this.$message("恒功率区的速度下限值需和降功区的速度上限值相同");
+                return;
+            }
+
             return new Promise(resolve => {
                 if (this.tableData && !this.tcsdId) {
                     this.$message("请先保存表格数据");

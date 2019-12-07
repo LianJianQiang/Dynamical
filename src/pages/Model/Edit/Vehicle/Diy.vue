@@ -98,8 +98,10 @@ export default {
         }
     },
     watch: {
-        dataSource() {
-            this.getTcsdDataById(this.dataSource.tcsdId);
+        dataSource(newVal, oldVal) {
+            if (oldVal.tcsdId !== newVal.tcsdId) {
+                this.getTcsdDataById(newVal.tcsdId);
+            }
         }
     },
 
