@@ -172,6 +172,7 @@ export default {
             });
         },
 
+        // 删除tag
         onCloseTag(item) {
             model.delModal({ id: item.id }).then(res => {
                 if (!res || res.code !== "200") return;

@@ -48,13 +48,13 @@
                             :dataSource="frontData"
                         />
                     </el-form-item>
-                    <el-form-item label="车间减震器:">
+                    <el-form-item label="车间减振器:">
                         <Damper
-                            title="前端面-车间减震器"
+                            title="前端面-车间减振器"
                             eleKey="cjjz"
                             :type="1"
                             :saveData="(params)=>saveDropDownData({...params,parent:'frontData', ele:eleDict.cjjz})"
-                            :dataSource="{num: frontData.jzqNum, tcsdId: frontData.jzqTcsdId}"
+                            :dataSource="{jzqNum: frontData.jzqNum, tcsdId: frontData.jzqTcsdId}"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
@@ -137,13 +137,13 @@
                             :dataSource="backData"
                         />
                     </el-form-item>
-                    <el-form-item label="车间减震器:">
+                    <el-form-item label="车间减振器:">
                         <Damper
-                            title="后端面-车间减震器"
+                            title="后端面-车间减振器"
                             eleKey="cjjz"
                             :type="1"
                             :saveData="(params)=>saveDropDownData({...params,parent:'backData', ele:eleDict.cjjz})"
-                            :dataSource="{num: backData.jzqNum, tcsdId: backData.jzqTcsdId}"
+                            :dataSource="{jzqNum: backData.jzqNum, tcsdId: backData.jzqTcsdId}"
                         />
                     </el-form-item>
                     <el-form-item label="风挡系统:">
@@ -337,6 +337,13 @@ export default {
             let { datas, parent, ele } = params;
             this[parent] = { ...this[parent], ...datas };
 
+            if (ele === "diy1" || ele === "diy2") {
+                this[parent][ele] = {
+                    x: datas[`${ele}X`],
+                    tcsdId: datas[`${ele}TcsdId`]
+                };
+            }
+
             // 保存已定义的元件列表，图形显示使用
             let faceType = CAR_ELE_DICT.back.key;
             if (parent === "frontData") {
@@ -380,9 +387,6 @@ export default {
             let params = {
                 allCoupTypeArr: [{ ...frontData }, { ...backData }]
             };
-
-            console.log(this.frontData);
-            console.log(this.backData);
 
             model.saveAllCoupType(params).then(res => {
                 if (!res) return;

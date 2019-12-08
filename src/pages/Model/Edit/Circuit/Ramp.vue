@@ -16,7 +16,7 @@
                         v-model="rampMethod"
                         placeholder="请选择"
                         class="m-l-5 rampMethodSel"
-                        :disabled="$attrs.type === 'edit'"
+                        :disabled="type === 'edit'"
                     >
                         <el-option
                             v-for="item in rampMethods"
@@ -177,7 +177,7 @@ export default {
             // 逐点定义
             typeList,
             selType: "line",
-            chartsOptions,
+            chartsOptions: JSON.parse(JSON.stringify(chartsOptions)),
             pointTableData: []
         };
     },
@@ -188,6 +188,10 @@ export default {
 
         dataSource() {
             this.formData = { ...this.dataSource };
+        },
+
+        type(val) {
+            if (val === "edit") this.rampMethod = 1;
         }
     },
     props: {
@@ -198,6 +202,9 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        type: {
+            type: String
         }
     },
     computed: {
@@ -214,7 +221,7 @@ export default {
             // } else {
             //     order = last.order + 1;
             // }
-            this.pointTableData.unshift({
+            this.pointTableData.push({
                 // order,
                 type: typeList[0].id,
                 smooth: "Yes"
@@ -225,7 +232,7 @@ export default {
         // 逐点定义 删除
         tableDel() {
             if (this.pointTableData.length === 0) return;
-            this.pointTableData.shift();
+            this.pointTableData.pop();
             this.resetOrder();
         },
 
@@ -275,30 +282,13 @@ export default {
         // 保存逐点定义数据
         saveType2Data() {
             let { rampMethod, pointTableData, curModelId } = this;
-            let len = pointTableData.length - 1;
+            let len = pointTableData.length;
             let result = [];
 
-            for (let i = len; i >= 1; i--) {
-                let curData = pointTableData[i];
-                if (isNil(curData.x) || isNil(curData.y)) {
-                    this.$message({
-                        message: "请将数据填写完整",
-                        type: "error"
-                    });
-                    return null;
-                }
+            for (let i = 0; i < len - 1; i++) {
+                let cur = pointTableData[i];
+                let next = pointTableData[i + 1];
 
-                let pro = pointTableData[i - 1];
-
-                if (pro.y === curData.y) {
-                    this.$message({
-                        message: "相邻两行的Y值不能相同",
-                        type: "error"
-                    });
-                    return null;
-                }
-
-                // row里的默认数据
                 let json = {
                     type: rampMethod,
                     lineDef: 1,
@@ -306,14 +296,15 @@ export default {
                 };
 
                 // 长度
-                json.lInitial = pro.x - curData.x;
+                json.lInitial = next.x - cur.x;
 
                 // 坡度
                 json.gradient = (
-                    ((pro.y - curData.y) / (pro.x - curData.x)) *
+                    ((next.y - cur.y) / (next.x - cur.x)) *
                     1000
                 ).toFixed(2);
-                result.unshift(json);
+
+                result.push(json);
             }
 
             return result;
@@ -338,8 +329,9 @@ export default {
         },
 
         resetData() {
-            this.formData = { ...defaultFormData };
+            this.formData = { ...this.dataSource };
             this.pointTableData = [];
+            this.chartsOptions = JSON.parse(JSON.stringify(chartsOptions));
         }
     },
     mounted() {

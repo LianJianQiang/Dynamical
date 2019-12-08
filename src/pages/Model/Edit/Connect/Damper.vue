@@ -5,6 +5,7 @@
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
+        :resetData="resetData"
     >
         <div :class="$style.root">
             <div class="listWrap">
@@ -30,6 +31,7 @@
 import EditTable from "components/EditTable";
 
 import { model } from "api";
+import { getObjFromStr } from "utils/util";
 
 import mixin from "./mixin/mixin";
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
@@ -54,11 +56,12 @@ export default {
     },
 
     watch: {
-        dataSource() {
-            const { jzqNum, tcsdId } = this.dataSource;
-            this.jzqNum = this;
-            if (tcsdId) {
-                this.getTcsdDataById(tcsdId);
+        dataSource(val, oldVal) {
+            const { jzqNum, tcsdId } = val;
+            this.jzqNum = jzqNum;
+            this.cacheJzqNum = jzqNum;
+            if (val.tcsdId && val.tcsdId !== oldVal.tcsdId) {
+                this.getTcsdDataById(val.tcsdId);
             }
         }
     },
@@ -74,6 +77,18 @@ export default {
             });
         },
 
+        resetData() {
+            const { jzqNum, tcsdId } = this.dataSource;
+            this.jzqNum = jzqNum;
+            this.cacheJzqNum = jzqNum;
+
+            if (tcsdId) {
+                this.getTcsdDataById(tcsdId);
+            } else {
+                this.tcsdData = { tcsdData: [] };
+            }
+        },
+
         // 保存数据
         onSaveData() {
             let datas = {
@@ -81,7 +96,14 @@ export default {
                 jzqTcsdId: this.curveId
             };
 
-            this.isHaveData = true;
+            this.isHaveData = false;
+            for (let i in datas) {
+                if (datas[i]) {
+                    this.isHaveData = true;
+                    break;
+                }
+            }
+
             this.saveData({ datas });
         }
     }

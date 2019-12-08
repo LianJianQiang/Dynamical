@@ -2,11 +2,18 @@
     <div :class="$style.root">
         <div :class="$style.btnGroup">
             <el-button v-if="showAdd" class="btn-mini" @click="tableAdd">+</el-button>
-            <el-button v-if="showDel" class="btn-mini" @click="tableDel">-</el-button>
+            <el-button v-if="showDel" class="btn-mini" @click="tableDel()">-</el-button>
             <el-button v-if="showOpen" class="btn-mini" @click="onOpenCurve">打开</el-button>
             <el-button v-if="showSave" class="btn-mini" @click="onSaveCurve">保存</el-button>
         </div>
-        <el-table :data="tableData" :height="height" border size="mini" style="width: 100%">
+        <el-table
+            :data="tableData"
+            :height="height"
+            border
+            size="mini"
+            style="width: 100%"
+            ref="elTable"
+        >
             <el-table-column prop="number" label="序号" align="center" />
             <el-table-column prop="x" label="x" align="center">
                 <template slot-scope="scope">
@@ -28,6 +35,11 @@
                     ></el-input-number>
                 </template>
             </el-table-column>
+            <el-table-column label="操作" align="center">
+                <template slot-scope="scope">
+                    <div class="cursor-p edit-btn" @click="tableDel(scope.$index, scope.row)">删除</div>
+                </template>
+            </el-table-column>
         </el-table>
 
         <el-dialog
@@ -37,19 +49,27 @@
             :append-to-body="true"
         >
             <ul :class="$style.tractionList" class="clearfix">
-                <li
+                <!-- <li
                     class="fll cursor-p"
                     v-for="item in tractionList"
                     :key="item.id"
                     @click="onClickTractionLi(item)"
-                >{{item.tcsdName}}</li>
+                >{{item.tcsdName}}</li>-->
+                <el-tag
+                    class="cursor-p"
+                    v-for="item in tractionList"
+                    :key="item.id"
+                    closable
+                    @close="onCloseTag(item)"
+                    @click="onClickTractionLi(item)"
+                >{{item.tcsdName}}</el-tag>
             </ul>
         </el-dialog>
 
         <NameDialog
             :visible="nameDialogVisible"
             :onSaveData="saveCurveName"
-            :onCancel="()=>this.toggleDialog('nameDialogVisible',false)"
+            :onCancel="()=>toggleDialog('nameDialogVisible',false)"
         />
     </div>
 </template>
@@ -95,6 +115,12 @@ export default {
                 return {};
             }
         },
+        parentParams: {
+            type: Object,
+            default: () => {
+                return {};
+            }
+        },
         tableDataChange: {
             type: Function,
             default: () => {}
@@ -127,12 +153,24 @@ export default {
             type: Function,
             default: () => {}
         },
-        getParentData: {
+        onOpenCurveCb: {
             type: Function,
-            default: () => ({})
+            default: () => {}
         }
     },
-    computed: {},
+    computed: {
+        // tcsd: {
+        //     get: function() {
+        //         return { ...this.tcsdData };
+        //     },
+        //     set: function(data) {
+        //         return { ...data };
+        //     }
+        // },
+        // tableData() {
+        //     return [...this.dataSource];
+        // }
+    },
     watch: {
         dataSource() {
             this.tableData = [...this.dataSource];
@@ -142,9 +180,21 @@ export default {
         }
     },
     methods: {
+        initData() {
+            this.tableData = [...this.dataSource];
+            this.tcsd = { ...this.tcsdData };
+        },
+
         // 切换dialog状态
         toggleDialog(field, bool) {
             this[field] = bool;
+        },
+
+        onTableRowChange() {
+            this.resetOrder();
+            this.$nextTick(() => {
+                this.$refs.elTable.bodyWrapper.scrollTop = this.$refs.elTable.bodyWrapper.scrollHeight;
+            });
         },
 
         // 单元格里到值发生变化时回调
@@ -155,22 +205,28 @@ export default {
         // table中插入一行
         tableAdd() {
             let { tableData } = this;
-            tableData.unshift({
+            tableData.push({
                 x: 0,
                 f: 0
             });
 
-            this.resetOrder();
+            this.onTableRowChange();
 
             // this.tableData = tableData;
             this.tableDataChange(this.tableData);
         },
 
         // table中删除一行
-        tableDel() {
+        tableDel(index) {
+            console.log(index);
             let { tableData } = this;
-            tableData.shift();
-            this.resetOrder();
+            if (index !== 0 && !index) {
+                tableData.pop();
+            } else {
+                tableData.splice(index, 1);
+            }
+
+            this.onTableRowChange();
             // this.tableData = tableData;
             this.tableDataChange(this.tableData);
         },
@@ -202,6 +258,19 @@ export default {
             });
         },
 
+        // 删除曲线
+        onCloseTag(item) {
+            model.delTcsd({ id: item.id }).then(res => {
+                if (!res || res.code !== "200") return;
+                this.$message(`删除成功`);
+
+                const delIdx = this.tractionList.findIndex(
+                    list => list.id === item.id
+                );
+                this.tractionList.splice(delIdx, 1);
+            });
+        },
+
         // 点击打开后，展示列表，并点击list
         onClickTractionLi(item) {
             let { id } = item;
@@ -214,6 +283,7 @@ export default {
 
                 // 打开数据后，将id返回给父组件
                 this.onSaveCb(res.data.id);
+                this.onOpenCurveCb(res.data);
             });
         },
 
@@ -239,17 +309,12 @@ export default {
         getSaveDataParmas() {
             const { userId } = getUserIdAndType();
 
-            // 适用于保存数据时，需要将父组件的数据一块发送到服务端到场景；
-            // 如：车辆参数中，用户自定义到横轴坐标，后端临时该接口，将横轴坐标放到该接口
-            // 神一般到方案:-)
-            let parentData = this.getParentData();
-
             return {
                 ...this.tcsd,
-                ...parentData,
                 userId,
                 tcsdData: this.tableData || [],
-                type: this.type
+                type: this.type,
+                ...this.parentParams
             };
         },
 
@@ -284,7 +349,9 @@ export default {
             });
         }
     },
-    mounted() {}
+    mounted() {
+        this.initData();
+    }
 };
 </script>
 <style module lang="scss">
@@ -297,13 +364,6 @@ export default {
         .el-input-number.is-without-controls .el-input__inner {
             padding: $input-pad-s;
         }
-        // .el-form-item__label,
-        // .el-form-item__content,
-        // .el-input,
-        // .el-input__inner {
-        //     height: 18px;
-        //     line-height: 18px;
-        // }
         .el-input__inner {
             padding: 0 5px;
         }
@@ -332,6 +392,14 @@ export default {
         line-height: 40px;
         padding: 0 20px;
         margin: 0 5px;
+    }
+
+    :global {
+        .el-tag {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            background-color: transparent;
+        }
     }
 }
 </style>

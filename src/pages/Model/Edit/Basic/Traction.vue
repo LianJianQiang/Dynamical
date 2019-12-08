@@ -292,7 +292,15 @@ export default {
                         message: "保存成功",
                         type: "success"
                     });
-                    this.isHaveData = true;
+
+                    this.isHaveData = false;
+                    for (let i in params) {
+                        if (params[i]) {
+                            this.isHaveData = true;
+                            break;
+                        }
+                    }
+
                     resolve(true);
                 });
             });

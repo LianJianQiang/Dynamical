@@ -6,22 +6,21 @@
                 ref="vehicleForm"
                 :key="formKey"
                 :model="formData"
-                :rules="rules"
                 label-width="120px"
             >
                 <el-col :span="10">
                     <el-form-item label="车辆质量:" prop="m">
-                        <el-input v-model="formData.m" clearable></el-input>
+                        <el-input-number :controls="false" v-model="formData.m" clearable></el-input-number>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="车辆长度:" prop="l">
-                        <el-input v-model="formData.l" clearable></el-input>
+                        <el-input-number :controls="false" v-model="formData.l" clearable></el-input-number>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="车体刚度:" prop="kcar">
-                        <el-input v-model="formData.kcar" clearable></el-input>
+                        <el-input-number :controls="false" v-model="formData.kcar" clearable></el-input-number>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
@@ -31,7 +30,7 @@
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="车体强度:" prop="qcar">
-                        <el-input v-model="formData.qcar" clearable></el-input>
+                        <el-input-number :controls="false" v-model="formData.qcar" clearable></el-input-number>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
@@ -113,14 +112,14 @@ import Diy from "./Diy";
 // import Traction from "./Traction";
 
 // 自定义验证规则
-const rules = {
-    // mass: { max: 10, isInt: true, min: 2 },
-    m: {},
-    kcar: {},
-    qcar: {}
-};
+// const rules = {
+//     // mass: { max: 10, isInt: true, min: 2 },
+//     m: {},
+//     kcar: {},
+//     qcar: {}
+// };
 
-const validateField = _util.validateField(rules);
+// const validateField = _util.validateField(rules);
 
 export default {
     name: "Vehicle",
@@ -137,11 +136,11 @@ export default {
             formKey: _util.randomString("vehicleForm_"),
 
             copySource: null,
-            rules: {
-                m: [{ validator: validateField, trigger: "change" }],
-                kcar: [{ validator: validateField, trigger: "change" }],
-                qcar: [{ validator: validateField, trigger: "change" }]
-            }
+            // rules: {
+            //     m: [{ validator: validateField, trigger: "change" }],
+            //     kcar: [{ validator: validateField, trigger: "change" }],
+            //     qcar: [{ validator: validateField, trigger: "change" }]
+            // }
         };
     },
     props: {},
@@ -209,7 +208,7 @@ export default {
                 }
             )
                 .then(() => {
-                    this.sureCopy(sourceInfo)
+                    this.sureCopy(sourceInfo);
                 })
                 .catch(() => {});
         },
@@ -218,10 +217,12 @@ export default {
             let { row, cal, id, name } = sourceInfo;
 
             // 默认复制全部
-            let carNums = name;
-            if (id !== "all") carNums = `${row}-${cal}`;
+            let carNums = "";
 
-            carArg.vehicleCopy({ id, carNums }).then(res => {
+            let params = { id: this.curTreeNodeInfo.id };
+            if (id !== "all") params.carNums = `${row}-${cal}`;
+
+            carArg.vehicleCopy({ ...params }).then(res => {
                 if (!res) return;
 
                 this.formKey = _util.randomString("vehicleForm_");

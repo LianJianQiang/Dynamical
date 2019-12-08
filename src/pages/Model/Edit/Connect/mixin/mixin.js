@@ -1,14 +1,13 @@
 import DropDown from "components/DropDown.vue";
-import { CONNECT_ELE_FIELD_DICT } from 'common/constants';
+
+import utilMixin from './util.mixin';
+
 export default {
     components: {
         DropDown
     },
-    data () {
-        return {
-            isHaveData: false
-        }
-    },
+    mixins: [utilMixin],
+
     props: {
         size: {
             type: String,
@@ -30,18 +29,8 @@ export default {
         }
     },
     watch: {
-        dataSource () {
-            if (this.$attrs.eleKey && CONNECT_ELE_FIELD_DICT[this.$attrs.eleKey]) {
-                const keyList = CONNECT_ELE_FIELD_DICT[this.$attrs.eleKey];
-
-                for (let i = 0; i < keyList.length; i++) {
-                    if (this.dataSource[keyList[i]] === 0 || this.dataSource[keyList[i]]) {
-                        this.isHaveData = true;
-                        break;
-                    }
-                }
-            }
-
+        dataSource() {
+            this.setIsHaveData(this.dataSource);
             this.formData = { ...this.dataSource }
         }
     }

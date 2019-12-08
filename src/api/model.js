@@ -76,6 +76,11 @@ const delModal = (params) => request(`${config.baseUrl}/model/delete`, { ...para
     method: 'post'
 });
 
+// 删除模型
+const delTcsd = (params) => request(`${config.baseUrl}/tcsd/delete`, { ...params }, {
+    method: 'post'
+});
+
 export default {
     // 模型树
     createModel,
@@ -104,5 +109,6 @@ export default {
     getAllCarDatas,
     saveAllCarDatas,
 
-    delModal
+    delModal,
+    delTcsd
 }

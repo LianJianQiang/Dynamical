@@ -5,10 +5,10 @@
             <div>
                 <h4>第一列</h4>
                 <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no1Form" :model="no1" :rules="rules" label-width="120px">
+                    <el-form ref="no1Form" :model="no1" label-width="120px">
                         <el-col :span="10">
                             <el-form-item label="车辆数量:" prop="num">
-                                <el-input v-model="no1.num" clearable></el-input>
+                                <el-input-number :controls="false" v-model="no1.num" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <!-- <el-col :span="10" :offset="2">
@@ -18,22 +18,22 @@
                         </el-col>-->
                         <el-col :span="10" :offset="2">
                             <el-form-item label="速度:" prop="v">
-                                <el-input v-model="no1.v" clearable></el-input>
+                                <el-input-number :controls="false" v-model="no1.v" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
                             <el-form-item label="起动阻力:" prop="qdf">
-                                <el-input v-model="no1.qdf" clearable></el-input>
+                                <el-input-number :controls="false" v-model="no1.qdf" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10" :offset="2">
                             <el-form-item label="brakes(u):" prop="mu">
-                                <el-input v-model="no1.mu" clearable></el-input>
+                                <el-input-number :controls="false" v-model="no1.mu" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
                             <el-form-item label="作用速度:" prop="vlimit">
-                                <el-input v-model="no1.vlimit" clearable></el-input>
+                                <el-input-number :controls="false" v-model="no1.vlimit" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10" :offset="2">
@@ -45,17 +45,26 @@
                             <el-form-item label="基本运行阻力:">
                                 <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                     <el-form-item label="A:">
-                                        <el-input v-model="no1.basicresisA" />
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no1.basicresisA"
+                                        />
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                     <el-form-item label="B:">
-                                        <el-input v-model="no1.basicresisB" />
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no1.basicresisB"
+                                        />
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                     <el-form-item label="C:">
-                                        <el-input v-model="no1.basicresisC" />
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no1.basicresisC"
+                                        />
                                     </el-form-item>
                                 </el-col>
                             </el-form-item>
@@ -66,11 +75,11 @@
             <div>
                 <h4>第二列</h4>
                 <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no2Form" :model="no2" :rules="rules" label-width="120px">
+                    <el-form ref="no2Form" :model="no2" label-width="120px">
                         <el-row>
                             <el-col :span="10">
                                 <el-form-item label="车辆数量:" prop="num">
-                                    <el-input v-model="no2.num" clearable></el-input>
+                                    <el-input-number :controls="false" v-model="no2.num" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <!-- <el-col :span="10" :offset="2">
@@ -80,22 +89,26 @@
                             </el-col>-->
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="速度:" prop="v">
-                                    <el-input v-model="no2.v" clearable></el-input>
+                                    <el-input-number :controls="false" v-model="no2.v" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
                                 <el-form-item label="起动阻力:" prop="qdf">
-                                    <el-input v-model="no2.qdf" clearable></el-input>
+                                    <el-input-number :controls="false" v-model="no2.qdf" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="brakes(u):" prop="mu">
-                                    <el-input v-model="no2.mu" clearable></el-input>
+                                    <el-input-number :controls="false" v-model="no2.mu" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
                                 <el-form-item label="作用速度:" prop="vlimit">
-                                    <el-input v-model="no2.vlimit" clearable></el-input>
+                                    <el-input-number
+                                        :controls="false"
+                                        v-model="no2.vlimit"
+                                        clearable
+                                    ></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10" :offset="2">
@@ -111,17 +124,26 @@
                                 <el-form-item label="基本运行阻力:">
                                     <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                         <el-form-item label="A:">
-                                            <el-input v-model="no2.basicresisA" />
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.basicresisA"
+                                            />
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                         <el-form-item label="B:">
-                                            <el-input v-model="no2.basicresisB" />
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.basicresisB"
+                                            />
                                         </el-form-item>
                                     </el-col>
                                     <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                         <el-form-item label="C:">
-                                            <el-input v-model="no2.basicresisC" />
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.basicresisC"
+                                            />
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
@@ -155,22 +177,22 @@ import { model } from "api";
 import Traction from "./Traction";
 
 // 自定义验证规则
-const rules = {
-    num: { max: 18, isInt: true, min: 2 },
-    length: {},
-    v: {},
-    mu: {},
-    vlimit: {},
-    qdf: {}
-};
+// const rules = {
+//     num: { max: 18, isInt: true, min: 2 },
+//     length: {},
+//     v: {},
+//     mu: {},
+//     vlimit: {},
+//     qdf: {}
+// };
 
-const validateField = (rule, value, cb) => {
-    let result = _util.validateNum(value, rules[rule.field]);
-    if (result) {
-        cb(new Error(result));
-    }
-    cb();
-};
+// const validateField = (rule, value, cb) => {
+//     let result = _util.validateNum(value, rules[rule.field]);
+//     if (result) {
+//         cb(new Error(result));
+//     }
+//     cb();
+// };
 
 export default {
     name: "BasicInfo",
@@ -185,17 +207,17 @@ export default {
             no1: {},
             no2: {},
 
-            rules: {
-                num: [{ validator: validateField, trigger: "change" }],
-                length: [{ validator: validateField, trigger: "change" }],
-                speed: [{ validator: validateField, trigger: "change" }],
-                brakes: [{ validator: validateField, trigger: "change" }],
-                startResistance: [
-                    { validator: validateField, trigger: "change" }
-                ],
-                speed2: [{ validator: validateField, trigger: "change" }],
-                basicRe: [{ validator: validateField, trigger: "change" }]
-            }
+            // rules: {
+            //     num: [{ validator: validateField, trigger: "blur" }],
+            //     length: [{ validator: validateField, trigger: "blur" }],
+            //     speed: [{ validator: validateField, trigger: "blur" }],
+            //     brakes: [{ validator: validateField, trigger: "blur" }],
+            //     startResistance: [
+            //         { validator: validateField, trigger: "blur" }
+            //     ],
+            //     speed2: [{ validator: validateField, trigger: "blur" }],
+            //     basicRe: [{ validator: validateField, trigger: "blur" }]
+            // }
         };
     },
     props: {},

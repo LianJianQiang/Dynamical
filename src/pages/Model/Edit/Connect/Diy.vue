@@ -5,12 +5,13 @@
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
+        :resetData="resetData"
     >
         <div :class="$style.root">
             <div :class="$style.axis" class="listWrap">
                 <div>
                     <label>横坐标</label>
-                    <el-select v-model="x" placeholder="请选择">
+                    <el-select v-model="xType" placeholder="请选择">
                         <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -27,8 +28,10 @@
                 <h4>曲线点设置</h4>
                 <EditTable
                     ref="editTable"
+                    :parentParams="{xType: xType}"
                     :type="type"
                     :onSaveCb="onSaveCb"
+                    :onOpenCurveCb="onOpenCurveCb"
                     :tcsdData="tcsdData"
                     :dataSource="tcsdData.tcsdData"
                     :tableDataChange="tableDataChange"
@@ -59,7 +62,7 @@ export default {
     data() {
         return {
             options,
-            x: "",
+            xType: "",
             tcsdData: {},
             isHaveData: false
         };
@@ -95,23 +98,59 @@ export default {
         }
     },
     watch: {
-        dataSource() {
-            const { x, tcsdId } = this.dataSource;
+        dataSource(val, oldVal) {
+            const { x, tcsdId } = val;
             if (x || tcsdId) this.isHaveData = true;
 
-            this.x = x;
-            if (tcsdId) {
-                this.getTcsdDataById(tcsdId);
+            this.xType = x;
+            if (val.tcsdId && val.tcsdId !== oldVal.tcsdId) {
+                this.getTcsdDataById(val.tcsdId);
+            }
+        },
+        xType(val) {
+            if (val !== this.cacheXType) {
+                this.isSaved = false;
             }
         }
     },
     methods: {
+        getTcsdDataById(id) {
+            if (!id) return;
+            model.tractionLiView({ id }).then(res => {
+                let data = res.data || {};
+                if (data.tcsdData) {
+                    data = { ...data, tcsdData: getObjFromStr(data.tcsdData) };
+                }
+
+                this.xType = data.xType || "";
+                this.cacheXType = data.xType || "";
+                this.tcsdData = data;
+            });
+        },
+
+        resetData() {
+            const { x: xType, tcsdId } = this.dataSource;
+            this.xType = xType || "";
+            this.cacheXType = xType || "";
+
+            if (tcsdId) {
+                this.getTcsdDataById(tcsdId);
+            } else {
+                this.tcsdData = { tcsdData: [] };
+            }
+        },
+
+        onOpenCurveCb(data) {
+            this.xType = data.xType || "";
+            this.cacheXType = data.xType || "";
+        },
+
         onSaveData() {
             let field = this.field;
             if (!field) return;
 
             let datas = {
-                [`${field}X`]: this.x,
+                [`${field}X`]: this.xType,
                 [`${field}TcsdId`]: this.curveId
             };
 
@@ -119,29 +158,21 @@ export default {
             this.saveData({ datas });
         },
 
-        getTcsdDataById(id) {
-            model.tractionLiView({ id }).then(res => {
-                let data = res.data || {};
-                if (data.tcsdData) {
-                    data = { ...data, tcsdData: getObjFromStr(data.tcsdData) };
-                }
-                this.tcsdData = data;
-            });
-        },
-
         // 保存数据
         save() {
-            const xTypeChange = this.x !== this.tcsdData.xType;
+            const xTypeChange = this.xType !== this.tcsdData.xType;
             const haveData = this.tableData || this.tcsdData.tcsdData;
 
             return new Promise((resolve, reject) => {
-                // 调用editTable组件自动保存，生成tcsdID，并通过onSaveCb回调返回
-                if (xTypeChange && !haveData) {
+                if (!this.xType) {
+                    this.$message.error("请先选择横坐标");
+                    resolve(false);
+                } else if (!haveData && !this.curveId) {
                     this.$message({
                         message: "请将数据填写完整"
                     });
                     resolve(false);
-                } else if ((!this.curveId && this.tableData) || xTypeChange) {
+                } else if (!this.isSaved) {
                     this.$message({
                         message: "请先点击保存，保存数据"
                     });

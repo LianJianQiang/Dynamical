@@ -25,8 +25,8 @@ export default {
         };
     },
     watch: {
-        visible() {
-            this.dialogVisible = this.visible;
+        visible(val) {
+            this.dialogVisible = val;
         }
     },
     props: {

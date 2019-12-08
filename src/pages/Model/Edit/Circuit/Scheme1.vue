@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.btnGroup">
-            <span class="btn-mini" :class="$style.btn" @click="tableAdd">+</span>
+            <span class="btn-mini" :class="$style.btn" @click="tableAdd()">+</span>
             <span class="btn-mini" :class="$style.btn" @click="tableDel">-</span>
         </div>
         <el-table :data="tableData" border max-height="500">
@@ -98,29 +98,29 @@ export default {
         ...mapState("models", ["curModelId"])
     },
     methods: {
-        resetTableData() {
-            let { tableData } = this;
-
-            let len = tableData.length - 1;
-            for (let i = len; i >= 0; i--) {
+        resetTableData(tableData) {
+            let len = tableData.length;
+            for (let i = 1; i <= len; i++) {
+                let prev = tableData[i - 1];
                 let cur = tableData[i];
 
-                if (i === len) {
-                    cur.xInitial = 0;
-                } else {
-                    let next = tableData[i + 1];
-                    // pro.xInitial = cur.xInitial + cur.lInitial;
-                    cur.xInitial = next.xInitial + next.lInitial;
+                if (i === 1) {
+                    prev.xInitial = 0;
+                }
+
+                if (cur) {
+                    cur.xInitial = prev.xInitial + prev.lInitial;
                 }
             }
+
             this.tableData = tableData;
         },
 
-        // 插入一行数据，默认在第一行插入
+        // 插入一行数据，默认在最后插入
         insertRow(row = []) {
-            let idx = this.insertIdx || 0;
+            let idx = this.insertIdx;
             this.tableData.splice(idx, 0, ...row);
-            this.resetTableData();
+            this.resetTableData(this.tableData);
             return true;
         },
 
@@ -131,16 +131,21 @@ export default {
 
             delete data._editIdx;
             this.tableData.splice(_editIdx, 1, data);
-            this.resetTableData();
+            this.resetTableData(this.tableData);
             return true;
         },
 
         // 删除一行数据
         deleteRow(idx, row) {
-            circuit.delCircleRow({ id: row.id }).then(res => {
-                if (!res) return;
-                this.initData();
-            });
+            if (row.id) {
+                circuit.delCircleRow({ id: row.id }).then(res => {
+                    if (!res) return;
+                    this.initData();
+                });
+            } else {
+                this.tableData.splice(idx, 1);
+                this.resetTableData(this.tableData);
+            }
         },
 
         tableEdit(idx, row) {
@@ -150,7 +155,10 @@ export default {
         },
 
         // 表头添加按钮，默认添加一条数据到第一行
-        tableAdd(idx = 0) {
+        tableAdd(idx) {
+            if (idx !== 0 && !idx) {
+                idx = this.tableData.length;
+            }
             this.rampVisible = true;
             this.insertIdx = idx;
             this.rampType = "add";
@@ -158,10 +166,14 @@ export default {
 
         // 表头删除按钮，默认删除第一条数据
         tableDel() {
-            if (this.tableData.length === 0) {
+            const len = this.tableData.length;
+            if (len === 0) {
                 return;
             }
-            this.tableData.shift();
+
+            const delIdx = len - 1;
+            const delRow = this.tableData[len - 1];
+            this.deleteRow(delIdx, delRow);
         },
 
         saveRampData(data) {
@@ -182,7 +194,7 @@ export default {
             circuit.getCircleData({ modelId: this.curModelId }).then(res => {
                 if (!res) return;
                 let data = res.data || [];
-                data.sort((a, b) => b.xInitial - a.xInitial);
+                data.sort((a, b) => a.xInitial - b.xInitial);
                 this.tableData = res.data || [];
             });
         },
