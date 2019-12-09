@@ -193,7 +193,7 @@
                     :class="$style.subBtn"
                     class="btn-xl"
                     type="primary"
-                    @click="submitForm"
+                    @click="submitForm()"
                 >保存</el-button>
                 <el-button class="btn-xl" @click="resetForm">重置</el-button>
             </el-col>
@@ -318,18 +318,28 @@ export default {
                 return;
             }
 
-            // TODO 未测试
+            console.log(this.copySource);
+
             let sourceInfo = this.getTreeNodeById(this.copySource);
+
+            console.log(sourceInfo);
 
             let { row, cal } = sourceInfo;
             if (!row || !cal) return null;
 
-            this.initData(`${row}-${cal}`, () => {
+            this.submitForm(`${row}-${cal}`, () => {
                 this.$message({
                     message: "操作成功",
                     type: "success"
                 });
             });
+
+            // this.initData(`${row}-${cal}`, () => {
+            //     this.$message({
+            //         message: "操作成功",
+            //         type: "success"
+            //     });
+            // });
         },
 
         // 保存下拉框的数据
@@ -359,8 +369,9 @@ export default {
 
         /**
          * 保存模型数据
+         * 复制时，传入carNum和cb
          */
-        submitForm: function() {
+        submitForm: function(carNum, cb) {
             let frontData = filterJson(this.frontData);
             let backData = filterJson(this.backData);
 
@@ -384,12 +395,23 @@ export default {
                 carNum: this.carNameStr
             });
 
+            // TODO 复制
+            if (carNum) {
+                frontData = { ...frontData, carNum };
+                backData = { ...backData, carNum };
+            }
+
             let params = {
                 allCoupTypeArr: [{ ...frontData }, { ...backData }]
             };
 
             model.saveAllCoupType(params).then(res => {
                 if (!res) return;
+
+                // TODO 复制
+                if (cb && typeof cb === "function") {
+                    return cb(res);
+                }
 
                 this.frontData = { ...frontData, id: res.data["1"] };
                 this.backData = { ...backData, id: res.data["2"] };
