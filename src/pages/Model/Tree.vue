@@ -4,7 +4,6 @@
         <div :class="$style.treeWrap">
             <div :class="$style.noData" v-if="modelsTree.length === 0">暂无数据</div>
             <el-tree
-                :key="curTreeNodeId"
                 v-else
                 :data="modelsTree"
                 node-key="id"
@@ -13,7 +12,11 @@
                 @node-click="nodeClick"
                 :props="{label:'name'}"
             >
-                <span class="custom-tree-node" slot-scope="{ node, data }">
+                <span
+                    class="custom-tree-node"
+                    slot-scope="{ node, data }"
+                    :class="{ active: curTreeNodeId === node.data.id }"
+                >
                     <img v-if="data.children" :src="fileIcon" alt />
                     <span>{{ node.label }}</span>
                 </span>
@@ -45,12 +48,23 @@ export default {
             if (id === this.curTreeNodeId) return;
 
             if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
-            this.setCurTreeNodeId(id);
+            // this.setCurTreeNodeId(id);
 
-            this.$router.push({
-                path: "/page/model/edit",
-                query: { type, id }
-            });
+            this.$confirm("页面即将跳转，请检查是否已经保存数据！", "", {
+                confirmButtonText: "是",
+                cancelButtonText: "否",
+                type: "warning"
+            })
+                .then((...opt) => {
+                    this.setCurTreeNodeId(id);
+                    this.$router.push({
+                        path: "/page/model/edit",
+                        query: { type, id }
+                    });
+                })
+                .catch((...opt) => {
+                    this.setCurTreeNodeId(this.curTreeNodeId);
+                });
         },
         getQueryId() {
             let { id = "" } = this.$route.query || {};
@@ -89,14 +103,18 @@ export default {
             span {
                 font-size: 12px;
             }
+
+            &.active {
+                color: $highlight-color_1;
+            }
         }
         .el-tree-node,
         .el-tree-node > .el-tree-node__content {
             background-color: transparent;
         }
-        .el-tree-node.is-current > .el-tree-node__content {
-            color: $highlight-color_1;
-        }
+        // .el-tree-node.is-current > .el-tree-node__content {
+        // color: $highlight-color_1;
+        // }
     }
 }
 </style>

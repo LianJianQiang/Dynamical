@@ -278,12 +278,15 @@ export default {
                 if (!res) return;
                 let { data = {} } = res;
                 this.tcsd = data;
-                this.tableData = getObjFromStr(data.tcsdData) || [];
+
+                const tcsdData = getObjFromStr(data.tcsdData) || [];
+
+                this.tableData = tcsdData;
                 this.curveDialogVisible = false;
 
                 // 打开数据后，将id返回给父组件
                 this.onSaveCb(res.data.id);
-                this.onOpenCurveCb(res.data);
+                this.onOpenCurveCb({ ...data, tcsdData });
             });
         },
 

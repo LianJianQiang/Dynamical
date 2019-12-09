@@ -62,7 +62,7 @@ export default {
     methods: {
         handleCommand(command) {
             if (command === "logout") {
-                this.$router.push('/login')
+                this.$router.push("/login");
             }
         }
     }

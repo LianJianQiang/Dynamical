@@ -79,6 +79,15 @@ import { carArg } from "api";
 
 import Diy from "./Diy";
 
+const FIELD_LIST = [
+    "tracdef",
+    "emNum",
+    "tracf",
+    "delayTime",
+    "loadTime",
+    "tcsd"
+];
+
 export default {
     name: "VehicleTraction",
     data() {
@@ -97,6 +106,15 @@ export default {
         ...mapState("models", ["curTreeNodeId"])
     },
     methods: {
+        getIsHaveDataStatus(data = {}) {
+            this.isHaveData = false;
+            for (let i = 0; i < FIELD_LIST.length; i++) {
+                if (data[FIELD_LIST[i]]) {
+                    this.isHaveData = true;
+                    return;
+                }
+            }
+        },
         initData() {
             carArg.tractionView({ caId: this.curTreeNodeId }).then(res => {
                 if (!res) return;
@@ -104,9 +122,10 @@ export default {
                 let data = res.data || {};
                 let diyData = data.tcsd || {};
 
-                if (data && JSON.stringify(data) !== "{}") {
-                    this.isHaveData = true;
-                }
+                // if (data && JSON.stringify(data) !== "{}") {
+                //     this.isHaveData = true;
+                // }
+                this.getIsHaveDataStatus(data);
 
                 this.formData = { tracdef: "", ...data };
                 this.cacheData = { tracdef: "", ...data };

@@ -62,6 +62,7 @@
                                 速度
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="true"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
@@ -95,6 +96,7 @@
                                 速度
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="true"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         :min="0"
@@ -198,13 +200,13 @@ export default {
         },
         "datas.characterV2"(val) {
             this.datas.characterV5 = val;
-        },
-        "datas.characterV3"(val) {
-            this.datas.characterV1 = val;
-        },
-        "datas.characterV5"(val) {
-            this.datas.characterV2 = val;
         }
+        // "datas.characterV3"(val) {
+        //     this.datas.characterV1 = val;
+        // },
+        // "datas.characterV5"(val) {
+        //     this.datas.characterV2 = val;
+        // }
     },
     methods: {
         initData() {
@@ -248,21 +250,21 @@ export default {
 
         // 保存数据
         save() {
-            const {
-                characterV1,
-                characterV3,
-                characterV2,
-                characterV5
-            } = this.datas;
-            if (characterV1 !== characterV3) {
-                this.$message("恒转速区速度下限值需和恒功率区速度上限值相同");
-                return;
-            }
+            // const {
+            //     characterV1,
+            //     characterV3,
+            //     characterV2,
+            //     characterV5
+            // } = this.datas;
+            // if (characterV1 !== characterV3) {
+            //     this.$message("恒转速区速度下限值需和恒功率区速度上限值相同");
+            //     return;
+            // }
 
-            if (characterV2 !== characterV5) {
-                this.$message("恒功率区的速度下限值需和降功区的速度上限值相同");
-                return;
-            }
+            // if (characterV2 !== characterV5) {
+            //     this.$message("恒功率区的速度下限值需和降功区的速度上限值相同");
+            //     return;
+            // }
 
             return new Promise(resolve => {
                 if (this.tableData && !this.tcsdId) {

@@ -2,12 +2,7 @@
     <div :class="$style.root">
         <div :class="$style.title">{{curTreeNodeInfo.name}}</div>
         <div :class="$style.formWrap" class="clearfix">
-            <el-form
-                ref="vehicleForm"
-                :key="formKey"
-                :model="formData"
-                label-width="120px"
-            >
+            <el-form ref="vehicleForm" :key="formKey" :model="formData" label-width="120px">
                 <el-col :span="10">
                     <el-form-item label="车辆质量:" prop="m">
                         <el-input-number :controls="false" v-model="formData.m" clearable></el-input-number>
@@ -135,7 +130,7 @@ export default {
 
             formKey: _util.randomString("vehicleForm_"),
 
-            copySource: null,
+            copySource: null
             // rules: {
             //     m: [{ validator: validateField, trigger: "change" }],
             //     kcar: [{ validator: validateField, trigger: "change" }],
@@ -199,7 +194,7 @@ export default {
             if (!sourceInfo) return;
 
             this.$confirm(
-                `确认将“${this.curTreeNodeInfo.name}”的所有数据复制到“${sourceInfo.name}”么？`,
+                `确认将“${this.curTreeNodeInfo.name}”的所有数据复制到“${sourceInfo.name}”吗？`,
                 "",
                 {
                     confirmButtonText: "确定",
@@ -214,10 +209,11 @@ export default {
         },
 
         sureCopy(sourceInfo) {
-            let { row, cal, id, name } = sourceInfo;
+            // let { row, cal, id, name } = sourceInfo;
+            let { row, cal, id } = sourceInfo;
 
             // 默认复制全部
-            let carNums = "";
+            // let carNums = "";
 
             let params = { id: this.curTreeNodeInfo.id };
             if (id !== "all") params.carNums = `${row}-${cal}`;

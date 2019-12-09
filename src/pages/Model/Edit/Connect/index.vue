@@ -210,7 +210,7 @@ import {
     CONNECT_ELE_DICT,
     CAR_ELE_DICT
 } from "common/constants";
-import { filterJson } from "utils/util";
+// import { filterJson } from "utils/util";
 import { model } from "api";
 
 import Foldedcollapse from "./FoldedCollapse";
@@ -285,13 +285,13 @@ export default {
 
                     this.frontData = {
                         ...front,
-                        diy1: { x: front.diy1X, tcsdId: front.diy1TcsdId },
-                        diy2: { x: front.diy2X, tcsdId: front.diy2TcsdId }
+                        diy1: { xType: front.diy1X, tcsdId: front.diy1TcsdId },
+                        diy2: { xType: front.diy2X, tcsdId: front.diy2TcsdId }
                     };
                     this.backData = {
                         ...back,
-                        diy1: { x: back.diy1X, tcsdId: back.diy1TcsdId },
-                        diy2: { x: back.diy2X, tcsdId: back.diy2TcsdId }
+                        diy1: { xType: back.diy1X, tcsdId: back.diy1TcsdId },
+                        diy2: { xType: back.diy2X, tcsdId: back.diy2TcsdId }
                     };
 
                     this.cacheFrontData = { ...front };
@@ -318,11 +318,7 @@ export default {
                 return;
             }
 
-            console.log(this.copySource);
-
             let sourceInfo = this.getTreeNodeById(this.copySource);
-
-            console.log(sourceInfo);
 
             let { row, cal } = sourceInfo;
             if (!row || !cal) return null;
@@ -345,13 +341,23 @@ export default {
         // 保存下拉框的数据
         saveDropDownData(params) {
             let { datas, parent, ele } = params;
-            this[parent] = { ...this[parent], ...datas };
+
+            const { xType, tcsdId } = datas;
 
             if (ele === "diy1" || ele === "diy2") {
-                this[parent][ele] = {
-                    x: datas[`${ele}X`],
-                    tcsdId: datas[`${ele}TcsdId`]
-                };
+                let otherP = parent === "frontData" ? "backData" : "frontData";
+
+                this[parent][ele] = { ...datas };
+                this[parent][`${ele}X`] = xType;
+                this[parent][`${ele}TcsdId`] = tcsdId;
+
+                if (tcsdId === this[otherP][`${ele}TcsdId`]) {
+                    this[otherP][ele] = { ...datas };
+                    this[otherP][`${ele}X`] = xType;
+                    this[otherP][`${ele}TcsdId`] = tcsdId;
+                }
+            } else {
+                this[parent] = { ...this[parent], ...datas };
             }
 
             // 保存已定义的元件列表，图形显示使用
@@ -372,8 +378,8 @@ export default {
          * 复制时，传入carNum和cb
          */
         submitForm: function(carNum, cb) {
-            let frontData = filterJson(this.frontData);
-            let backData = filterJson(this.backData);
+            let frontData = { ...this.frontData };
+            let backData = { ...this.backData };
 
             if (!this.carNameStr) {
                 this.$message({
@@ -399,6 +405,9 @@ export default {
             if (carNum) {
                 frontData = { ...frontData, carNum };
                 backData = { ...backData, carNum };
+
+                delete frontData.id;
+                delete backData.id;
             }
 
             let params = {
