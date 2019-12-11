@@ -67,6 +67,10 @@
             @saveData="saveRampData"
             @cancel="rampVisible=false"
         />
+        <div :class="$style.footer">
+            <el-button class="btn-xl" type="primary" @click="saveData">保存</el-button>
+            <el-button class="btn-xl" @click="clearData">清空</el-button>
+        </div>
     </div>
 </template>
 
@@ -186,7 +190,7 @@ export default {
 
             if (!isSuccess) return;
 
-            this.$message.success("操作成功");
+            // this.$message.success("操作成功");
             this.rampVisible = false;
         },
 
@@ -207,6 +211,9 @@ export default {
                     if (!res) return;
                     this.initData();
                 });
+        },
+        clearData() {
+            this.tableData = [];
         }
     },
     mounted() {
@@ -220,6 +227,10 @@ export default {
 .root {
     width: 100%;
     height: 100%;
+    .footer {
+        text-align: center;
+        margin: 30px 0 10px;
+    }
     .btnGroup {
         margin-bottom: 10px;
 

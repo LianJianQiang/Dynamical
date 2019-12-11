@@ -14,8 +14,20 @@ export default {
 
             if (!this.field) return;
 
-            this.isHaveData = true;
+            this.isHaveData = false;
+            if (data.tcsdId) {
+                this.isHaveData = true;
+            }
             this.saveData({ data, field: this.field });
+        },
+
+        cancel() {
+            const { tcsdId } = this.dataSource;
+            this.getTcsdDataById(this.dataSource.tcsdId);
+
+            if (tcsdId) {
+                this.isHaveData = true;
+            }
         }
     },
     mounted() {
