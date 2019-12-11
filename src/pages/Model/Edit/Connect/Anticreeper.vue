@@ -1,6 +1,13 @@
 <!-- 车辆参数 制动系统弹层 -->
 <template>
-    <DropDown :save="save" :resetData="resetData" :placeholder="placeholder" :title="$attrs.title" :isHaveData="isHaveData">
+    <DropDown
+        :save="save"
+        :resetData="clearData"
+        :placeholder="placeholder"
+        :title="$attrs.title"
+        :isHaveData="isHaveData"
+        :cancel="cancel"
+    >
         <!-- <div class="dropPanel"> -->
         <el-form ref="form" label-position="left" :model="formData" label-width="160px">
             <el-form-item label="空行程">

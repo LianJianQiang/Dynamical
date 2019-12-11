@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.btnGroup">
-            <el-button v-if="showAdd" class="btn-mini" @click="tableAdd">+</el-button>
+            <el-button v-if="showAdd" class="btn-mini" @click="tableAdd()">+</el-button>
             <el-button v-if="showDel" class="btn-mini" @click="tableDel()">-</el-button>
             <el-button v-if="showOpen" class="btn-mini" @click="onOpenCurve">打开</el-button>
             <el-button v-if="showSave" class="btn-mini" @click="onSaveCurve">保存</el-button>
@@ -37,7 +37,18 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <template slot-scope="scope">
-                    <div class="cursor-p edit-btn" @click="tableDel(scope.$index, scope.row)">删除</div>
+                    <div class="clearfix">
+                        <div
+                            class="cursor-p edit-btn fll"
+                            style="width: 49%"
+                            @click="tableInsert(scope.$index, scope.row)"
+                        >插入</div>
+                        <div
+                            class="cursor-p edit-btn flr"
+                            style="width: 49%"
+                            @click="tableDel(scope.$index, scope.row)"
+                        >删除</div>
+                    </div>
                 </template>
             </el-table-column>
         </el-table>
@@ -158,23 +169,11 @@ export default {
             default: () => {}
         }
     },
-    computed: {
-        // tcsd: {
-        //     get: function() {
-        //         return { ...this.tcsdData };
-        //     },
-        //     set: function(data) {
-        //         return { ...data };
-        //     }
-        // },
-        // tableData() {
-        //     return [...this.dataSource];
-        // }
-    },
     watch: {
         dataSource() {
             this.tableData = [...this.dataSource];
         },
+
         tcsdData() {
             this.tcsd = { ...this.tcsdData };
         }
@@ -183,6 +182,13 @@ export default {
         initData() {
             this.tableData = [...this.dataSource];
             this.tcsd = { ...this.tcsdData };
+        },
+
+        clearData() {
+            this.tableData = [];
+            this.tcsd = {};
+
+            this.tableDataChange([]);
         },
 
         // 切换dialog状态
@@ -203,12 +209,17 @@ export default {
         },
 
         // table中插入一行
-        tableAdd() {
+        tableAdd(idx) {
             let { tableData } = this;
-            tableData.push({
+            idx = idx || tableData.length - 1;
+            tableData.splice(idx + 1, 0, {
                 x: 0,
                 f: 0
             });
+            // tableData.push({
+            //     x: 0,
+            //     f: 0
+            // });
 
             this.onTableRowChange();
 
@@ -216,9 +227,12 @@ export default {
             this.tableDataChange(this.tableData);
         },
 
+        tableInsert(index) {
+            this.tableAdd(index);
+        },
+
         // table中删除一行
         tableDel(index) {
-            console.log(index);
             let { tableData } = this;
             if (index !== 0 && !index) {
                 tableData.pop();
@@ -253,7 +267,7 @@ export default {
                     this.$message("暂无可选择的数据");
                     return;
                 }
-                this.tractionList = res.data;
+                this.tractionList = data.filter(item => !!item.tcsdName);
                 this.curveDialogVisible = true;
             });
         },
@@ -294,12 +308,13 @@ export default {
         onSaveCurve(cb) {
             let params = this.getSaveDataParmas();
 
+            // 由父组件进行保存业务处理
             if (this.onSave) {
                 this.onSave(params);
                 return;
             }
 
-            this.tcsd = params;
+            // this.tcsd = params;
 
             if (params.id) {
                 this.tractionLiSave(cb);
@@ -313,6 +328,7 @@ export default {
             const { userId } = getUserIdAndType();
 
             return {
+                tcsdName: "",
                 ...this.tcsd,
                 userId,
                 tcsdData: this.tableData || [],
@@ -328,20 +344,22 @@ export default {
 
         // 保存talbe对数据
         tractionLiSave(cb) {
-            let params = this.tcsd;
+            let params = this.getSaveDataParmas();
 
             if (this.tcsdName) {
                 params.tcsdName = this.tcsdName;
             }
 
-            model.tractionLiSave(params).then(res => {
+            if (!params.tcsdName && params.tcsdData.length === 0) return;
+
+            return model.tractionLiSave(params).then(res => {
                 if (!res) return;
                 this.nameDialogVisible = false;
 
-                this.$message({
-                    message: "操作成功",
-                    type: "success"
-                });
+                // this.$message({
+                //     message: "操作成功",
+                //     type: "success"
+                // });
 
                 this.tcsdId = res.data.id;
 
@@ -349,6 +367,7 @@ export default {
                 this.onSaveCb(res.data.id);
 
                 typeof cb === "function" && cb();
+                return res;
             });
         }
     },

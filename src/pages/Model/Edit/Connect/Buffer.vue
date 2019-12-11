@@ -1,9 +1,14 @@
 <!-- 车辆参数 制动系统弹层 -->
 <template>
-    <DropDown :save="save" :resetData="resetData" :title="$attrs.title" :isHaveData="isHaveData">
+    <DropDown
+        :save="save"
+        :resetData="clearData"
+        :title="$attrs.title"
+        :isHaveData="isHaveData"
+        :cancel="cancel"
+    >
         <div :class="$style.root">
             <el-row class="listWrap">
-                <!-- <el-radio v-model="formData.coupdef" :label="1">描点法设置</el-radio> -->
                 <el-checkbox
                     class="radioWrap"
                     :value="formData.coupdef===1"
@@ -28,18 +33,17 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="行程">
-                        <el-input-number :controls="false" v-model="formData.couRoute" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="formData.couRoute"></el-input-number>
                     </el-form-item>
                     <el-form-item label="间隙">
-                        <el-input-number :controls="false" v-model="formData.couGap" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="formData.couGap"></el-input-number>
                     </el-form-item>
                     <el-form-item label="包络线间震动的阻尼">
-                        <el-input-number :controls="false" v-model="formData.couDeboost" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="formData.couDeboost"></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
             <el-row class="listWrap">
-                <!-- <el-radio v-model="formData.coupdef" :label="2">分段函数法设置</el-radio> -->
                 <el-checkbox
                     class="radioWrap"
                     :value="formData.coupdef===2"
@@ -56,9 +60,9 @@
                             label-width="120px"
                         >
                             <el-form-item label="型号选择">
-                                <el-select v-model="formData.couMdfId" placeholder="请选择">
+                                <el-select v-model="formData.couFdhsfId" placeholder="请选择">
                                     <el-option
-                                        v-for="item in curveList"
+                                        v-for="item in piecewiseLsit"
                                         :key="item.id"
                                         :label="item.name"
                                         :value="item.id"
@@ -66,21 +70,11 @@
                                 </el-select>
                             </el-form-item>
                         </el-form>
-                        <!-- <div class="fll">型号选择</div>
-                        <el-select v-model="formData.couFdhsfId" placeholder="请选择" class="flr">
-                            <el-option
-                                v-for="item in piecewiseLsit"
-                                :key="item.id"
-                                :label="item.name"
-                                :value="item.id"
-                            ></el-option>
-                        </el-select>-->
                     </div>
                 </div>
             </el-row>
             <el-row class="listWrap">
                 <div class="clearfix">
-                    <!-- <el-radio v-model="formData.coupdef" :label="3">缓冲器本构</el-radio> -->
                     <el-checkbox
                         class="radioWrap"
                         :value="formData.coupdef === 3"
@@ -91,13 +85,12 @@
                         class="flr"
                         :controls="false"
                         v-model="formData.couEquation"
-                        :min="0"
                         style="width:88px;margin-bottom:6px"
                     ></el-input-number>
                 </div>
                 <el-form ref="form" label-position="left" :model="formData" label-width="120px">
                     <el-form-item label="钩缓质量" label-position="left">
-                        <el-input-number :controls="false" v-model="formData.couQuality" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="formData.couQuality"></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -163,6 +156,10 @@ export default {
                     if (!res) return;
                     this.curveList = res.data || [];
                 });
+        },
+
+        clearData() {
+            this.formData = { coupdef: "" };
         }
     },
     mounted() {

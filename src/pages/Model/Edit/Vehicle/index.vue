@@ -10,7 +10,7 @@
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="车辆长度:" prop="l">
-                        <el-input-number :controls="false" v-model="formData.l" clearable></el-input-number>
+                        <el-input-number :controls="false" v-model="formData.length" clearable></el-input-number>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
@@ -20,7 +20,7 @@
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="牵引系统:">
-                        <Traction title="牵引力系统" />
+                        <Traction ref="traction" title="牵引力系统" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
@@ -30,12 +30,13 @@
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="制动系统:">
-                        <Brakes title="牵引力系统" />
+                        <Brakes ref="brakes" title="牵引力系统" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="用户自定义1:">
                         <Diy
+                            ref="diy1"
                             title="用户自定义1"
                             field="diy1Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy1'})"
@@ -47,6 +48,7 @@
                 <el-col :span="10" :offset="2">
                     <el-form-item label="用户自定义2:">
                         <Diy
+                            ref="diy2"
                             title="用户自定义2"
                             field="diy2Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy2'})"
@@ -58,6 +60,7 @@
                 <el-col :span="10">
                     <el-form-item label="用户自定义3:">
                         <Diy
+                            ref="diy3"
                             title="用户自定义3"
                             field="diy3Tcsd"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy3'})"
@@ -87,7 +90,7 @@
                     type="primary"
                     @click="submitForm"
                 >保存</el-button>
-                <el-button class="btn-xl" @click="resetForm">重置</el-button>
+                <el-button class="btn-xl" @click="clearData">清空</el-button>
             </el-col>
         </el-row>
     </div>
@@ -115,6 +118,16 @@ import Diy from "./Diy";
 // };
 
 // const validateField = _util.validateField(rules);
+
+const FIELD_LIST = ["m", "m", "kcar", "qcar", "length", "l"];
+const FIELD_LIST_DIY = [
+    "diy1",
+    "diy1Tcsd",
+    "diy2",
+    "diy2Tcsd",
+    "diy3",
+    "diy3Tcsd"
+];
 
 export default {
     name: "Vehicle",
@@ -144,7 +157,7 @@ export default {
 
         trainList() {
             const list = this.getTreeNodeByType(MODEL_TREE_TYPE.vehicle) || [];
-            let trainList = [{ id: "all", name: "全部" }, ...list];
+            let trainList = [{ id: "all", name: "所有车辆" }, ...list];
             return trainList;
         }
     },
@@ -238,16 +251,23 @@ export default {
             this.diyData[field] = data.tcsdId;
             this.diyData[type] = 1;
         },
+
         /**
          * 保存模型数据
          */
         submitForm: function() {
             this.$refs.vehicleForm.validate(vali => {
                 if (!vali) return;
-
                 this.saveData();
             });
         },
+
+        // saveChildCompData(){
+        //     return Promise.all([
+        //         this.$refs.traction.saveDataToServe(),
+        //         this.$refs.brakes.saveDataToServe(),
+        //     ])
+        // },
 
         saveData() {
             let diyData = { ...this.diyData };
@@ -255,11 +275,32 @@ export default {
             delete diyData.diy2TcsdData;
             delete diyData.diy3TcsdData;
 
+            const veParams = {
+                ...this.formData,
+                l: this.formData.length,
+                length: this.formData.length
+            };
+
+            const diyParams = { ...this.diyData };
+
+            FIELD_LIST.map(item => {
+                veParams[item] !== 0 &&
+                    !veParams[item] &&
+                    (veParams[item] = "");
+            });
+
+            FIELD_LIST_DIY.map(item => {
+                diyParams[item] !== 0 &&
+                    !diyParams[item] &&
+                    (diyParams[item] = "");
+            });
+
             Promise.all([
-                carArg.vehicleEdit({ ...this.formData }),
-                carArg.diySave({ ...this.diyData })
+                this.$refs.traction.saveDataToServe(),
+                this.$refs.brakes.saveDataToServe(),
+                carArg.vehicleEdit(veParams),
+                carArg.diySave(diyParams)
             ]).then(res => {
-                console.log(res);
                 if (!res[0] || !res[1]) return;
 
                 this.$message({
@@ -272,9 +313,21 @@ export default {
         /**
          * 取消输入
          */
-        resetForm: function() {
-            this.formData = { ...this.cacheFromData };
-            this.diyData = { ...this.cacheDiyData };
+        clearData: function() {
+            const { id, modelId, carNum } = this.formData;
+
+            this.formData = { id, modelId, carNum };
+            this.diyData = {
+                id: this.diyData.id,
+                modelId: this.diyData.modelId,
+                caId: this.diyData.caId
+            };
+
+            this.$refs.traction.clearData();
+            this.$refs.brakes.clearData();
+            this.$refs.diy1.clearData();
+            this.$refs.diy2.clearData();
+            this.$refs.diy3.clearData();
         }
     },
     mounted() {

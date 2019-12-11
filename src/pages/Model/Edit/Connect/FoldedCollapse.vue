@@ -1,10 +1,11 @@
 <template>
     <DropDown
         :save="save"
-        :resetData="resetData"
+        :resetData="clearData"
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
+        :cancel="cancel"
     >
         <div class="clearfix" :class="$style.root">
             <el-row class="listWrap">

@@ -114,7 +114,7 @@
                     </div>
                     <div class="drawerFooter" v-if="rampMethod">
                         <el-button class="btn-xl" type="primary" @click="saveData">保存</el-button>
-                        <el-button class="btn-xl" type="primary" @click="resetData">重置</el-button>
+                        <el-button class="btn-xl" type="primary" @click="resetData">清空</el-button>
                         <el-button class="btn-xl" @click="$emit('cancel')">取消</el-button>
                     </div>
                 </div>
@@ -329,7 +329,7 @@ export default {
         },
 
         resetData() {
-            this.formData = { ...this.dataSource };
+            this.formData = {};
             this.pointTableData = [];
             this.chartsOptions = JSON.parse(JSON.stringify(chartsOptions));
         }

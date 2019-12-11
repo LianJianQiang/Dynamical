@@ -75,7 +75,7 @@ export const CAR_ELE_DICT = {
 }
 
 export const CONNECT_ELE_FIELD_DICT = {
-    hcq: ['couGap', 'couRoute', 'couDeboost', 'coupname', 'coupdef', 'couMdfId', 'couFdhsfId', 'couQuality', 'couEquation'],         // 缓冲器
+    hcq: ['couGap', 'couRoute', 'couDeboost', 'coupdef', 'couMdfId', 'couFdhsfId', 'couQuality', 'couEquation'],         // 缓冲器
     xjzc: ['kelas', 'selas'],       // 橡胶轴承
     ykg: ['ykgTempId'],         // 压溃管
     gzbh: ['fprot', 'sprot'],       // 过载保护

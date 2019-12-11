@@ -1,7 +1,7 @@
 <template>
     <DropDown
         :save="save"
-        :resetData="resetData"
+        :resetData="clearData"
         :title="$attrs.title || ''"
         :isHaveData="isHaveData"
     >
@@ -59,6 +59,7 @@
                     @change="()=>onCheckboxChange(3)"
                 >牵引力用户自定义</el-checkbox>
                 <Diy
+                    ref="diy"
                     title="牵引力用户自定义"
                     field="tcsdId"
                     :saveData="saveDiyData"
@@ -85,7 +86,7 @@ const FIELD_LIST = [
     "tracf",
     "delayTime",
     "loadTime",
-    "tcsd"
+    "tcsdId"
 ];
 
 export default {
@@ -106,15 +107,15 @@ export default {
         ...mapState("models", ["curTreeNodeId"])
     },
     methods: {
-        getIsHaveDataStatus(data = {}) {
-            this.isHaveData = false;
-            for (let i = 0; i < FIELD_LIST.length; i++) {
-                if (data[FIELD_LIST[i]]) {
-                    this.isHaveData = true;
-                    return;
-                }
-            }
-        },
+        // setHaveDataStatus(data = {}) {
+        //     this.isHaveData = false;
+        //     for (let i = 0; i < FIELD_LIST.length; i++) {
+        //         if (data[FIELD_LIST[i]]) {
+        //             this.isHaveData = true;
+        //             return;
+        //         }
+        //     }
+        // },
         initData() {
             carArg.tractionView({ caId: this.curTreeNodeId }).then(res => {
                 if (!res) return;
@@ -125,7 +126,7 @@ export default {
                 // if (data && JSON.stringify(data) !== "{}") {
                 //     this.isHaveData = true;
                 // }
-                this.getIsHaveDataStatus(data);
+                this.setHaveDataStatus(data);
 
                 this.formData = { tracdef: "", ...data };
                 this.cacheData = { tracdef: "", ...data };
@@ -133,11 +134,14 @@ export default {
             });
         },
 
-        resetData() {
-            this.formData = { ...this.cacheData };
+        clearData() {
+            const { id, caId, modelId } = this.formData;
+            this.formData = { id, caId, modelId, tracdef: "" };
+            this.diyDataSource = {};
 
-            let diyData = this.cacheData.tcsd || {};
-            this.diyDataSource = { ...diyData, tcsdId: diyData.id };
+            this.setHaveDataStatus(this.formData);
+
+            this.$refs.diy && this.$refs.diy.clearData();
         },
 
         onCheckboxChange(value) {
@@ -152,41 +156,69 @@ export default {
         // 保存数据
         save() {
             return new Promise(resolve => {
-                let { formData } = this;
+                const params = this.getSaveParams();
+                this.setHaveDataStatus(params);
+                resolve(true);
+                // carArg.tractionEdit({ ...params }).then(res => {
+                //     if (!res) {
+                //         resolve(false);
+                //         return;
+                //     }
+                //     this.$message({
+                //         message: "操作成功",
+                //         type: "success"
+                //     });
 
-                let params = {};
-                for (let i in formData) {
-                    if (formData[i] === 0 || formData[i]) {
-                        params[i] = formData[i];
-                    }
-                }
+                //     this.isHaveData = false;
+                //     for (let i in params) {
+                //         if (params[i]) {
+                //             this.isHaveData = true;
+                //             break;
+                //         }
+                //     }
 
-                carArg.tractionEdit({ ...params }).then(res => {
-                    if (!res) {
-                        resolve(false);
-                        return;
-                    }
-                    this.$message({
-                        message: "操作成功",
-                        type: "success"
-                    });
-
-                    this.isHaveData = false;
-                    for (let i in params) {
-                        if (params[i]) {
-                            this.isHaveData = true;
-                            break;
-                        }
-                    }
-
-                    resolve(true);
-                });
+                //     resolve(true);
+                // });
             });
         },
 
         saveDiyData(params) {
             let { field, data } = params;
             this.formData[field] = data.tcsdId;
+        },
+
+        setHaveDataStatus(params = {}) {
+            this.isHaveData = false;
+            for (let i in params) {
+                if (i === "id" || i === "modelId" || i === "caId") continue;
+                if (params[i]) {
+                    this.isHaveData = true;
+                    break;
+                }
+            }
+        },
+
+        getSaveParams() {
+            let { formData } = this;
+
+            let params = {};
+            for (let i in formData) {
+                if (formData[i] === 0 || formData[i]) {
+                    params[i] = formData[i];
+                }
+            }
+
+            FIELD_LIST.map(item => {
+                params[item] !== 0 && !params[item] && (params[item] = "");
+            });
+
+            return params;
+        },
+
+        saveDataToServe() {
+            const params = this.getSaveParams();
+            delete params.tcsd;
+            return carArg.tractionEdit({ ...params });
         }
     },
     mounted() {

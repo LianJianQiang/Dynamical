@@ -5,7 +5,7 @@
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
-        :resetData="resetData"
+        :resetData="clearData"
     >
         <div :class="$style.root">
             <div :class="$style.axis" class="listWrap">
@@ -121,18 +121,18 @@ export default {
 
             if (haveTcsd) this.isHaveData = true;
 
-            if (haveTcsd && tcsdId !== oldId) {
+            if (haveTcsd && tcsdId !== oldId && tcsdId !== this.curveId) {
                 this.getTcsdDataById(tcsdId);
             }
         },
         "dataSource.tcsdData"(tcsdData) {
             this.tcsdData = { ...tcsdData };
-        },
-        xType(val) {
-            if (val !== this.cacheXType) {
-                this.isSaved = false;
-            }
         }
+        // xType(val) {
+        //     if (val !== this.cacheXType) {
+        //         this.isSaved = false;
+        //     }
+        // }
     },
     methods: {
         getTcsdDataById(id) {
@@ -143,6 +143,10 @@ export default {
                     data = { ...data, tcsdData: getObjFromStr(data.tcsdData) };
                 }
 
+                if (data.id) {
+                    this.isHaveData = true;
+                }
+
                 const xType = data.xType || data.xtype || "";
                 this.xType = xType;
                 this.cacheXType = xType;
@@ -150,20 +154,34 @@ export default {
             });
         },
 
-        resetData() {
-            const { xType, tcsdId } = this.dataSource;
-            const haveTcsd = tcsdId && tcsdId !== "0";
+        clearData() {
+            this.xType = "";
+            this.cacheXType = "";
 
-            if (xType || haveTcsd) this.isHaveData = true;
+            this.tcsdData = {};
+            this.tableData = null;
 
-            this.xType = xType || "";
-            this.cacheXType = xType || "";
+            this.curveId = "";
+            this.isSaved = false;
+            this.isHaveData = false;
 
-            if (haveTcsd) {
-                this.getTcsdDataById(tcsdId);
-            } else {
-                this.tcsdData = { xType, tcsdId, tcsdData: [] };
-            }
+            this.openCurveDataCache = {};
+
+            this.$refs.editTable && this.$refs.editTable.clearData();
+
+            // const { xType, tcsdId } = this.dataSource;
+            // const haveTcsd = tcsdId && tcsdId !== "0";
+
+            // if (xType || haveTcsd) this.isHaveData = true;
+
+            // this.xType = xType || "";
+            // this.cacheXType = xType || "";
+
+            // if (haveTcsd) {
+            //     this.getTcsdDataById(tcsdId);
+            // } else {
+            //     this.tcsdData = { xType, tcsdId, tcsdData: [] };
+            // }
         },
 
         onOpenCurveCb(data) {
@@ -195,33 +213,36 @@ export default {
                 datas.tcsdData.tcsdData = this.tableData;
             }
 
-            this.isHaveData = true;
+            if (this.xType || this.curveId) {
+                this.isHaveData = true;
+            }
+
             this.saveData({ datas });
         },
 
         // 保存数据
-        save() {
+        async save() {
             // const xTypeChange = this.xType !== this.tcsdData.xType;
-            const haveData = this.tableData || this.tcsdData.tcsdData;
+            // const haveData = this.tableData || this.tcsdData.tcsdData;
 
-            return new Promise((resolve, reject) => {
+            // if (!haveData && !this.curveId) {
+            //     this.$message({
+            //         message: "请将数据填写完整"
+            //     });
+            //     return false;
+            // }
+
+            if (!this.isSaved && this.tableData && this.tableData.length > 0) {
                 if (!this.xType) {
                     this.$message.error("请先选择横坐标");
-                    resolve(false);
-                } else if (!haveData && !this.curveId) {
-                    this.$message({
-                        message: "请将数据填写完整"
-                    });
-                    resolve(false);
-                } else if (!this.isSaved) {
-                    this.$message({
-                        message: "请先点击保存，保存数据"
-                    });
-                    resolve(false);
-                } else {
-                    this.onSaveData();
-                    resolve(true);
+                    return false;
                 }
+                await this.$refs.editTable.tractionLiSave();
+            }
+
+            return new Promise((resolve, reject) => {
+                this.onSaveData();
+                resolve(true);
             });
         }
     }

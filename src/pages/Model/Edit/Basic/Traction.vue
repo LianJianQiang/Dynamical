@@ -1,23 +1,23 @@
 <!-- 牵引力特征曲线参数设置 -->
 <template>
-    <DropDown :save="save" title="牵引力特征曲线" :isHaveData="isHaveData">
+    <DropDown :save="save" title="牵引力特征曲线" :isHaveData="isHaveData" :resetData="clearData">
         <div :class="$style.root">
             <el-row class="listWrap">
                 <el-form ref="form" label-position="left" :model="datas" label-width="160px">
                     <el-form-item label="整列最大载客工况总质量">
-                        <el-input-number :controls="false" v-model="datas.massMax" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="datas.massMax"></el-input-number>
                     </el-form-item>
                     <el-form-item label="整列车回转质量">
-                        <el-input-number :controls="false" v-model="datas.massRotating" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="datas.massRotating"></el-input-number>
                     </el-form-item>
                     <el-form-item label="整列车牵引电机数量">
-                        <el-input-number :controls="false" v-model="datas.motorNum" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="datas.motorNum"></el-input-number>
                     </el-form-item>
                     <el-form-item label="牵引指令下达后的延长时间">
-                        <el-input-number :controls="false" v-model="datas.delayTime" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="datas.delayTime"></el-input-number>
                     </el-form-item>
                     <el-form-item label="冲击率">
-                        <el-input-number :controls="false" v-model="datas.rampFun" :min="0"></el-input-number>
+                        <el-input-number :controls="false" v-model="datas.rampFun"></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -39,7 +39,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterV1"
                                     />
                                 </el-form-item>
@@ -50,7 +49,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterF"
                                     />
                                 </el-form-item>
@@ -65,7 +63,6 @@
                                         :disabled="true"
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterV3"
                                     />
                                 </el-form-item>-
@@ -73,7 +70,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterV2"
                                     />
                                 </el-form-item>
@@ -84,7 +80,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterFv"
                                     />
                                 </el-form-item>
@@ -99,7 +94,6 @@
                                         :disabled="true"
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterV5"
                                     />
                                 </el-form-item>-
@@ -107,7 +101,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterFvv"
                                     />
                                 </el-form-item>
@@ -118,7 +111,6 @@
                                     <el-input-number
                                         :controls="false"
                                         :class="$style.speedbox"
-                                        :min="0"
                                         v-model="datas.characterV4"
                                     />
                                 </el-form-item>
@@ -216,9 +208,10 @@ export default {
                     if (!res) return;
                     let { data = {} } = res;
 
-                    if (data && JSON.stringify(data) !== "{}") {
-                        this.isHaveData = true;
-                    }
+                    // if (data && JSON.stringify(data) !== "{}") {
+                    //     this.isHaveData = true;
+                    // }
+                    this.setHaveDataStatus(data);
 
                     if (data.tcsd && data.tcsd.tcsdData) {
                         data.tcsd.tcsdData = getObjFromStr(data.tcsd.tcsdData);
@@ -248,64 +241,75 @@ export default {
             this.characteristics = value;
         },
 
-        // 保存数据
-        save() {
-            // const {
-            //     characterV1,
-            //     characterV3,
-            //     characterV2,
-            //     characterV5
-            // } = this.datas;
-            // if (characterV1 !== characterV3) {
-            //     this.$message("恒转速区速度下限值需和恒功率区速度上限值相同");
-            //     return;
-            // }
+        clearData() {
+            const { id, modelId } = this.datas;
+            const newDatas = { id, modelId };
 
-            // if (characterV2 !== characterV5) {
-            //     this.$message("恒功率区的速度下限值需和降功区的速度上限值相同");
-            //     return;
-            // }
+            this.datas = newDatas;
+
+            this.characteristics = "";
+            this.tcsd = {};
+
+            this.$refs.editTable.clearData();
+
+            this.setHaveDataStatus(newDatas);
+        },
+
+        // 保存数据
+        async save() {
+            if (this.tableData && !this.tcsdId) {
+                // this.$message("请先保存表格数据");
+                // return resolve(false);
+                await this.$refs.editTable.tractionLiSave();
+            }
 
             return new Promise(resolve => {
-                if (this.tableData && !this.tcsdId) {
-                    this.$message("请先保存表格数据");
-                    return resolve(false);
-                }
+                // if (this.tableData && !this.tcsdId) {
+                //     this.$message("请先保存表格数据");
+                //     return resolve(false);
+                // }
 
-                let params = {
-                    type: this.type,
-                    vtrInfo: {
-                        ...this.datas,
-                        modelId: this.curModelId
-                    }
-                };
+                const params = this.getSaveParams();
+                this.setHaveDataStatus(params.vtrInfo);
 
-                if (this.characteristics) {
-                    params.vtrInfo.characteristics = this.characteristics;
-                }
-
-                this.tcsdId &&
-                    (params.tcsdId = this.tcsdId) &&
-                    (params.vtrInfo.tcsdId = this.tcsdId);
-
-                model.tractionSave(params).then(res => {
-                    if (!res) return;
-                    this.$message({
-                        message: "保存成功",
-                        type: "success"
-                    });
-
-                    this.isHaveData = false;
-                    for (let i in params) {
-                        if (params[i]) {
-                            this.isHaveData = true;
-                            break;
-                        }
-                    }
-
-                    resolve(true);
-                });
+                resolve(true);
             });
+        },
+
+        setHaveDataStatus(params = {}) {
+            this.isHaveData = false;
+            for (let i in params) {
+                if (i === "id" || i === "modelId") continue;
+                if (params[i]) {
+                    this.isHaveData = true;
+                    break;
+                }
+            }
+        },
+
+        getSaveParams() {
+            let params = {
+                type: this.type,
+                vtrInfo: {
+                    ...this.datas,
+                    modelId: this.curModelId
+                }
+            };
+
+            if (this.characteristics) {
+                params.vtrInfo.characteristics = this.characteristics;
+            }
+
+            this.tcsdId &&
+                (params.tcsdId = this.tcsdId) &&
+                (params.vtrInfo.tcsdId = this.tcsdId);
+
+            return params;
+        },
+
+        saveDataToServe() {
+            const params = this.getSaveParams();
+            return model.tractionSave(params);
         }
     }
 };

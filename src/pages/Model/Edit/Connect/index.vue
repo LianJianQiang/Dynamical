@@ -195,7 +195,7 @@
                     type="primary"
                     @click="submitForm()"
                 >保存</el-button>
-                <el-button class="btn-xl" @click="resetForm">重置</el-button>
+                <el-button class="btn-xl" @click="clearData">清空</el-button>
             </el-col>
         </el-row>
     </div>
@@ -208,8 +208,10 @@ import Img from "assets/images";
 import {
     MODEL_TREE_TYPE,
     CONNECT_ELE_DICT,
+    CONNECT_ELE_FIELD_DICT,
     CAR_ELE_DICT
 } from "common/constants";
+
 // import { filterJson } from "utils/util";
 import { model } from "api";
 
@@ -341,7 +343,6 @@ export default {
         // 保存下拉框的数据
         saveDropDownData(params) {
             let { datas, parent, ele } = params;
-
             const { xType, tcsdId } = datas;
 
             if (ele === "diy1" || ele === "diy2") {
@@ -358,6 +359,11 @@ export default {
                 }
             } else {
                 this[parent] = { ...this[parent], ...datas };
+                CONNECT_ELE_FIELD_DICT[ele].map(item => {
+                    if (datas[item] !== 0 && !datas[item]) {
+                        delete this[parent][item];
+                    }
+                });
             }
 
             // 保存已定义的元件列表，图形显示使用
@@ -435,9 +441,20 @@ export default {
         /**
          * 取消输入
          */
-        resetForm: function() {
-            this.frontData = { ...this.cacheFrontData };
-            this.backData = { ...this.cacheBackData };
+        clearData: function() {
+            const { frontData, backData } = this;
+            this.frontData = {
+                id: frontData.id,
+                carNum: frontData.carNum,
+                faceType: frontData.faceType,
+                modelId: frontData.modelId
+            };
+            this.backData = {
+                id: backData.id,
+                carNum: backData.carNum,
+                faceType: backData.faceType,
+                modelId: backData.modelId
+            };
         }
     },
 

@@ -2,10 +2,11 @@
 <template>
     <DropDown
         :save="save"
-        :resetData="resetData"
+        :resetData="clearData"
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
+        :cancel="cancel"
     >
         <!-- <div class="dropPanel"> -->
         <el-form ref="form" label-position="left" :model="formData" label-width="160px">

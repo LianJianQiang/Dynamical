@@ -57,7 +57,7 @@
         </div>
         <div :class="$style.footer">
             <el-button class="btn-xl" type="primary" @click="save">保存</el-button>
-            <el-button class="btn-xl" @click="resetData">重置</el-button>
+            <el-button class="btn-xl" @click="resetData">清空</el-button>
         </div>
 
         <NameDialog

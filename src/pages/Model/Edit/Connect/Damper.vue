@@ -5,12 +5,18 @@
         :placeholder="placeholder"
         :title="$attrs.title"
         :isHaveData="isHaveData"
-        :resetData="resetData"
+        :resetData="clearData"
+        :cancel="cancel"
     >
         <div :class="$style.root">
             <div class="listWrap">
                 <span :class="$style.numLabel">数量</span>
-                <el-input-number :class="$style.inpNum" :controls="false" v-model="jzqNum" :min="0"></el-input-number>
+                <el-input-number
+                    :class="$style.inpNum"
+                    :controls="false"
+                    v-model="formData.jzqNum"
+                    :min="0"
+                ></el-input-number>
             </div>
             <div :class="$style.tableWrap">
                 <h4>特征曲线</h4>
@@ -35,14 +41,15 @@ import { getObjFromStr } from "utils/util";
 
 import mixin from "./mixin/mixin";
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
+import utilMixin from "./mixin/util.mixin";
 
 export default {
     name: "Damper",
-    mixins: [mixin, mixinSaveFunc],
+    mixins: [mixin, mixinSaveFunc, utilMixin],
 
     data() {
         return {
-            jzqNum: null,
+            formData: {},
             tcsdData: {}
         };
     },
@@ -57,10 +64,16 @@ export default {
 
     watch: {
         dataSource(val, oldVal) {
-            const { jzqNum, tcsdId } = val;
-            this.jzqNum = jzqNum;
-            this.cacheJzqNum = jzqNum;
-            if (val.tcsdId && val.tcsdId !== oldVal.tcsdId) {
+            const { jzqNum } = val;
+
+            this.formData = { jzqNum };
+            this.cacheFormData = { jzqNum };
+
+            if (
+                val.tcsdId &&
+                val.tcsdId !== oldVal.tcsdId &&
+                val.tcsdId !== this.curveId
+            ) {
                 this.getTcsdDataById(val.tcsdId);
             }
         }
@@ -68,43 +81,57 @@ export default {
 
     methods: {
         getTcsdDataById(id) {
+            if (!id || id === this.cacheTcsdId) return;
             model.tractionLiView({ id }).then(res => {
                 let data = res.data || {};
                 if (data.tcsdData) {
                     data = { ...data, tcsdData: getObjFromStr(data.tcsdData) };
                 }
                 this.tcsdData = data;
+                this.cacheTcsdId = id;
             });
         },
 
-        resetData() {
-            const { jzqNum, tcsdId } = this.dataSource;
-            this.jzqNum = jzqNum;
-            this.cacheJzqNum = jzqNum;
+        cancel() {
+            this.formData = { ...this.dataSource };
+            this.setIsHaveData(this.formData);
+            this.getTcsdDataById(this.dataSource.tcsdId);
+        },
 
-            if (tcsdId) {
-                this.getTcsdDataById(tcsdId);
-            } else {
-                this.tcsdData = { tcsdData: [] };
-            }
+        clearData() {
+            this.formData = {};
+            this.cacheFormData = {};
+            this.tcsdData = { tcsdData: [] };
+
+            this.tableData = null;
+            this.curveId = "";
+            this.isSaved = false;
+            this.isHaveData = false;
+
+            this.$refs.editTable && this.$refs.editTable.clearData();
         },
 
         // 保存数据
         onSaveData() {
             let datas = {
-                jzqNum: this.jzqNum,
+                jzqNum: this.formData.jzqNum,
                 jzqTcsdId: this.curveId
             };
 
-            this.isHaveData = false;
-            for (let i in datas) {
-                if (datas[i]) {
-                    this.isHaveData = true;
-                    break;
-                }
-            }
-
+            this.setIsHaveData(datas);
             this.saveData({ datas });
+        },
+
+        // 保存数据
+        async save() {
+            if (!this.isSaved) {
+                await this.$refs.editTable.tractionLiSave();
+            }
+            return new Promise((resolve, reject) => {
+                this.onSaveData();
+
+                resolve(true);
+            });
         }
     }
 };

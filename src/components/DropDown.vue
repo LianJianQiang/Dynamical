@@ -11,12 +11,13 @@
             :with-header="false"
             custom-class="editArgsDrawer"
             :title="title"
+            @close="cancel"
         >
             <div class="editArgsDrawerBody">
                 <slot></slot>
                 <div class="subBtnWrap">
                     <el-button class="btn-default" @click="clickSave">应用</el-button>
-                    <el-button class="btn-default" @click="clickReset">重置</el-button>
+                    <el-button class="btn-default" @click="clickReset">清空</el-button>
                     <el-button class="btn-default" @click="clickCancel">取消</el-button>
                 </div>
             </div>

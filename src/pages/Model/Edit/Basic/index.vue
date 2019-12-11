@@ -38,7 +38,12 @@
                         </el-col>
                         <el-col :span="10" :offset="2">
                             <el-form-item label="牵引力特征曲线:">
-                                <Traction parentField="no1" :saveData="saveTractionData" type="1" />
+                                <Traction
+                                    ref="tractionNo1"
+                                    parentField="no1"
+                                    :saveData="saveTractionData"
+                                    type="1"
+                                />
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
@@ -114,6 +119,7 @@
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="牵引力特征曲线:">
                                     <Traction
+                                        ref="tractionNo2"
                                         parentField="no2"
                                         :saveData="saveTractionData"
                                         type="2"
@@ -160,7 +166,7 @@
                         type="primary"
                         @click="submitForm"
                     >保存</el-button>
-                    <el-button class="btn-xl" @click="resetForm">重置</el-button>
+                    <el-button class="btn-xl" @click="resetForm">清空</el-button>
                 </el-col>
             </el-row>
         </div>
@@ -170,7 +176,7 @@
 <script>
 import { mapActions, mapState } from "vuex";
 
-import _util from "utils/util";
+// import _util from "utils/util";
 
 import { model } from "api";
 
@@ -205,7 +211,7 @@ export default {
          */
         return {
             no1: {},
-            no2: {},
+            no2: {}
 
             // rules: {
             //     num: [{ validator: validateField, trigger: "blur" }],
@@ -232,15 +238,27 @@ export default {
                 if (!res) return;
 
                 let { data = {} } = res;
-                const no1 = data.ve1 || {};
-                const no2 = data.ve2 || {};
+                this.initDataCb(data);
+                // const no1 = data.ve1 || {};
+                // const no2 = data.ve2 || {};
 
-                this.no1 = no1;
-                this.no2 = no2;
+                // this.no1 = no1;
+                // this.no2 = no2;
 
-                this.cacheNo1 = { ...no1 };
-                this.cacheNo2 = { ...no2 };
+                // this.cacheNo1 = { ...no1 };
+                // this.cacheNo2 = { ...no2 };
             });
+        },
+
+        initDataCb(data = {}) {
+            const no1 = data.ve1 || {};
+            const no2 = data.ve2 || {};
+
+            this.no1 = no1;
+            this.no2 = no2;
+
+            this.cacheNo1 = { ...no1 };
+            this.cacheNo2 = { ...no2 };
         },
 
         /**
@@ -253,28 +271,7 @@ export default {
             ])
                 .then(([val1, val2]) => {
                     if (val1 && val2) {
-                        model
-                            .vehicleBasicEdit({
-                                ve1Info: {
-                                    ...this.no1,
-                                    modelId: this.curModelId
-                                },
-                                ve2Info: {
-                                    ...this.no2,
-                                    modelId: this.curModelId
-                                }
-                            })
-                            .then(res => {
-                                if (!res) return;
-                                let { data = {} } = res;
-
-                                this.no1 = { ...this.no1, id: data.v1Id };
-                                this.no2 = { ...this.no2, id: data.v2Id };
-
-                                // 基本参数变更以后，更新treeData
-                                this.getModelData(this.curModelId);
-                                this.$message("保存成功");
-                            });
+                        this.saveDataToServe();
                     }
                 })
                 .catch(err => {
@@ -282,11 +279,57 @@ export default {
                 });
         },
 
+        saveChildCompData() {
+            return Promise.all([
+                this.$refs.tractionNo1.saveDataToServe(),
+                this.$refs.tractionNo2.saveDataToServe()
+            ]);
+        },
+
+        async saveDataToServe() {
+            const childSaveResult = await this.saveChildCompData();
+            if (
+                childSaveResult[0].code !== "200" ||
+                childSaveResult[1].code !== "200"
+            ) {
+                return;
+            }
+
+            model
+                .vehicleBasicEdit({
+                    ve1Info: {
+                        ...this.no1,
+                        modelId: this.curModelId
+                    },
+                    ve2Info: {
+                        ...this.no2,
+                        modelId: this.curModelId
+                    }
+                })
+                .then(res => {
+                    if (!res) return;
+                    let { data = {} } = res;
+
+                    this.no1 = { ...this.no1, id: data.v1Id };
+                    this.no2 = { ...this.no2, id: data.v2Id };
+
+                    // 基本参数变更以后，更新treeData
+                    this.getModelData(this.curModelId);
+                    this.$message("保存成功");
+                });
+        },
+
         /**
          * 取消输入
          */
         resetForm: function() {
-            this.initData();
+            let initData = {
+                ve1: { id: this.no1.id },
+                ve2: { id: this.no2.id }
+            };
+            this.initDataCb(initData);
+            this.$refs.tractionNo1.clearData();
+            this.$refs.tractionNo2.clearData();
         },
 
         saveTractionData(params) {
