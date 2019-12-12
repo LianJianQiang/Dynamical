@@ -5,19 +5,27 @@
             <el-row class="listWrap">
                 <el-form ref="form" label-position="left" :model="datas" label-width="160px">
                     <el-form-item label="整列最大载客工况总质量">
-                        <el-input-number :controls="false" v-model="datas.massMax"></el-input-number>
+                        <input-number-wrap suffix="kg">
+                            <el-input-number :controls="false" v-model="datas.massMax"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="整列车回转质量">
-                        <el-input-number :controls="false" v-model="datas.massRotating"></el-input-number>
+                        <input-number-wrap suffix="kg">
+                            <el-input-number :controls="false" v-model="datas.massRotating"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="整列车牵引电机数量">
                         <el-input-number :controls="false" v-model="datas.motorNum"></el-input-number>
                     </el-form-item>
                     <el-form-item label="牵引指令下达后的延长时间">
-                        <el-input-number :controls="false" v-model="datas.delayTime"></el-input-number>
+                        <input-number-wrap suffix="s">
+                            <el-input-number :controls="false" v-model="datas.delayTime"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="冲击率">
-                        <el-input-number :controls="false" v-model="datas.rampFun"></el-input-number>
+                        <input-number-wrap suffix="m/s³">
+                            <el-input-number :controls="false" v-model="datas.rampFun"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -27,14 +35,14 @@
                     :value="characteristics===1"
                     :label="1"
                     @change="()=>onCheckboxChange(1)"
-                >牵引力曲线自定义1</el-checkbox>
+                >整列车牵引力曲线自定义1</el-checkbox>
 
                 <ul :class="$style.curveInfo">
                     <el-form :model="datas">
                         <li>
                             <span>恒转速区：</span>
                             <span>
-                                速度0-
+                                速度(km/h) 0-
                                 <el-form-item>
                                     <el-input-number
                                         :controls="false"
@@ -44,7 +52,7 @@
                                 </el-form-item>
                             </span>
                             <span style="margin-left:10px">
-                                F
+                                F(N)
                                 <el-form-item>
                                     <el-input-number
                                         :controls="false"
@@ -57,7 +65,7 @@
                         <li>
                             <span>恒功率区:</span>
                             <span>
-                                速度
+                                速度(km/h)
                                 <el-form-item>
                                     <el-input-number
                                         :disabled="true"
@@ -75,7 +83,7 @@
                                 </el-form-item>
                             </span>
                             <span>
-                                F.v²
+                                F.v²(N.(m/s)²)
                                 <el-form-item>
                                     <el-input-number
                                         :controls="false"
@@ -86,9 +94,9 @@
                             </span>
                         </li>
                         <li>
-                            <span>降速区：</span>
+                            <span>降功区：</span>
                             <span>
-                                速度
+                                速度(km/h)
                                 <el-form-item>
                                     <el-input-number
                                         :disabled="true"
@@ -125,7 +133,7 @@
                     :value="characteristics===2"
                     :label="2"
                     @change="()=>onCheckboxChange(2)"
-                >牵引力曲线自定义2</el-checkbox>
+                >整列车牵引力曲线自定义2</el-checkbox>
 
                 <div :class="$style.curveInfo">
                     <EditTable

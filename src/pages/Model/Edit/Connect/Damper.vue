@@ -21,6 +21,8 @@
             <div :class="$style.tableWrap">
                 <h4>特征曲线</h4>
                 <EditTable
+                    xUnit="m/s"
+                    fxUnit="N"
                     ref="editTable"
                     :type="type"
                     :onSaveCb="onSaveCb"

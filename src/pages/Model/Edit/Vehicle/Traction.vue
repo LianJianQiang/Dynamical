@@ -41,13 +41,23 @@
                     label-width="120px"
                 >
                     <el-form-item label="牵引力">
-                        <el-input-number :controls="false" v-model="formData.tracf" :min="0"></el-input-number>
+                        <input-number-wrap suffix="N">
+                            <el-input-number :controls="false" v-model="formData.tracf" :min="0"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="延迟时间">
-                        <el-input-number :controls="false" v-model="formData.delayTime" :min="0"></el-input-number>
+                        <input-number-wrap suffix="s">
+                            <el-input-number
+                                :controls="false"
+                                v-model="formData.delayTime"
+                                :min="0"
+                            ></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="牵引力加载时间">
-                        <el-input-number :controls="false" v-model="formData.loadTime" :min="0"></el-input-number>
+                        <input-number-wrap suffix="s">
+                            <el-input-number :controls="false" v-model="formData.loadTime" :min="0"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-form>
             </el-row>

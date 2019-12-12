@@ -1,7 +1,7 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.searchWrap">
-            <div :class="$style.title">查询条件</div>
+            <div :class="$style.title">计算条件设置</div>
             <el-form ref="form" :model="searchForm" label-width="120px">
                 <el-row>
                     <el-col :span="8">
@@ -88,29 +88,29 @@ import Chart from "./Charts";
 
 import Cascader from "./Cascader";
 
-const varifyArgs = [
-    { key: "initialLocation", msg: "请输入初始位置" },
-    { key: "integralTimes", msg: "请输入积分时长" },
-    { key: "integralStep", msg: "请输入积分步长" }
-    // { key: "ve", msg: "请选择显示参数" },
-    // { key: "ca", msg: "请选择显示参数" },
-    // { key: "code", msg: "请选择显示参数" }
-];
+// const varifyArgs = [
+//     { key: "initialLocation", msg: "请输入初始位置" },
+//     { key: "integralTimes", msg: "请输入积分时长" },
+//     { key: "integralStep", msg: "请输入积分步长" }
+//     // { key: "ve", msg: "请选择显示参数" },
+//     // { key: "ca", msg: "请选择显示参数" },
+//     // { key: "code", msg: "请选择显示参数" }
+// ];
 
-const varifyArgsFns = (arg = {}, obj) => {
-    const { key, msg } = arg;
-    if (!key) return true;
+// const varifyArgsFns = (arg = {}, obj) => {
+//     const { key, msg } = arg;
+//     if (!key) return true;
 
-    if (!obj[key]) {
-        ELEMENT.Message({
-            message: msg || "请输入正确的查询条件",
-            type: "error"
-        });
-        return false;
-    }
+//     if (!obj[key]) {
+//         ELEMENT.Message({
+//             message: msg || "请输入正确的计算条件",
+//             type: "error"
+//         });
+//         return false;
+//     }
 
-    return true;
-};
+//     return true;
+// };
 
 export default {
     name: "Report",

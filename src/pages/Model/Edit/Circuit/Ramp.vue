@@ -67,7 +67,7 @@
                                         ></el-input-number>
                                     </template>-->
                                 </el-table-column>
-                                <el-table-column prop="x" label="X" align="center">
+                                <el-table-column prop="x" label="x (m)" align="center">
                                     <template slot-scope="scope">
                                         <el-input-number
                                             v-model="scope.row.x"
@@ -77,7 +77,7 @@
                                         ></el-input-number>
                                     </template>
                                 </el-table-column>
-                                <el-table-column prop="y" label="Y" align="center">
+                                <el-table-column prop="y" label="y (m)" align="center">
                                     <template slot-scope="scope">
                                         <el-input-number
                                             v-model="scope.row.y"

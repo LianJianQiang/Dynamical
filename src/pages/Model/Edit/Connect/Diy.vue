@@ -21,7 +21,7 @@
                     </el-select>
                 </div>
                 <div>
-                    <label>纵坐标</label>力
+                    <label>纵坐标</label>力 (单位：N)
                 </div>
             </div>
             <div :class="$style.tableWrap">
@@ -51,9 +51,9 @@ import { getObjFromStr } from "utils/util";
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
 
 const options = [
-    { label: "位移", value: "1" },
-    { label: "速度", value: "2" },
-    { label: "时间", value: "3" }
+    { label: "位移(m)", value: "1" },
+    { label: "速度(m/s)", value: "2" },
+    { label: "时间(s)", value: "3" }
 ];
 
 export default {

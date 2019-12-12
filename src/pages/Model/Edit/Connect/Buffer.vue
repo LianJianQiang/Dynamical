@@ -14,7 +14,7 @@
                     :value="formData.coupdef===1"
                     :label="1"
                     @change="onCheckboxChange(1)"
-                >牵引力曲线自定义1</el-checkbox>
+                >描点法设置</el-checkbox>
                 <el-form
                     class="clearfix"
                     ref="form"
@@ -33,13 +33,19 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="行程">
-                        <el-input-number :controls="false" v-model="formData.couRoute"></el-input-number>
+                        <input-number-wrap suffix="m">
+                            <el-input-number :controls="false" v-model="formData.couRoute"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="间隙">
-                        <el-input-number :controls="false" v-model="formData.couGap"></el-input-number>
+                        <input-number-wrap suffix="m">
+                            <el-input-number :controls="false" v-model="formData.couGap"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="包络线间震动的阻尼">
-                        <el-input-number :controls="false" v-model="formData.couDeboost"></el-input-number>
+                        <input-number-wrap suffix="N.s/m">
+                            <el-input-number :controls="false" v-model="formData.couDeboost"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -80,7 +86,7 @@
                         :value="formData.coupdef === 3"
                         :label="3"
                         @change="onCheckboxChange(3)"
-                    >缓冲器本构</el-checkbox>
+                    >缓冲器本构 型号选择</el-checkbox>
                     <el-input-number
                         class="flr"
                         :controls="false"
@@ -90,7 +96,9 @@
                 </div>
                 <el-form ref="form" label-position="left" :model="formData" label-width="120px">
                     <el-form-item label="钩缓质量" label-position="left">
-                        <el-input-number :controls="false" v-model="formData.couQuality"></el-input-number>
+                        <input-number-wrap suffix="kg">
+                            <el-input-number :controls="false" v-model="formData.couQuality"></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-form>
             </el-row>

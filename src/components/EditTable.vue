@@ -15,7 +15,7 @@
             ref="elTable"
         >
             <el-table-column prop="number" label="序号" align="center" />
-            <el-table-column prop="x" label="x" align="center">
+            <el-table-column prop="x" :label="xLabel" align="center">
                 <template slot-scope="scope">
                     <el-input-number
                         :controls="false"
@@ -25,7 +25,7 @@
                     ></el-input-number>
                 </template>
             </el-table-column>
-            <el-table-column prop="f" label="fx" align="center">
+            <el-table-column prop="f" :label="fxLabel" align="center">
                 <template slot-scope="scope">
                     <el-input-number
                         v-model="scope.row.f"
@@ -108,6 +108,8 @@ export default {
         NameDialog
     },
     props: {
+        xUnit: { type: String },
+        fxUnit: { type: String },
         type: {
             // 如不传，则打开和保存会调用props里到方法
             type: Number
@@ -167,6 +169,14 @@ export default {
         onOpenCurveCb: {
             type: Function,
             default: () => {}
+        }
+    },
+    computed: {
+        xLabel() {
+            return `x (${this.xUnit || "km/h"})`;
+        },
+        fxLabel() {
+            return `f(x) (${this.fxUnit || "N"})`;
         }
     },
     watch: {

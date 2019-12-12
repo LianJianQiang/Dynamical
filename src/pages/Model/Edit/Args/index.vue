@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div :class="$style.connectWrap" v-if="descList.length > 0">
-                <div :class="$style.title">车辆连接系统</div>
+                <div :class="$style.title">车间连接系统</div>
                 <div :class="$style.desc" class="clearfix" v-for="item in descList" :key="item.id">
                     <span class="fll">{{item.coupname}}</span>
                     <div :class="$style.cont">
@@ -230,7 +230,7 @@ export default {
             data.map(item => {
                 let arr = [];
                 for (let i in TEMP_FIELD_DICT) {
-                    if (item[i] || item[i] === 0) {
+                    if (item[i]) {
                         let str = TEMP_FIELD_DICT[i].name + ": ";
                         if (TEMP_FIELD_DICT[i].dict) {
                             str += TEMP_FIELD_DICT[i].dict[item[i]];

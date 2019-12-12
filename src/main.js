@@ -2,6 +2,8 @@ import '@babel/polyfill';
 import Es6Promise from 'es6-promise'
 import Vue from 'vue';
 
+import InputNumberWrap from 'components/InputNumber';
+
 import App from './App.vue';
 import router from './router.js'
 import store from './store'
@@ -18,6 +20,8 @@ import './plugins/upload';
 import 'styles/index.scss';
 
 Es6Promise.polyfill();
+
+Vue.component('inputNumberWrap', InputNumberWrap)
 
 Vue.config.productionTip = false;
 

@@ -5,17 +5,23 @@
             <el-form ref="vehicleForm" :key="formKey" :model="formData" label-width="120px">
                 <el-col :span="10">
                     <el-form-item label="车辆质量:" prop="m">
-                        <el-input-number :controls="false" v-model="formData.m" clearable></el-input-number>
+                        <input-number-wrap suffix="kg">
+                            <el-input-number :controls="false" v-model="formData.m" clearable></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="车辆长度:" prop="l">
-                        <el-input-number :controls="false" v-model="formData.length" clearable></el-input-number>
+                        <input-number-wrap suffix="m">
+                            <el-input-number :controls="false" v-model="formData.length" clearable></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="车体刚度:" prop="kcar">
-                        <el-input-number :controls="false" v-model="formData.kcar" clearable></el-input-number>
+                        <input-number-wrap suffix="N/m">
+                            <el-input-number :controls="false" v-model="formData.kcar" clearable></el-input-number>
+                        </input-number-wrap>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="2">
@@ -30,7 +36,7 @@
                 </el-col>
                 <el-col :span="10" :offset="2">
                     <el-form-item label="制动系统:">
-                        <Brakes ref="brakes" title="牵引力系统" />
+                        <Brakes ref="brakes" title="制动力系统" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">

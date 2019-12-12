@@ -16,7 +16,7 @@
                     <el-input v-model="scope.row.order" @change="dataChange"></el-input>
                 </template>
             </el-table-column>
-            <el-table-column label="行程起止点△x">
+            <el-table-column label="行程起止点∆x">
                 <el-table-column prop="start" label="起点" width="80">
                     <template slot-scope="scope">
                         <el-input v-model="scope.row.start" @change="dataChange"></el-input>

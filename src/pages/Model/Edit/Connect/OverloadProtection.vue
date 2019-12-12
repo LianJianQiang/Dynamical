@@ -11,10 +11,14 @@
         <!-- <div class="dropPanel"> -->
         <el-form ref="form" label-position="left" :model="formData" label-width="160px">
             <el-form-item label="塑性变形量">
-                <el-input-number :controls="false" v-model="formData.sprot" :min="0"></el-input-number>
+                <input-number-wrap suffix="m">
+                    <el-input-number :controls="false" v-model="formData.sprot" :min="0"></el-input-number>
+                </input-number-wrap>
             </el-form-item>
             <el-form-item label="作用力">
-                <el-input-number :controls="false" v-model="formData.fprot" :min="0"></el-input-number>
+                <input-number-wrap suffix="N">
+                    <el-input-number :controls="false" v-model="formData.fprot" :min="0"></el-input-number>
+                </input-number-wrap>
             </el-form-item>
         </el-form>
         <!-- </div> -->

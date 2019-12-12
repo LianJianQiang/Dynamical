@@ -2,21 +2,21 @@ import Icon from 'assets/icon';
 
 export const MENU_LIST = [
     {
-        name: '模型建设',
+        name: '模型搭建',
         key: 'model',
         icon: Icon['model'],
         activeIcon: Icon['modelActive'],
         url: '/page/model'
     },
     {
-        name: '参数配置',
+        name: '模型参数库',
         key: 'argcfg',
         icon: Icon['arg'],
         activeIcon: Icon['argActive'],
         url: '/page/arg-cfg'
     },
     {
-        name: '计算报告',
+        name: '计算与报告',
         key: 'report',
         icon: Icon['report'],
         activeIcon: Icon['reportActive'],

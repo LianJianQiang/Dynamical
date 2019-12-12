@@ -11,7 +11,9 @@
         <!-- <div class="dropPanel"> -->
         <el-form ref="form" label-position="left" :model="formData" label-width="160px">
             <el-form-item label="风挡力">
-                <el-input-number :controls="false" v-model="formData.fdlFront" :min="0"></el-input-number>
+                <input-number-wrap suffix="N">
+                    <el-input-number :controls="false" v-model="formData.fdlFront" :min="0"></el-input-number>
+                </input-number-wrap>
             </el-form-item>
         </el-form>
         <!-- </div> -->

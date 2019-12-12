@@ -44,9 +44,14 @@ import { mapActions, mapGetters, mapState } from "vuex";
 import { MODEL_TREE_TYPE } from "common/constants";
 
 import { model } from "api";
-import { getUserIdAndType, isNumZhEn } from "utils/util";
+import { getUserIdAndType } from "utils/util";
 
 import Tree from "./Tree";
+
+const verifyModelName = (value) => {
+    let reg = /^[A-Za-z0-9\u4e00-\u9fa5_-]+$/;
+    return reg.test(value);
+}
 
 export default {
     name: "Model",
@@ -136,8 +141,8 @@ export default {
          */
         validatorModelname: function(value) {
             if (!value) return "请输入名称";
-            if (!isNumZhEn(value)) {
-                return "名称为只能包含汉字、数字、字母";
+            if (!verifyModelName(value)) {
+                return "名称为只能包含汉字、数字、字母、_、-";
             }
             return true;
         },

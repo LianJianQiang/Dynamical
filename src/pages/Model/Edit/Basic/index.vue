@@ -5,7 +5,7 @@
             <div>
                 <h4>第一列</h4>
                 <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no1Form" :model="no1" label-width="120px">
+                    <el-form ref="no1Form" :model="no1" label-width="170px">
                         <el-col :span="10">
                             <el-form-item label="车辆数量:" prop="num">
                                 <el-input-number :controls="false" v-model="no1.num" clearable></el-input-number>
@@ -18,22 +18,30 @@
                         </el-col>-->
                         <el-col :span="10" :offset="2">
                             <el-form-item label="速度:" prop="v">
-                                <el-input-number :controls="false" v-model="no1.v" clearable></el-input-number>
+                                <input-number-wrap suffix="km/h">
+                                    <el-input-number :controls="false" v-model="no1.v" clearable></el-input-number>
+                                </input-number-wrap>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
-                            <el-form-item label="起动阻力:" prop="qdf">
+                            <el-form-item label="单位起动基本阻力:" prop="qdf">
                                 <el-input-number :controls="false" v-model="no1.qdf" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10" :offset="2">
-                            <el-form-item label="brakes(u):" prop="mu">
+                            <el-form-item label="停放制动系数(u):" prop="mu">
                                 <el-input-number :controls="false" v-model="no1.mu" clearable></el-input-number>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
-                            <el-form-item label="作用速度:" prop="vlimit">
-                                <el-input-number :controls="false" v-model="no1.vlimit" clearable></el-input-number>
+                            <el-form-item label="起动基本作用的速度:" prop="vlimit">
+                                <input-number-wrap suffix="km/h">
+                                    <el-input-number
+                                        :controls="false"
+                                        v-model="no1.vlimit"
+                                        clearable
+                                    ></el-input-number>
+                                </input-number-wrap>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10" :offset="2">
@@ -47,7 +55,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
-                            <el-form-item label="基本运行阻力:">
+                            <el-form-item label="单位基本运行阻力(N/kN):">
                                 <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                     <el-form-item label="A:">
                                         <el-input-number
@@ -80,7 +88,7 @@
             <div>
                 <h4>第二列</h4>
                 <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no2Form" :model="no2" label-width="120px">
+                    <el-form ref="no2Form" :model="no2" label-width="170px">
                         <el-row>
                             <el-col :span="10">
                                 <el-form-item label="车辆数量:" prop="num">
@@ -94,26 +102,34 @@
                             </el-col>-->
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="速度:" prop="v">
-                                    <el-input-number :controls="false" v-model="no2.v" clearable></el-input-number>
+                                    <input-number-wrap suffix="km/h">
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no2.v"
+                                            clearable
+                                        ></el-input-number>
+                                    </input-number-wrap>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
-                                <el-form-item label="起动阻力:" prop="qdf">
+                                <el-form-item label="单位起动基本阻力:" prop="qdf">
                                     <el-input-number :controls="false" v-model="no2.qdf" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10" :offset="2">
-                                <el-form-item label="brakes(u):" prop="mu">
+                                <el-form-item label="停放制动系数(u):" prop="mu">
                                     <el-input-number :controls="false" v-model="no2.mu" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
-                                <el-form-item label="作用速度:" prop="vlimit">
-                                    <el-input-number
-                                        :controls="false"
-                                        v-model="no2.vlimit"
-                                        clearable
-                                    ></el-input-number>
+                                <el-form-item label="起动基本作用的速度:" prop="vlimit">
+                                    <input-number-wrap suffix="km/h">
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no2.vlimit"
+                                            clearable
+                                        ></el-input-number>
+                                    </input-number-wrap>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10" :offset="2">
@@ -127,7 +143,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
-                                <el-form-item label="基本运行阻力:">
+                                <el-form-item label="单位基本运行阻力(N/kN):">
                                     <el-col :span="7" :offset="1" :class="$style.basicReLabel">
                                         <el-form-item label="A:">
                                             <el-input-number

@@ -8,6 +8,8 @@
             <!-- 曲线xy值表格 -->
             <div :class="$style.chartTableWrap">
                 <EditTable
+                    xUnit="m"
+                    fxUnit="N"
                     :showSave="false"
                     :showOpen="false"
                     :dataSource="pointData"
@@ -84,7 +86,7 @@ let chartsOptions = {
 const interList = [{ id: "line", name: "line" }];
 
 const defaultPointData = [
-    { name: "预加载段", value: "", key: "preMount" },
+    { name: "预加载", value: "", key: "preMount" },
     { name: "开始加载", value: "", key: "beforeMount" },
     { name: "加载", value: "", key: "mount" },
     { name: "开始卸载", value: "", key: "beforeDestory" },
