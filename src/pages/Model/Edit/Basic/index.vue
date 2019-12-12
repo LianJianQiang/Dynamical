@@ -344,6 +344,7 @@ export default {
                 ve2: { id: this.no2.id }
             };
             this.initDataCb(initData);
+
             this.$refs.tractionNo1.clearData();
             this.$refs.tractionNo2.clearData();
         },

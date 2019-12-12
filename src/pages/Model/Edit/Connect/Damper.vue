@@ -43,11 +43,11 @@ import { getObjFromStr } from "utils/util";
 
 import mixin from "./mixin/mixin";
 import mixinSaveFunc from "./mixin/mixinSaveFunc";
-import utilMixin from "./mixin/util.mixin";
+import mixinData from "./mixin/mixinData";
 
 export default {
     name: "Damper",
-    mixins: [mixin, mixinSaveFunc, utilMixin],
+    mixins: [mixin, mixinData, mixinSaveFunc],
 
     data() {
         return {
@@ -70,6 +70,7 @@ export default {
 
             this.formData = { jzqNum };
             this.cacheFormData = { jzqNum };
+            if (val.jzqNum || val.tcsdId) this.isHaveData = true;
 
             if (
                 val.tcsdId &&
@@ -83,20 +84,22 @@ export default {
 
     methods: {
         getTcsdDataById(id) {
-            if (!id || id === this.cacheTcsdId) return;
+            if (!id) return;
             model.tractionLiView({ id }).then(res => {
                 let data = res.data || {};
                 if (data.tcsdData) {
                     data = { ...data, tcsdData: getObjFromStr(data.tcsdData) };
                 }
                 this.tcsdData = data;
-                this.cacheTcsdId = id;
             });
         },
 
         cancel() {
             this.formData = { ...this.dataSource };
-            this.setIsHaveData(this.formData);
+            this.setIsHaveData({
+                jzqNum: this.dataSource.jzqNum,
+                jzqTcsdId: this.dataSource.tcsdId
+            });
             this.getTcsdDataById(this.dataSource.tcsdId);
         },
 

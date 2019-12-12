@@ -50,6 +50,7 @@
                     </el-form-item>
                     <el-form-item label="车间减振器:">
                         <Damper
+                            ref="damper1"
                             title="前端面-车间减振器"
                             eleKey="cjjz"
                             :type="1"
@@ -67,6 +68,7 @@
                     </el-form-item>
                     <el-form-item label="用户自定义:">
                         <Diy
+                            ref="diy11"
                             title="前端面-用户自定义"
                             eleKey="diy1"
                             field="diy1"
@@ -77,6 +79,7 @@
                     </el-form-item>
                     <el-form-item label="用户自定义:">
                         <Diy
+                            ref="diy12"
                             title="前端面-用户自定义"
                             eleKey="diy2"
                             field="diy2"
@@ -139,6 +142,7 @@
                     </el-form-item>
                     <el-form-item label="车间减振器:">
                         <Damper
+                            ref="damper2"
                             title="后端面-车间减振器"
                             eleKey="cjjz"
                             :type="1"
@@ -156,6 +160,7 @@
                     </el-form-item>
                     <el-form-item label="用户自定义:">
                         <Diy
+                            ref="diy21"
                             title="后端面-用户自定义"
                             eleKey="diy1"
                             field="diy1"
@@ -166,6 +171,7 @@
                     </el-form-item>
                     <el-form-item label="用户自定义:">
                         <Diy
+                            ref="diy22"
                             title="后端面-用户自定义"
                             eleKey="diy2"
                             field="diy2"
@@ -306,9 +312,21 @@ export default {
         // 复制端
         copyItem(item) {
             if (item === "left") {
-                this.frontData = { ...this.backData };
+                this.frontData = {
+                    ...this.backData,
+                    id: this.frontData.id,
+                    faceType: this.frontData.id,
+                    modelId: this.frontData.modelId,
+                    carNum: this.frontData.carNum
+                };
             } else {
-                this.backData = { ...this.frontData };
+                this.backData = {
+                    ...this.frontData,
+                    id: this.backData.id,
+                    faceType: this.backData.id,
+                    modelId: this.backData.modelId,
+                    carNum: this.backData.carNum
+                };
             }
             this.$message("操作成功");
         },
@@ -443,18 +461,41 @@ export default {
          */
         clearData: function() {
             const { frontData, backData } = this;
+
+            let newF = {};
+            let newB = {};
+
+            for (let i in CONNECT_ELE_FIELD_DICT) {
+                CONNECT_ELE_FIELD_DICT[i].map(item => {
+                    newF[item] = "";
+                    newB[item] = "";
+                });
+            }
+
             this.frontData = {
                 id: frontData.id,
                 carNum: frontData.carNum,
                 faceType: frontData.faceType,
-                modelId: frontData.modelId
+                modelId: frontData.modelId,
+                diy1: {},
+                diy2: {},
+                ...newF
             };
             this.backData = {
                 id: backData.id,
                 carNum: backData.carNum,
                 faceType: backData.faceType,
-                modelId: backData.modelId
+                modelId: backData.modelId,
+                diy1: {},
+                diy2: {},
+                ...newB
             };
+            this.$refs.diy11.clearData();
+            this.$refs.diy12.clearData();
+            this.$refs.diy21.clearData();
+            this.$refs.diy22.clearData();
+            this.$refs.damper1.clearData();
+            this.$refs.damper2.clearData();
         }
     },
 

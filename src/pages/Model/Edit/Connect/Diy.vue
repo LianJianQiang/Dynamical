@@ -6,6 +6,7 @@
         :title="$attrs.title"
         :isHaveData="isHaveData"
         :resetData="clearData"
+        :cancel="cancel"
     >
         <div :class="$style.root">
             <div :class="$style.axis" class="listWrap">
@@ -98,23 +99,9 @@ export default {
         }
     },
     watch: {
-        // dataSource(val, oldVal) {
-        //     const { xType, tcsdId, tcsdData } = val;
-        //     const haveTcsd = tcsdId && tcsdId !== "0";
-
-        //     if (xType || haveTcsd) this.isHaveData = true;
-
-        //     this.xType = xType;
-        //     this.tcsdData = { ...tcsdData };
-
-        //     if (haveTcsd && val.tcsdId !== oldVal.tcsdId) {
-        //         this.getTcsdDataById(val.tcsdId);
-        //     }
-        // },
-
         "dataSource.xType"(val) {
             if (val) this.isHaveData = true;
-            this.xType = val;
+            this.setXType(val);
         },
         "dataSource.tcsdId"(tcsdId, oldId) {
             const haveTcsd = tcsdId && tcsdId !== "0";
@@ -126,7 +113,7 @@ export default {
             }
         },
         "dataSource.tcsdData"(tcsdData) {
-            this.tcsdData = { ...tcsdData };
+            this.setTcsdData(tcsdData);
         }
         // xType(val) {
         //     if (val !== this.cacheXType) {
@@ -148,10 +135,21 @@ export default {
                 }
 
                 const xType = data.xType || data.xtype || "";
-                this.xType = xType;
-                this.cacheXType = xType;
-                this.tcsdData = { ...data, xType };
+                // this.xType = xType;
+                this.setXType(xType);
+                this.setTcsdData({ ...data, xType });
+                // this.tcsdData = { ...data, xType };
             });
+        },
+
+        setXType(xType) {
+            this.xType = xType;
+            this.cacheXType = xType;
+        },
+
+        setTcsdData(data) {
+            this.tcsdData = { ...data };
+            this.cacheTcsdData = { ...data };
         },
 
         clearData() {
@@ -162,7 +160,7 @@ export default {
             this.tableData = null;
 
             this.curveId = "";
-            this.isSaved = false;
+            this.isSaved = true;
             this.isHaveData = false;
 
             this.openCurveDataCache = {};
@@ -184,10 +182,31 @@ export default {
             // }
         },
 
+        cancel() {
+            // console.log(this.isSaved);
+            // if (!this.isSaved) {
+            //     this.xType = this.cacheXType;
+            //     this.tcsdData = this.cacheTcsdData;
+            //     if (this.xType || this.tcsdData.id) {
+            //         this.isHaveData = true;
+            //     }
+            // }
+            const { tcsdId, xType } = this.dataSource;
+            this.formData = { ...this.dataSource };
+
+            this.getTcsdDataById(this.dataSource.tcsdId);
+
+            if (tcsdId || xType) {
+                this.isHaveData = true;
+            }
+        },
+
         onOpenCurveCb(data) {
             const xType = data.xType || data.xtype || "";
-            this.xType = xType;
-            this.cacheXType = xType;
+            // this.xType = xType;
+            // this.cacheXType = xType;
+            this.setXType(xType);
+            this.setTcsdData(data);
             this.openCurveDataCache = { ...data };
         },
 

@@ -16,10 +16,10 @@
             <Scheme1 v-if="scheme === 'scheme1'" ref="scheme1" />
             <Scheme2 v-if="scheme === 'scheme2'" />
 
-            <div :class="$style.footer" v-if="scheme==='scheme1'">
+            <!-- <div :class="$style.footer" v-if="scheme==='scheme1'">
                 <el-button class="btn-xl" type="primary" @click="save">保存</el-button>
                 <el-button class="btn-xl" @click="cancel">取消</el-button>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

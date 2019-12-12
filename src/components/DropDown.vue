@@ -2,8 +2,8 @@
     <div :class="[$style.root]" class="cursor-p" ref="root">
         <div slot="reference" class="link inp-border" ref="reference" @click="visible = true">
             <span
-                :class="{[$style.haveData]:$attrs.isHaveData, [$style.noData]:!$attrs.isHaveData}"
-            >{{$attrs.isHaveData ? '参数设置（已设置）' : '参数设置（未设置）'}}</span>
+                :class="{[$style.haveData]:isHaveData, [$style.noData]:!isHaveData}"
+            >{{isHaveData ? '参数设置（已设置）' : '参数设置（未设置）'}}</span>
             <span class="triangle-down-6 downIcon"></span>
         </div>
         <el-drawer
@@ -38,6 +38,10 @@ export default {
         size: {
             type: String,
             default: "default"
+        },
+        isHaveData: {
+            type: Boolean,
+            default: false
         },
         title: {
             type: String,
@@ -74,7 +78,9 @@ export default {
         async clickSave() {
             // this.setVisible();
             let result = await this.save();
-            result && this.setVisible();
+            setTimeout(() => {
+                result && this.setVisible();
+            }, 10);
         },
         clickReset() {
             this.resetData();

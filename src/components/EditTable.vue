@@ -197,8 +197,6 @@ export default {
         clearData() {
             this.tableData = [];
             this.tcsd = {};
-
-            this.tableDataChange([]);
         },
 
         // 切换dialog状态

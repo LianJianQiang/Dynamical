@@ -257,10 +257,9 @@ export default {
 
             this.characteristics = "";
             this.tcsd = {};
-
-            this.$refs.editTable.clearData();
-
             this.setHaveDataStatus(newDatas);
+
+            this.$refs.editTable && this.$refs.editTable.clearData();
         },
 
         // 保存数据
