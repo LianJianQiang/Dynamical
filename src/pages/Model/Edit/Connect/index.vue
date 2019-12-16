@@ -406,7 +406,7 @@ export default {
          * 保存模型数据
          * 复制时，传入carNum和cb
          */
-        submitForm: function(args = {}) {
+        submitForm(args = {}) {
             let { carNum, saveCb, success } = args;
 
             let frontData = { ...this.frontData };
@@ -517,7 +517,7 @@ export default {
             }
         );
     },
-    beforeDestory() {
+    beforeDestroy() {
         msgCenter.unsubscribe(this.subToken);
     }
 };

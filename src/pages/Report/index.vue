@@ -21,16 +21,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="8">
-                        <el-form-item label="选择报告模版">
-                            <el-select v-model="searchForm.temp" placeholder>
-                                <el-option label="坡道救援(紧急制动)报告模版" value="temp1"></el-option>
-                                <el-option label="坡道救援(普通制动)报告模版" value="temp2"></el-option>
-                                <el-option label="冲击车挡报告模版" value="temp3"></el-option>
-                                <el-option label="连挂报告模版" value="temp4"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="8">
                         <el-form-item label="计算方式">
                             <el-select v-model="searchForm.compute" placeholder>
                                 <el-option label="计算方法1" value="compute1"></el-option>
@@ -45,16 +35,6 @@
                         type="primary"
                         @click="getCalculateResults"
                     >计算</span>
-                    <a
-                        v-if="allowCreateCharts"
-                        :class="[$style.btn,$style.exportBtn]"
-                        href="/api/resultrecord/exportReport"
-                    >生成报告</a>
-                    <a
-                        v-else
-                        :class="[$style.btn,$style.exportBtn]"
-                        @click="$message('请先进行计算')"
-                    >生成报告</a>
                     <span
                         :class="[$style.btn,$style.saveBtn]"
                         type="primary"
@@ -65,6 +45,17 @@
                         type="primary"
                         @click="openCalculate"
                     >打开计算结果</span>
+                    <span :class="[$style.btn,$style.exportBtn]" @click="getReportExel">生成报告</span>
+                    <!-- <a
+                        v-if="allowCreateCharts"
+                        :class="[$style.btn,$style.exportBtn]"
+                        href="/api/resultrecord/exportReport"
+                    >生成报告</a>
+                    <a
+                        v-else
+                        :class="[$style.btn,$style.exportBtn]"
+                        @click="$message('请先进行计算')"
+                    >生成报告</a>-->
                 </el-form-item>
             </el-form>
         </div>
@@ -91,6 +82,39 @@
                 <p>计算中 ...</p>
             </div>
         </div>
+
+        <el-dialog
+            title="生成报告"
+            :visible.sync="showDownReportModel"
+            :append-to-body="true"
+            :custom-class="$style.downReportDialog"
+        >
+            <el-form :model="reportTypeFrom" label-width="120px">
+                <el-form-item label="选择报告模版">
+                    <el-select v-model="reportTypeFrom.temp" placeholder>
+                        <el-option label="坡道救援(紧急制动)报告模版" value="temp1"></el-option>
+                        <el-option label="坡道救援(普通制动)报告模版" value="temp2"></el-option>
+                        <el-option label="冲击车挡报告模版" value="temp3"></el-option>
+                        <el-option label="连挂报告模版" value="temp4"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="选择计算结果">
+                    <el-select v-model="reportTypeFrom.result" placeholder>
+                        <el-option label="计算结果1" value="1"></el-option>
+                        <el-option label="计算结果2" value="2"></el-option>
+                        <el-option label="计算结果3" value="3"></el-option>
+                        <el-option label="计算结果4" value="4"></el-option>
+                        <el-option label="计算结果5" value="5"></el-option>
+                        <el-option label="计算结果6" value="6"></el-option>
+                    </el-select>
+                </el-form-item>
+            </el-form>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showDownReportModel = false">取 消</el-button>
+                <el-button type="primary" @click="sureDownReport">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -149,7 +173,11 @@ export default {
             allowCreateCharts: false,
 
             showCalculating: false,
-            calculatingPer: 75
+            calculatingPer: 75,
+
+            showDownReportModel: false,
+
+            reportTypeFrom: { temp: "", result: "" }
 
             // chartsLayout: testLayout
         };
@@ -309,6 +337,23 @@ export default {
             if (closedChart !== -1) {
                 this.chartsData.splice(closedChart, 1);
             }
+        },
+
+        getReportExel() {
+            if (!this.allowCreateCharts) return this.$message("请先进行计算");
+            this.showDownReportModel = true;
+        },
+
+        sureDownReport() {
+            const { temp, result } = this.reportTypeFrom;
+            if (!temp) return this.$message("请先选择模版类型");
+            if (!result) return this.$message("请先选择计算结果");
+
+            const a = document.createElement("a");
+            a.setAttribute("href", "/api/resultrecord/exportReport");
+            a.click();
+
+            this.showDownReportModel = false;
         }
     }
 };
@@ -433,6 +478,16 @@ export default {
         .el-form-item__label,
         .el-form-item__content {
             line-height: 28px;
+        }
+    }
+}
+
+.downReportDialog {
+    width: 500px;
+
+    :global {
+        .el-select {
+            width: 100%;
         }
     }
 }

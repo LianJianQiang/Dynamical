@@ -3,9 +3,9 @@
         <div :class="$style.title">本构法</div>
         <div :class="$style.curBuffer">
             <label>请选择</label>
-            <el-select v-model="curYKGType" placeholder="请选择" class="m-l-5">
+            <el-select v-model="curBGFType" placeholder="请选择" class="m-l-5">
                 <el-option
-                    v-for="item in ykgList"
+                    v-for="item in bgfList"
                     :key="item.id"
                     :label="item.name"
                     :value="item.id"
@@ -21,16 +21,16 @@
             :visible="nameDialogVisible"
             :onSaveData="saveData"
             :onCancel="()=>nameDialogVisible = false"
-        /> -->
+        />-->
     </div>
 </template>
 
 <script>
 // import NameDialog from "components/NameDialog";
-import { argConfig } from "api";
-import { getUserIdAndType } from "utils/util";
+// import { argConfig } from "api";
+// import { getUserIdAndType } from "utils/util";
 
-const { userId, userType } = getUserIdAndType();
+// const { userId, userType } = getUserIdAndType();
 
 export default {
     name: "YKGTemp",
@@ -39,98 +39,108 @@ export default {
     },
     data() {
         return {
-            // 当前的缓冲器型号
-            ykgList: [],
-            curYKGType: "",
-            formData: {},
+            bgfList: [
+                { id: 1, name: "本构法1" },
+                { id: 2, name: "本构法2" },
+                { id: 3, name: "本构法3" },
+                { id: 4, name: "本构法4" },
+                { id: 5, name: "本构法5" },
+                { id: 6, name: "本构法6" },
+                { id: 7, name: "本构法7" },
+                { id: 8, name: "本构法8" },
+                { id: 9, name: "本构法9" },
+                { id: 10, name: "本构法10" }
+            ],
+            curBGFType: ""
+            // formData: {},
 
-            isDiy: false,
+            // isDiy: false,
 
-            nameDialogVisible: false
+            // nameDialogVisible: false
         };
     },
     props: {},
     computed: {},
     watch: {
-        curYKGType() {
-            let list = this.ykgList || [];
-            let curKey = this.curYKGType;
-            if (!curKey) return;
-            this.formData = list.find(item => item.id === curKey);
-        }
+        // curYKGType() {
+        //     let list = this.ykgList || [];
+        //     let curKey = this.curYKGType;
+        //     if (!curKey) return;
+        //     this.formData = list.find(item => item.id === curKey);
+        // }
     },
     methods: {
-        // 获取压溃管模版列表
-        getYKGTempList() {
-            // TODO type 根据用户身份确定，管理员：1(公用)，普通用户：2(私有)
-            argConfig.getYKGTempList({ userId, type: userType }).then(res => {
-                if (!res) return;
-                this.ykgList = res.data;
-            });
-        },
+        // // 获取压溃管模版列表
+        // getYKGTempList() {
+        //     // TODO type 根据用户身份确定，管理员：1(公用)，普通用户：2(私有)
+        //     argConfig.getYKGTempList({ userId, type: userType }).then(res => {
+        //         if (!res) return;
+        //         this.ykgList = res.data;
+        //     });
+        // },
 
         // 点击删除，删除选中项
-        onClickDel() {
-            if (!this.curYKGType) {
-                this.$message({
-                    message: "请先选择型号",
-                    type: "error"
-                });
-                return;
-            }
-            argConfig.delYKGTemp({ id: this.curYKGType }).then(res => {
-                if (!res) return;
+        // onClickDel() {
+        //     if (!this.curYKGType) {
+        //         this.$message({
+        //             message: "请先选择型号",
+        //             type: "error"
+        //         });
+        //         return;
+        //     }
+        //     argConfig.delYKGTemp({ id: this.curYKGType }).then(res => {
+        //         if (!res) return;
 
-                // 保存成功后，刷新select数据，并清空选项
-                this.getYKGTempList();
-                this.curYKGType = "";
+        //         // 保存成功后，刷新select数据，并清空选项
+        //         this.getYKGTempList();
+        //         this.curYKGType = "";
 
-                this.$message({
-                    message: "操作成功",
-                    type: "success"
-                });
-            });
-        },
+        //         this.$message({
+        //             message: "操作成功",
+        //             type: "success"
+        //         });
+        //     });
+        // },
 
         //  保存数据
-        saveData(name) {
-            let params = {
-                ...this.formData,
-                userId,
-                type: userType,
-                name
-            };
+        // saveData(name) {
+        //     let params = {
+        //         ...this.formData,
+        //         userId,
+        //         type: userType,
+        //         name
+        //     };
 
-            if (this.isDiy || !this.curYKGType) {
-                delete params.id;
-            }
+        //     if (this.isDiy || !this.curYKGType) {
+        //         delete params.id;
+        //     }
 
-            argConfig.saveYKGTemp(params).then(res => {
-                if (!res) return;
-                this.nameDialogVisible = false;
+        //     argConfig.saveYKGTemp(params).then(res => {
+        //         if (!res) return;
+        //         this.nameDialogVisible = false;
 
-                // 保存成功后，刷新select数据
-                this.getYKGTempList();
+        //         // 保存成功后，刷新select数据
+        //         this.getYKGTempList();
 
-                this.$message({
-                    message: "操作成功",
-                    type: "success"
-                });
-            });
-        },
+        //         this.$message({
+        //             message: "操作成功",
+        //             type: "success"
+        //         });
+        //     });
+        // },
         save() {
             // if (this.isDiy || !this.curYKGType) {
             //     this.nameDialogVisible = true;
             //     return;
             // }
-
             // this.saveData(this.formData.name);
+            this.$message("保存成功，测试");
         },
         resetData() {
-            this.curYKGType = "";
-            this.formData = {};
-            this.isDiy = false;
-            this.nameDialogVisible = false;
+            this.curBGFType = "";
+            // this.formData = {};
+            // this.isDiy = false;
+            // this.nameDialogVisible = false;
         }
     },
     mounted() {

@@ -272,7 +272,7 @@ export default {
         }
     },
     mounted() {
-        console.log("diy : ", this.disabled);
+        // console.log("diy : ", this.disabled);
     }
 };
 </script>

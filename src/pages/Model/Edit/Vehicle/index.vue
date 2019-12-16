@@ -265,7 +265,7 @@ export default {
         /**
          * 保存模型数据
          */
-        submitForm: function(params) {
+        submitForm(params) {
             this.$refs.vehicleForm.validate(vali => {
                 if (!vali) return;
                 this.saveData(params);
@@ -351,7 +351,7 @@ export default {
             }
         );
     },
-    beforeDestory() {
+    beforeDestroy() {
         msgCenter.unsubscribe(this.subToken);
     }
 };

@@ -231,7 +231,7 @@ export default {
             }
         );
     },
-    beforeDestory() {
+    beforeDestroy() {
         msgCenter.unsubscribe(this.subToken);
     }
 };

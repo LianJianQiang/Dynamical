@@ -11,7 +11,7 @@
                     <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
                     <el-button class="btn-xl" @click="newModel">新建模型</el-button>
                     <el-button class="btn-xl" @click="saveModel">保存模型</el-button>
-                    <el-button class="btn-xl" @click="saveModelAs">模型另存为</el-button>
+                    <el-button class="btn-xl" @click="saveModelAs">模型另存</el-button>
                     <el-button class="btn-xl" @click="delModel">删除模型</el-button>
                 </div>
                 <div class="rightCont">
@@ -134,8 +134,7 @@ export default {
                         this.$message("创建成功");
                     });
                 })
-                .catch(e => {
-                });
+                .catch(e => {});
         },
 
         /**
@@ -234,6 +233,10 @@ export default {
                 }
             });
         }
+    },
+    mounted() {
+        if (!this.curModelId) return;
+        this.createSuccessCb();
     }
 };
 </script>

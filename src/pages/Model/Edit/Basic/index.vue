@@ -282,7 +282,7 @@ export default {
         /**
          * 保存模型数据
          */
-        submitForm: function(params) {
+        submitForm(params) {
             Promise.all([
                 this.$refs.no1Form.validate(),
                 this.$refs.no2Form.validate()
@@ -366,7 +366,7 @@ export default {
             }
         );
     },
-    beforeDestory() {
+    beforeDestroy() {
         msgCenter.unsubscribe(this.subToken);
     }
 };
