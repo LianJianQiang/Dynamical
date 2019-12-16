@@ -11,7 +11,7 @@
                     <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
                     <el-button class="btn-xl" @click="newModel">新建模型</el-button>
                     <el-button class="btn-xl" @click="saveModel">保存模型</el-button>
-                    <el-button class="btn-xl" @click="saveModelAs">模型另存</el-button>
+                    <el-button class="btn-xl" @click="saveModelAsBefore">模型另存</el-button>
                     <el-button class="btn-xl" @click="delModel">删除模型</el-button>
                 </div>
                 <div class="rightCont">
@@ -131,7 +131,7 @@ export default {
                     model.createModel({ userId, name: value }).then(res => {
                         if (!res) return;
                         this.getModelTreeData(res.data.id);
-                        this.$message("创建成功");
+                        this.$message("操作成功");
                     });
                 })
                 .catch(e => {});
@@ -179,17 +179,46 @@ export default {
         },
 
         // 模型另存为
-        saveModelAs() {
+        saveModelAs(params = {}) {
+            // 是否包含计算结果，后端暂不支持
+            // let { includeCalculate } = params;
+            const { userId } = getUserIdAndType();
+            this.$prompt("请输入模型名称", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                inputValidator: this.validatorModelname
+            })
+                .then(({ value }) => {
+                    model
+                        .saveModelAs({
+                            userId,
+                            name: value,
+                            id: this.curModelId
+                        })
+                        .then(res => {
+                            if (!res) return;
+                            this.getModelTreeData(res.data.id);
+                            this.$message("操作成功");
+                        });
+                })
+                .catch(e => {});
+        },
+
+        // 模型另存为
+        saveModelAsBefore() {
+            if (!this.curModelId) return this.$message("请先选择模型");
             this.$confirm("是否包含计算结果？", "模型另存为", {
                 confirmButtonText: "是",
                 cancelButtonText: "否",
                 type: "info"
             })
                 .then(() => {
-                    this.$message("模型另存为，含计算结果");
+                    // this.$message("模型另存为，含计算结果");
+                    this.saveModelAs({ includeCalculate: true });
                 })
                 .catch(() => {
-                    this.$message("模型另存为，不含计算结果");
+                    // this.$message("模型另存为，不含计算结果");
+                    this.saveModelAs({ includeCalculate: false });
                 });
         },
 

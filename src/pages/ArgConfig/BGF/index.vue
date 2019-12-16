@@ -134,7 +134,7 @@ export default {
             //     return;
             // }
             // this.saveData(this.formData.name);
-            this.$message("保存成功，测试");
+            this.$message.success("保存成功，测试");
         },
         resetData() {
             this.curBGFType = "";

@@ -11,6 +11,9 @@ const getModels = (params) => request(`${config.baseUrl}/model/listData`, { ...p
 // 创建模型
 const getModelTree = (params) => request(`${config.baseUrl}/model/modelTree`, { ...params });
 
+// 创建另存为
+const saveModelAs = (params) => request(`${config.baseUrl}/model/saveAs`, { ...params });
+
 // 车辆顺序调整
 const resortVehicleOrder = (params) => request(`${config.baseUrl}/ca/sequenceAdjust`, { ...params });
 
@@ -82,6 +85,8 @@ const delTcsd = (params) => request(`${config.baseUrl}/tcsd/delete`, { ...params
 });
 
 export default {
+    saveModelAs,
+
     // 模型树
     createModel,
     getModels,

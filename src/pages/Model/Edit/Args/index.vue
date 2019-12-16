@@ -64,6 +64,8 @@
 import { mapState } from "vuex";
 
 import { model } from "api";
+import msgCenter from "utils/msgCenter";
+import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
 
 import CarList from "./CarList";
 import { TEMP_FIELD_DICT } from "./constants";
@@ -253,6 +255,15 @@ export default {
 
     mounted() {
         this.initData();
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                data.success();
+            }
+        );
+    },
+    beforeDestroy() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>

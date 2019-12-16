@@ -333,7 +333,7 @@ export default {
 
                     // 基本参数变更以后，更新treeData
                     this.getModelData(this.curModelId);
-                    this.$message("保存成功");
+                    this.$message.success("保存成功");
                     typeof params.success === "function" && params.success();
                 });
         },
