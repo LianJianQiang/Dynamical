@@ -23,7 +23,11 @@
                     label-width="120px"
                 >
                     <el-form-item label="型号选择">
-                        <el-select v-model="formData.couMdfId" placeholder="请选择">
+                        <el-select
+                            v-model="formData.couMdfId"
+                            placeholder="请选择"
+                            :disabled="formData.coupdef!==1"
+                        >
                             <el-option
                                 v-for="item in curveList"
                                 :key="item.id"
@@ -33,18 +37,30 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="行程">
-                        <input-number-wrap suffix="m">
-                            <el-input-number :controls="false" v-model="formData.couRoute"></el-input-number>
+                        <input-number-wrap suffix="m" :disabled="formData.coupdef!==1">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.coupdef!==1"
+                                v-model="formData.couRoute"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="间隙">
-                        <input-number-wrap suffix="m">
-                            <el-input-number :controls="false" v-model="formData.couGap"></el-input-number>
+                        <input-number-wrap suffix="m" :disabled="formData.coupdef!==1">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.coupdef!==1"
+                                v-model="formData.couGap"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="包络线间震动的阻尼">
-                        <input-number-wrap suffix="N.s/m">
-                            <el-input-number :controls="false" v-model="formData.couDeboost"></el-input-number>
+                        <input-number-wrap suffix="N.s/m" :disabled="formData.coupdef!==1">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.coupdef!==1"
+                                v-model="formData.couDeboost"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                 </el-form>
@@ -66,7 +82,11 @@
                             label-width="120px"
                         >
                             <el-form-item label="型号选择">
-                                <el-select v-model="formData.couFdhsfId" placeholder="请选择">
+                                <el-select
+                                    v-model="formData.couFdhsfId"
+                                    placeholder="请选择"
+                                    :disabled="formData.coupdef!==2"
+                                >
                                     <el-option
                                         v-for="item in piecewiseLsit"
                                         :key="item.id"
@@ -88,6 +108,7 @@
                         @change="onCheckboxChange(3)"
                     >缓冲器本构 型号选择</el-checkbox>
                     <el-input-number
+                        :disabled="formData.coupdef!==3"
                         class="flr"
                         :controls="false"
                         v-model="formData.couEquation"
@@ -96,8 +117,12 @@
                 </div>
                 <el-form ref="form" label-position="left" :model="formData" label-width="120px">
                     <el-form-item label="钩缓质量" label-position="left">
-                        <input-number-wrap suffix="kg">
-                            <el-input-number :controls="false" v-model="formData.couQuality"></el-input-number>
+                        <input-number-wrap suffix="kg" :disabled="formData.coupdef!==3">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.coupdef!==3"
+                                v-model="formData.couQuality"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                 </el-form>

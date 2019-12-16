@@ -16,6 +16,11 @@ export const TreeData = [
                         id: "/page/arg-cfg/buffer-piecewise",
                         url: "/page/arg-cfg/buffer-piecewise",
                         label: "分段函数法设置"
+                    },
+                    {
+                        id: "/page/arg-cfg/bgf",
+                        url: "/page/arg-cfg/bgf",
+                        label: "本构法设置"
                     }
                 ]
             },

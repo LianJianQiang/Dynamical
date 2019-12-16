@@ -1,5 +1,5 @@
 <template>
-    <div :class="$style.root" class="clearfix">
+    <div :class="{[$style.root]:true, [$style.disabled]: disabled}" class="clearfix">
         <div :class="$style.mainWrap" class="fll">
             <slot></slot>
         </div>
@@ -13,7 +13,10 @@ export default {
     data() {
         return {};
     },
-    props: ["suffix"]
+    props: {
+        disabled: { type: Boolean, default: false },
+        suffix: { type: String, default: "" }
+    }
 };
 </script>
 
@@ -33,12 +36,19 @@ export default {
         font-size: 12px;
     }
 
+    &.disabled {
+        .suffix {
+            background-color: #f5f7fa;
+            color: #c0c4cc;
+        }
+    }
+
     :global {
         .el-input,
         .el-input-number,
         .el-input__inner {
-            height: 26px;
-            line-height: 26px;
+            height: 24px;
+            line-height: 24px;
             border: none !important;
         }
     }

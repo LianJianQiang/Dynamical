@@ -193,6 +193,8 @@
 import { mapActions, mapState } from "vuex";
 
 // import _util from "utils/util";
+import msgCenter from "utils/msgCenter";
+import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
 
 import { model } from "api";
 
@@ -280,14 +282,14 @@ export default {
         /**
          * 保存模型数据
          */
-        submitForm: function() {
+        submitForm: function(params) {
             Promise.all([
                 this.$refs.no1Form.validate(),
                 this.$refs.no2Form.validate()
             ])
                 .then(([val1, val2]) => {
                     if (val1 && val2) {
-                        this.saveDataToServe();
+                        this.saveDataToServe(params);
                     }
                 })
                 .catch(err => {
@@ -302,7 +304,7 @@ export default {
             ]);
         },
 
-        async saveDataToServe() {
+        async saveDataToServe(params = {}) {
             const childSaveResult = await this.saveChildCompData();
             if (
                 childSaveResult[0].code !== "200" ||
@@ -332,6 +334,7 @@ export default {
                     // 基本参数变更以后，更新treeData
                     this.getModelData(this.curModelId);
                     this.$message("保存成功");
+                    typeof params.success === "function" && params.success();
                 });
         },
 
@@ -356,6 +359,15 @@ export default {
     },
     mounted() {
         this.initData();
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                this.submitForm({ success: data.success });
+            }
+        );
+    },
+    beforeDestory() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>

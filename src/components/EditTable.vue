@@ -1,10 +1,30 @@
 <template>
     <div :class="$style.root">
         <div :class="$style.btnGroup">
-            <el-button v-if="showAdd" class="btn-mini" @click="tableAdd()">+</el-button>
-            <el-button v-if="showDel" class="btn-mini" @click="tableDel()">-</el-button>
-            <el-button v-if="showOpen" class="btn-mini" @click="onOpenCurve">打开</el-button>
-            <el-button v-if="showSave" class="btn-mini" @click="onSaveCurve">保存</el-button>
+            <el-button
+                v-if="showAdd"
+                class="btn-mini"
+                :class="{[$style.disabled]: disabled}"
+                @click="tableAdd()"
+            >+</el-button>
+            <el-button
+                v-if="showDel"
+                class="btn-mini"
+                :class="{[$style.disabled]: disabled}"
+                @click="tableDel()"
+            >-</el-button>
+            <el-button
+                v-if="showOpen"
+                class="btn-mini"
+                :class="{[$style.disabled]: disabled}"
+                @click="onOpenCurve"
+            >打开</el-button>
+            <el-button
+                v-if="showSave"
+                class="btn-mini"
+                :class="{[$style.disabled]: disabled}"
+                @click="onSaveCurve"
+            >保存</el-button>
         </div>
         <el-table
             :data="tableData"
@@ -52,6 +72,9 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div :class="$style.chartWrap" v-if="showCharts">
+            <LineCharts :options="chartsOptions" />
+        </div>
 
         <el-dialog
             title="请选择曲线"
@@ -88,8 +111,26 @@
 <script>
 import NameDialog from "components/NameDialog";
 
-import { getUserIdAndType, getObjFromStr } from "utils/util";
+import { getUserIdAndType, getObjFromStr, isNil } from "utils/util";
 import { model } from "api";
+import LineCharts from "components/Charts";
+
+let chartsOptions = {
+    xAxis: {
+        type: "category",
+        data: []
+    },
+    yAxis: {
+        type: "value"
+    },
+    series: [
+        {
+            data: [],
+            type: "line",
+            smooth: true
+        }
+    ]
+};
 
 export default {
     name: "Table",
@@ -101,11 +142,14 @@ export default {
             tractionList: [],
 
             curveDialogVisible: false,
-            nameDialogVisible: false
+            nameDialogVisible: false,
+
+            chartsOptions: JSON.parse(JSON.stringify(chartsOptions))
         };
     },
     components: {
-        NameDialog
+        NameDialog,
+        LineCharts
     },
     props: {
         xUnit: { type: String },
@@ -169,6 +213,14 @@ export default {
         onOpenCurveCb: {
             type: Function,
             default: () => {}
+        },
+        disabled: {
+            type: Boolean,
+            default: false
+        },
+        showCharts: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -192,11 +244,13 @@ export default {
         initData() {
             this.tableData = [...this.dataSource];
             this.tcsd = { ...this.tcsdData };
+            this.charTableChange();
         },
 
         clearData() {
             this.tableData = [];
             this.tcsd = {};
+            this.charTableChange();
         },
 
         // 切换dialog状态
@@ -214,10 +268,12 @@ export default {
         // 单元格里到值发生变化时回调
         dataChange() {
             this.tableDataChange(this.tableData);
+            this.charTableChange();
         },
 
         // table中插入一行
         tableAdd(idx) {
+            if (this.disabled) return;
             let { tableData } = this;
             idx = idx || tableData.length - 1;
             tableData.splice(idx + 1, 0, {
@@ -233,6 +289,7 @@ export default {
 
             // this.tableData = tableData;
             this.tableDataChange(this.tableData);
+            this.charTableChange();
         },
 
         tableInsert(index) {
@@ -241,6 +298,7 @@ export default {
 
         // table中删除一行
         tableDel(index) {
+            if (this.disabled) return;
             let { tableData } = this;
             if (index !== 0 && !index) {
                 tableData.pop();
@@ -251,6 +309,7 @@ export default {
             this.onTableRowChange();
             // this.tableData = tableData;
             this.tableDataChange(this.tableData);
+            this.charTableChange();
         },
 
         resetOrder() {
@@ -261,6 +320,7 @@ export default {
 
         // 打开曲线
         onOpenCurve() {
+            if (this.disabled) return;
             if (!this.type) {
                 this.onOpen();
                 return;
@@ -309,11 +369,13 @@ export default {
                 // 打开数据后，将id返回给父组件
                 this.onSaveCb(res.data.id);
                 this.onOpenCurveCb({ ...data, tcsdData });
+                this.charTableChange();
             });
         },
 
         // 点击 table的保存，提示输入名称
         onSaveCurve(cb) {
+            if (this.disabled) return;
             let params = this.getSaveDataParmas();
 
             // 由父组件进行保存业务处理
@@ -377,6 +439,19 @@ export default {
                 typeof cb === "function" && cb();
                 return res;
             });
+        },
+
+        // 图表联动
+        charTableChange() {
+            let data = this.tableData;
+            let xAxisData = [];
+            let yAxisData = [];
+            data.map(item => {
+                if (!isNil(item.x)) xAxisData.push(item.x);
+                if (!isNil(item.f)) yAxisData.push(item.f);
+            });
+            this.chartsOptions.xAxis.data = xAxisData;
+            this.chartsOptions.series[0].data = yAxisData;
         }
     },
     mounted() {
@@ -388,6 +463,15 @@ export default {
 .root {
     .btnGroup {
         margin-bottom: 10px;
+        .disabled {
+            background-color: #999 !important;
+            color: #fff !important;
+        }
+    }
+
+    .chartWrap {
+        width: 100%;
+        height: 300px;
     }
 
     :global {

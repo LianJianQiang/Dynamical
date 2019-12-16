@@ -55,6 +55,16 @@
                         :class="[$style.btn,$style.exportBtn]"
                         @click="$message('请先进行计算')"
                     >生成报告</a>
+                    <span
+                        :class="[$style.btn,$style.saveBtn]"
+                        type="primary"
+                        @click="saveCalculate"
+                    >保存计算结果</span>
+                    <span
+                        :class="[$style.btn,$style.saveBtn]"
+                        type="primary"
+                        @click="openCalculate"
+                    >打开计算结果</span>
                 </el-form-item>
             </el-form>
         </div>
@@ -73,6 +83,12 @@
                     :chartInfo="item"
                     @onClose="onCloseCharts"
                 />
+            </div>
+        </div>
+        <div :class="$style.calculating" v-if="showCalculating">
+            <div :class="$style.cont">
+                <el-progress :percentage="calculatingPer"></el-progress>
+                <p>计算中 ...</p>
             </div>
         </div>
     </div>
@@ -112,6 +128,11 @@ import Cascader from "./Cascader";
 //     return true;
 // };
 
+const verifyModelName = value => {
+    let reg = /^[A-Za-z0-9\u4e00-\u9fa5_-]+$/;
+    return reg.test(value);
+};
+
 export default {
     name: "Report",
     components: {
@@ -125,7 +146,10 @@ export default {
             // IEVersion,
             searchForm: {},
             chartsData: [],
-            allowCreateCharts: false
+            allowCreateCharts: false,
+
+            showCalculating: false,
+            calculatingPer: 75
 
             // chartsLayout: testLayout
         };
@@ -169,6 +193,8 @@ export default {
                 integralStep = ""
             } = searchForm;
 
+            this.showCalculating = true;
+
             // 校验参数不为空
             // for (let i = 0; i < varifyArgs.length; i++) {
             //     if (!varifyArgsFns(varifyArgs[i], searchForm)) return;
@@ -185,7 +211,55 @@ export default {
                 .then(res => {
                     if (!res || res.code !== "200") return;
                     this.allowCreateCharts = true;
+
+                    this.calculatingPer = 100;
+                    setTimeout(() => {
+                        this.showCalculating = false;
+                    }, 500);
                 });
+        },
+
+        openCalculate() {
+            this.$message("打开计算结果");
+        },
+
+        /**
+         * 保存计算结果
+         */
+        saveCalculate() {
+            this.setModelName({
+                success: name => {
+                    this.$message(`保存为 ${name}`);
+                }
+            });
+        },
+
+        /**
+         * 设置模型名称
+         */
+        setModelName: function({ success }) {
+            // const { userId } = getUserIdAndType();
+
+            this.$prompt("请输入模型名称", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                inputValidator: this.validatorModelname
+            })
+                .then(({ value }) => {
+                    success(value);
+                })
+                .catch(e => {});
+        },
+
+        /**
+         * 校验模型名称
+         */
+        validatorModelname: function(value) {
+            if (!value) return "请输入名称";
+            if (!verifyModelName(value)) {
+                return "名称为只能包含汉字、数字、字母、_、-";
+            }
+            return true;
         },
 
         createChartsList() {
@@ -282,10 +356,13 @@ export default {
         line-height: 32px;
         padding: 0;
         color: #fff;
+        margin-right: 20px;
+        &:last-child {
+            margin-right: 0;
+        }
     }
     .saveBtn {
         background-color: #4bccf4;
-        margin-right: 60px;
     }
     .exportBtn {
         background-color: #36a7e3;
@@ -295,7 +372,7 @@ export default {
         background-color: #fff;
         padding: 20px;
         line-height: 30px;
-        margin: 20px 0;
+        margin-bottom: 20px;
         overflow: hidden;
 
         & > div:not(:last-child) {
@@ -313,6 +390,32 @@ export default {
         // margin-top: 20px;
         .chartsCont {
             position: relative;
+        }
+    }
+
+    .calculating {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        .cont {
+            width: 400px;
+            height: 90px;
+            margin: 100px auto 0;
+            padding: 30px;
+            background: #fff;
+            border: 1px solid #ececea;
+            box-sizing: border-box;
+            p {
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+                font-size: 16px;
+                text-align: center;
+            }
+
+            // background: #fff;
         }
     }
 

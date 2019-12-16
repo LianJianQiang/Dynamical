@@ -10,6 +10,9 @@
                 <div :class="$style.btnWrap">
                     <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
                     <el-button class="btn-xl" @click="newModel">新建模型</el-button>
+                    <el-button class="btn-xl" @click="saveModel">保存模型</el-button>
+                    <el-button class="btn-xl" @click="saveModelAs">模型另存为</el-button>
+                    <el-button class="btn-xl" @click="delModel">删除模型</el-button>
                 </div>
                 <div class="rightCont">
                     <router-view></router-view>
@@ -48,10 +51,10 @@ import { getUserIdAndType } from "utils/util";
 
 import Tree from "./Tree";
 
-const verifyModelName = (value) => {
+const verifyModelName = value => {
     let reg = /^[A-Za-z0-9\u4e00-\u9fa5_-]+$/;
     return reg.test(value);
-}
+};
 
 export default {
     name: "Model",
@@ -132,7 +135,6 @@ export default {
                     });
                 })
                 .catch(e => {
-                    console.log(e);
                 });
         },
 
@@ -177,8 +179,47 @@ export default {
             });
         },
 
+        // 模型另存为
+        saveModelAs() {
+            this.$confirm("是否包含计算结果？", "模型另存为", {
+                confirmButtonText: "是",
+                cancelButtonText: "否",
+                type: "info"
+            })
+                .then(() => {
+                    this.$message("模型另存为，含计算结果");
+                })
+                .catch(() => {
+                    this.$message("模型另存为，不含计算结果");
+                });
+        },
+
+        // 保存当前模型
+        saveModel() {
+            this.$confirm("是否包含计算结果？", "保存当前模型", {
+                confirmButtonText: "是",
+                cancelButtonText: "否",
+                type: "info"
+            })
+                .then(() => {
+                    this.$message("保存当前模型，含计算结果");
+                })
+                .catch(() => {
+                    this.$message("保存当前模型，不含计算结果");
+                });
+        },
+
+        // 删除当前模型
+        delModel() {
+            this.onCloseTag({ id: this.curModelId });
+        },
+
         // 删除tag
         onCloseTag(item) {
+            if (!item.id) {
+                this.$message("模型id不存在");
+                return;
+            }
             model.delModal({ id: item.id }).then(res => {
                 if (!res || res.code !== "200") return;
                 this.$message(`删除成功`);

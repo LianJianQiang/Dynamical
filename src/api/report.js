@@ -8,7 +8,7 @@ const getArgsList = (params) => request(`${config.baseUrl}/resultrecord/getParam
 const getCaListBYCode = (params) => request(`${config.baseUrl}/resultrecord/getCaListBYCode`, { ...params });
 
 // 计算
-const getCalculateResults = (params) => request(`${config.baseUrl}/resultrecord/getCalculateResults`, { ...params });
+const getCalculateResults = (params) => request(`${config.baseUrl}/resultrecord/getCalculateResults`, { ...params }, { showLoading: false });
 
 // 获取计算结果详情
 const getResultInfo = (params) => request(`${config.baseUrl}/resultrecord/getResultInfo`, { ...params });

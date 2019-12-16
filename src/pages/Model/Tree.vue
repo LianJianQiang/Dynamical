@@ -28,7 +28,11 @@
 <script>
 import { mapState, mapActions } from "vuex";
 import Icon from "assets/icon";
-import { MODEL_TYPE_LINK_LIST } from "common/constants";
+import {
+    MODEL_TYPE_LINK_LIST,
+    GLOBAL_MSG_CENTER_TOKEN
+} from "common/constants";
+import msgCenter from "utils/msgCenter";
 
 export default {
     data() {
@@ -50,21 +54,28 @@ export default {
             if (MODEL_TYPE_LINK_LIST.indexOf(type) === -1) return;
             // this.setCurTreeNodeId(id);
 
-            this.$confirm("页面即将跳转，请检查是否已经保存数据！", "", {
-                confirmButtonText: "是",
-                cancelButtonText: "否",
-                type: "warning"
-            })
-                .then((...opt) => {
+            msgCenter.publish(GLOBAL_MSG_CENTER_TOKEN.page_jump, {
+                success: () => {
                     this.setCurTreeNodeId(id);
                     this.$router.push({
                         path: "/page/model/edit",
                         query: { type, id }
                     });
-                })
-                .catch((...opt) => {
-                    this.setCurTreeNodeId(this.curTreeNodeId);
-                });
+                },
+                error: () => {
+                    // this.$message("数据保存失败");
+                }
+            });
+
+            // this.$confirm("页面即将跳转，请检查是否已经保存数据！", "", {
+            //     confirmButtonText: "是",
+            //     cancelButtonText: "否",
+            //     type: "warning"
+            // })
+            //     .then((...opt) => {})
+            //     .catch((...opt) => {
+            //         this.setCurTreeNodeId(this.curTreeNodeId);
+            //     });
         },
         getQueryId() {
             let { id = "" } = this.$route.query || {};

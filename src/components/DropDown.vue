@@ -1,6 +1,12 @@
 <template>
-    <div :class="[$style.root]" class="cursor-p" ref="root">
-        <div slot="reference" class="link inp-border" ref="reference" @click="visible = true">
+    <div :class="{[$style.root]: true, [$style.disabled]: disabled}" class="cursor-p" ref="root">
+        <div
+            slot="reference"
+            :class="$style.box"
+            class="link inp-border"
+            ref="reference"
+            @click="toggleVisible(true)"
+        >
             <span
                 :class="{[$style.haveData]:isHaveData, [$style.noData]:!isHaveData}"
             >{{isHaveData ? '参数设置（已设置）' : '参数设置（未设置）'}}</span>
@@ -62,6 +68,10 @@ export default {
         cancel: {
             type: Function,
             default: () => {}
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {
@@ -84,6 +94,10 @@ export default {
         },
         clickReset() {
             this.resetData();
+        },
+        toggleVisible(bool) {
+            if (this.disabled) return;
+            this.visible = bool;
         }
     },
     mounted() {}
@@ -105,6 +119,16 @@ $height: 28px;
 
     .noData {
         color: #999;
+    }
+
+    &.disabled {
+        .box {
+            background-color: #f5f7fa !important;
+
+            span {
+                color: #c0c4cc !important;
+            }
+        }
     }
 
     &.mini {

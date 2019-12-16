@@ -215,8 +215,10 @@ import {
     MODEL_TREE_TYPE,
     CONNECT_ELE_DICT,
     CONNECT_ELE_FIELD_DICT,
-    CAR_ELE_DICT
+    CAR_ELE_DICT,
+    GLOBAL_MSG_CENTER_TOKEN
 } from "common/constants";
+import msgCenter from "utils/msgCenter";
 
 // import { filterJson } from "utils/util";
 import { model } from "api";
@@ -343,11 +345,14 @@ export default {
             let { row, cal } = sourceInfo;
             if (!row || !cal) return null;
 
-            this.submitForm(`${row}-${cal}`, () => {
-                this.$message({
-                    message: "操作成功",
-                    type: "success"
-                });
+            this.submitForm({
+                carNum: `${row}-${cal}`,
+                saveCb: () => {
+                    this.$message({
+                        message: "操作成功",
+                        type: "success"
+                    });
+                }
             });
 
             // this.initData(`${row}-${cal}`, () => {
@@ -401,7 +406,9 @@ export default {
          * 保存模型数据
          * 复制时，传入carNum和cb
          */
-        submitForm: function(carNum, cb) {
+        submitForm: function(args = {}) {
+            let { carNum, saveCb, success } = args;
+
             let frontData = { ...this.frontData };
             let backData = { ...this.backData };
 
@@ -442,8 +449,8 @@ export default {
                 if (!res) return;
 
                 // TODO 复制
-                if (cb && typeof cb === "function") {
-                    return cb(res);
+                if (saveCb && typeof saveCb === "function") {
+                    return saveCb(res);
                 }
 
                 this.frontData = { ...frontData, id: res.data["1"] };
@@ -453,6 +460,8 @@ export default {
                     message: "保存成功",
                     type: "success"
                 });
+
+                typeof success === "function" && success();
             });
         },
 
@@ -501,6 +510,15 @@ export default {
 
     mounted() {
         this.initData();
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                this.submitForm({ success: data.success });
+            }
+        );
+    },
+    beforeDestory() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>

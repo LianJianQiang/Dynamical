@@ -100,3 +100,8 @@ export const DIY_XAXIS_OPTIONS = [
     { name: "速度", id: 2 },
     { name: "时间", id: 3 }
 ];
+
+
+export const GLOBAL_MSG_CENTER_TOKEN = {
+    page_jump: 'page_jump'
+}

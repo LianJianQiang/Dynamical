@@ -22,13 +22,19 @@
                     label-width="120px"
                 >
                     <el-form-item label="制动力">
-                        <input-number-wrap suffix="N">
-                            <el-input-number :controls="false" v-model="formData.brakef" :min="0"></el-input-number>
+                        <input-number-wrap suffix="N" :disabled="formData.brakedef!==1">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.brakedef!==1"
+                                v-model="formData.brakef"
+                                :min="0"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="空走时间">
-                        <input-number-wrap suffix="s">
+                        <input-number-wrap suffix="s" :disabled="formData.brakedef!==1">
                             <el-input-number
+                                :disabled="formData.brakedef!==1"
                                 :controls="false"
                                 v-model="formData.delayTime"
                                 :min="0"
@@ -36,8 +42,13 @@
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="制动力加载时间">
-                        <input-number-wrap suffix="s">
-                            <el-input-number :controls="false" v-model="formData.loadTime" :min="0"></el-input-number>
+                        <input-number-wrap suffix="s" :disabled="formData.brakedef!==1">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.brakedef!==1"
+                                v-model="formData.loadTime"
+                                :min="0"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                 </el-form>
@@ -54,6 +65,7 @@
                     title="制动力用户自定义"
                     field="tcsdId"
                     :saveData="saveDiyData"
+                    :disabled="formData.brakedef!==2"
                     :class="$style.diyDown"
                     :type="6"
                     :dataSource="diyDataSource"

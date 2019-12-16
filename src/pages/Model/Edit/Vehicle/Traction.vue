@@ -21,7 +21,12 @@
                     label-width="120px"
                 >
                     <el-form-item label="牵引电机数量">
-                        <el-input-number :controls="false" v-model="formData.emNum" :min="0"></el-input-number>
+                        <el-input-number
+                            :controls="false"
+                            :disabled="formData.tracdef!==1"
+                            v-model="formData.emNum"
+                            :min="0"
+                        ></el-input-number>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -41,22 +46,33 @@
                     label-width="120px"
                 >
                     <el-form-item label="牵引力">
-                        <input-number-wrap suffix="N">
-                            <el-input-number :controls="false" v-model="formData.tracf" :min="0"></el-input-number>
+                        <input-number-wrap suffix="N" :disabled="formData.tracdef!==2">
+                            <el-input-number
+                                :controls="false"
+                                :disabled="formData.tracdef!==2"
+                                v-model="formData.tracf"
+                                :min="0"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="延迟时间">
-                        <input-number-wrap suffix="s">
+                        <input-number-wrap suffix="s" :disabled="formData.tracdef!==2">
                             <el-input-number
                                 :controls="false"
+                                :disabled="formData.tracdef!==2"
                                 v-model="formData.delayTime"
                                 :min="0"
                             ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                     <el-form-item label="牵引力加载时间">
-                        <input-number-wrap suffix="s">
-                            <el-input-number :controls="false" v-model="formData.loadTime" :min="0"></el-input-number>
+                        <input-number-wrap suffix="s" :disabled="formData.tracdef!==2">
+                            <el-input-number
+                                :controls="false"
+                                v-model="formData.loadTime"
+                                :disabled="formData.tracdef!==2"
+                                :min="0"
+                            ></el-input-number>
                         </input-number-wrap>
                     </el-form-item>
                 </el-form>
@@ -73,6 +89,7 @@
                     title="牵引力用户自定义"
                     field="tcsdId"
                     :saveData="saveDiyData"
+                    :disabled="formData.tracdef!==3"
                     :class="$style.diyDown"
                     :type="5"
                     :dataSource="diyDataSource"

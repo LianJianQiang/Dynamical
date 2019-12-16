@@ -45,6 +45,7 @@
                             ref="diy1"
                             title="用户自定义1"
                             field="diy1Tcsd"
+                            :showCharts="true"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy1'})"
                             :dataSource="{tcsdId: diyData.diy1Tcsd}"
                             :type="7"
@@ -57,6 +58,7 @@
                             ref="diy2"
                             title="用户自定义2"
                             field="diy2Tcsd"
+                            :showCharts="true"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy2'})"
                             :dataSource="{tcsdId: diyData.diy2Tcsd}"
                             :type="8"
@@ -69,6 +71,7 @@
                             ref="diy3"
                             title="用户自定义3"
                             field="diy3Tcsd"
+                            :showCharts="true"
                             :saveData="(params)=>onSaveDiyData({...params, type:'diy3'})"
                             :dataSource="{tcsdId: diyData.diy3Tcsd}"
                             :type="9"
@@ -106,7 +109,8 @@
 import { mapGetters } from "vuex";
 
 import _util from "utils/util";
-import { MODEL_TREE_TYPE } from "common/constants";
+import { MODEL_TREE_TYPE, GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
+import msgCenter from "utils/msgCenter";
 
 import { carArg } from "api";
 
@@ -261,10 +265,10 @@ export default {
         /**
          * 保存模型数据
          */
-        submitForm: function() {
+        submitForm: function(params) {
             this.$refs.vehicleForm.validate(vali => {
                 if (!vali) return;
-                this.saveData();
+                this.saveData(params);
             });
         },
 
@@ -275,7 +279,7 @@ export default {
         //     ])
         // },
 
-        saveData() {
+        saveData(params = {}) {
             let diyData = { ...this.diyData };
             delete diyData.diy1TcsdData;
             delete diyData.diy2TcsdData;
@@ -313,6 +317,8 @@ export default {
                     message: "保存成功",
                     type: "success"
                 });
+
+                typeof params.success && params.success();
             });
         },
 
@@ -338,6 +344,15 @@ export default {
     },
     mounted() {
         this.initData();
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                this.submitForm({ success: data.success });
+            }
+        );
+    },
+    beforeDestory() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>

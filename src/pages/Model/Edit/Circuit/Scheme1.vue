@@ -80,6 +80,8 @@ import { mapState } from "vuex";
 
 import { circuit } from "api";
 import { isNil } from "utils/util";
+import msgCenter from "utils/msgCenter";
+import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
 
 import Ramp from "./Ramp";
 
@@ -204,12 +206,16 @@ export default {
         },
 
         // 保存数据
-        saveData() {
+        saveData(params = {}) {
             circuit
                 .saveCircleData({ lpArr: this.tableData || [] })
                 .then(res => {
                     if (!res) return;
-                    this.initData();
+                    if (typeof params.success === "function") {
+                        params.success();
+                    } else {
+                        this.initData();
+                    }
                 });
         },
         clearData() {
@@ -218,6 +224,15 @@ export default {
     },
     mounted() {
         this.initData();
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                this.submitForm({ success: data.success });
+            }
+        );
+    },
+    beforeDestory() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>

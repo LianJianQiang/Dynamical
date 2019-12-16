@@ -19,7 +19,7 @@
             </div>
             <!-- 曲线分段 -->
             <div :class="$style.subTableWrap">
-                <el-table :data="pointAllotData" border size="mini">
+                <el-table :data="pointAllotData" border size="mini" stripe>
                     <el-table-column prop="name" label="曲线分段" align="center" />
                     <el-table-column prop="value" label="点序号" align="center">
                         <template slot-scope="scope">
@@ -77,8 +77,8 @@ let chartsOptions = {
     series: [
         {
             data: [],
-            type: "line",
-            smooth: true
+            type: "line"
+            // smooth: true
         }
     ]
 };

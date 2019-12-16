@@ -14,6 +14,7 @@ const OpenModel = resolve => require(['pages/Model/Open'], resolve);
 
 const BufferCurve = resolve => require(['pages/ArgConfig/BufferCurve'], resolve);
 const BufferPiecewise = resolve => require(['pages/ArgConfig/BufferPiecewise'], resolve);
+const BGF = resolve => require(['pages/ArgConfig/BGF'], resolve);
 const YKGTemp = resolve => require(['pages/ArgConfig/YKGTemp'], resolve);
 
 const Login = resolve => require(['pages/Login'], resolve);
@@ -45,6 +46,10 @@ const routes = [
                     {
                         path: 'buffer-piecewise',
                         component: BufferPiecewise
+                    },
+                    {
+                        path: 'bgf',
+                        component: BGF
                     },
                     {
                         path: 'ykg',

@@ -7,6 +7,7 @@
         :isHaveData="isHaveData"
         :resetData="clearData"
         :cancel="cancel"
+        :disabled="disabled"
     >
         <div :class="$style.root">
             <div :class="$style.axis" class="listWrap">
@@ -32,6 +33,7 @@
                     :parentParams="{xType: xType}"
                     :type="type"
                     :onSaveCb="onSaveCb"
+                    :showCharts="$attrs.showCharts"
                     :onOpenCurveCb="onOpenCurveCb"
                     :tcsdData="tcsdData"
                     :dataSource="tcsdData.tcsdData"
@@ -96,6 +98,10 @@ export default {
         dataSource: {
             type: Object,
             default: () => ({})
+        },
+        disabled: {
+            type: Boolean,
+            default: false
         }
     },
     watch: {
@@ -264,6 +270,9 @@ export default {
                 resolve(true);
             });
         }
+    },
+    mounted() {
+        console.log("diy : ", this.disabled);
     }
 };
 </script>

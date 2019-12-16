@@ -45,6 +45,7 @@
                                 速度(km/h) 0-
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterV1"
@@ -55,6 +56,7 @@
                                 F(N)
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterF"
@@ -76,6 +78,7 @@
                                 </el-form-item>-
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterV2"
@@ -86,6 +89,7 @@
                                 F.v²(N.(m/s)²)
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterFv"
@@ -107,6 +111,7 @@
                                 </el-form-item>-
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterFvv"
@@ -117,6 +122,7 @@
                                 F.v
                                 <el-form-item>
                                     <el-input-number
+                                        :disabled="characteristics!==1"
                                         :controls="false"
                                         :class="$style.speedbox"
                                         v-model="datas.characterV4"
@@ -139,6 +145,8 @@
                     <EditTable
                         ref="editTable"
                         :type="4"
+                        :disabled="characteristics!==2"
+                        :showCharts="true"
                         :onSaveCb="onSaveCb"
                         :tcsdData="tcsd"
                         :dataSource="tcsd.tcsdData"
