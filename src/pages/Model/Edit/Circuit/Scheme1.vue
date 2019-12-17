@@ -227,7 +227,7 @@ export default {
         this.subToken = msgCenter.subscribe(
             GLOBAL_MSG_CENTER_TOKEN.page_jump,
             (topic, data) => {
-                this.submitForm({ success: data.success });
+                this.saveData({ success: data.success });
             }
         );
     },

@@ -22,6 +22,9 @@
 import { mapState } from "vuex";
 // import { MODEL_TREE_TYPE } from "common/constants";
 
+import msgCenter from "utils/msgCenter";
+import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
+
 import { getUserIdAndType } from "utils/util";
 import config from "api/config";
 
@@ -56,8 +59,6 @@ export default {
                 curve: fileNameCurve,
                 tunnel: fileNameTunnel
             } = responseFilesName;
-
-            console.log(this.responseFilesName);
 
             if (!fileNameRamp) {
                 return this.$message.error("请上传线路坡道信息文件");
@@ -95,6 +96,16 @@ export default {
             curve: "",
             tunnel: ""
         };
+
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                data.success();
+            }
+        );
+    },
+    beforeDestroy() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>
