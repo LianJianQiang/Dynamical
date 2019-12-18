@@ -130,9 +130,6 @@ export default {
         refreshTemp(cb) {
             let modelId = this.curModelId;
 
-            // TODO 测试
-            // modelId = "1158299331507040256";
-
             model.compAllcouptypeTemp({ modelId }).then(res => {
                 if (!res) return;
                 typeof cb === "function" && cb(modelId);

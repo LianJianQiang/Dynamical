@@ -28,6 +28,28 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="列车1 速度">
+                            <input-number-wrap suffix="km/h">
+                                <el-input-number
+                                    :controls="false"
+                                    v-model="searchForm.v1"
+                                    clearable
+                                ></el-input-number>
+                            </input-number-wrap>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="列车2 速度">
+                            <input-number-wrap suffix="km/h">
+                                <el-input-number
+                                    :controls="false"
+                                    v-model="searchForm.v2"
+                                    clearable
+                                ></el-input-number>
+                            </input-number-wrap>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
                 <el-form-item :class="$style.subForm">
                     <span
@@ -43,7 +65,7 @@
                     <span
                         :class="[$style.btn,$style.saveBtn]"
                         type="primary"
-                        @click="openCalculate"
+                        @click="calcResultDialogVisible = true"
                     >打开计算结果</span>
                     <span :class="[$style.btn,$style.exportBtn]" @click="getReportExel">生成报告</span>
                     <!-- <a
@@ -100,12 +122,12 @@
                 </el-form-item>
                 <el-form-item label="选择计算结果">
                     <el-select v-model="reportTypeFrom.result" placeholder>
-                        <el-option label="计算结果1" value="1"></el-option>
-                        <el-option label="计算结果2" value="2"></el-option>
-                        <el-option label="计算结果3" value="3"></el-option>
-                        <el-option label="计算结果4" value="4"></el-option>
-                        <el-option label="计算结果5" value="5"></el-option>
-                        <el-option label="计算结果6" value="6"></el-option>
+                        <el-option
+                            v-for="item in calcResultList"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name"
+                        ></el-option>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -114,6 +136,22 @@
                 <el-button @click="showDownReportModel = false">取 消</el-button>
                 <el-button type="primary" @click="sureDownReport">确 定</el-button>
             </span>
+        </el-dialog>
+
+        <el-dialog
+            title="请选择要打开的计算结果"
+            :visible.sync="calcResultDialogVisible"
+            :append-to-body="true"
+        >
+            <ul :class="$style.modelsContent" class="clearfix" v-if="calcResultList.length > 0">
+                <el-tag
+                    class="cursor-p"
+                    v-for="item in calcResultList"
+                    :key="item.id"
+                    @click="openCalculate(item)"
+                >{{item.name}}</el-tag>
+            </ul>
+            <dir v-else class="noData">暂无数据</dir>
         </el-dialog>
     </div>
 </template>
@@ -177,7 +215,10 @@ export default {
 
             showDownReportModel: false,
 
-            reportTypeFrom: { temp: "", result: "" }
+            reportTypeFrom: { temp: "", result: "" },
+
+            calcResultList: [],
+            calcResultDialogVisible: false
 
             // chartsLayout: testLayout
         };
@@ -187,6 +228,25 @@ export default {
         ...mapState("models", ["curModelId"])
     },
     methods: {
+        initData() {
+            this.getCalcList();
+        },
+
+        /**
+         * 获取计算结果列表
+         */
+        getCalcList() {
+            if (!this.curModelId) return;
+            const { userId } = getUserIdAndType();
+            // 获取计算结果列表
+            report
+                .getRecordList({ userId, modelId: this.curModelId })
+                .then(res => {
+                    if (!res || res.code !== "200") return;
+                    this.calcResultList = res.data || [];
+                });
+        },
+
         onArgsChange(args) {
             if (args.length === 0) {
                 this.searchForm = {
@@ -218,7 +278,9 @@ export default {
             const {
                 initialLocation = "",
                 integralTimes = "",
-                integralStep = ""
+                integralStep = "",
+                v1 = "",
+                v2 = ""
             } = searchForm;
 
             this.showCalculating = true;
@@ -233,11 +295,20 @@ export default {
                     initialLocation,
                     integralTimes,
                     integralStep,
+                    v1,
+                    v2,
                     modelId: this.curModelId,
                     userID: userId
                 })
                 .then(res => {
-                    if (!res || res.code !== "200") return;
+                    if (!res || res.code !== "200") {
+                        this.showCalculating = false;
+                        return;
+                    }
+
+                    const { data = {} } = res;
+                    this.curCalcId = data.recordId || "";
+
                     this.allowCreateCharts = true;
 
                     this.calculatingPer = 100;
@@ -247,17 +318,37 @@ export default {
                 });
         },
 
-        openCalculate() {
-            this.$message("打开计算结果");
+        openCalculate(record) {
+            if (!record.id) return;
+            report.getRecordInfo({ recordId: record.id }).then(res => {
+                if (!res || res.code !== "200") return;
+                const { data = {} } = res;
+                this.curCalcId = data.id || "";
+                this.allowCreateCharts = true;
+                this.calcResultDialogVisible = false;
+                this.$message("操作成功");
+            });
         },
 
         /**
          * 保存计算结果
          */
         saveCalculate() {
+            if (!this.curCalcId) return this.$message("当前没有计算结果可保存");
             this.setModelName({
                 success: name => {
-                    this.$message(`保存为 ${name}`);
+                    const { userId } = getUserIdAndType();
+                    // this.$message(`保存为 ${name}`);
+                    let params = { name, modelId: this.curModelId, userId };
+                    if (this.curCalcId) {
+                        params.id = this.curCalcId;
+                    }
+
+                    report.saveResultRecord(params).then(res => {
+                        if (!res || res.code !== "200") return;
+                        this.$message(res.message || "保存成功");
+                        this.getCalcList();
+                    });
                 }
             });
         },
@@ -268,7 +359,7 @@ export default {
         setModelName: function({ success }) {
             // const { userId } = getUserIdAndType();
 
-            this.$prompt("请输入模型名称", {
+            this.$prompt("请输入计算结果名称", {
                 confirmButtonText: "确定",
                 cancelButtonText: "取消",
                 inputValidator: this.validatorModelname
@@ -355,6 +446,9 @@ export default {
 
             this.showDownReportModel = false;
         }
+    },
+    mounted() {
+        this.initData();
     }
 };
 </script>
@@ -488,6 +582,24 @@ export default {
     :global {
         .el-select {
             width: 100%;
+        }
+    }
+}
+
+.modelsContent {
+    max-height: 300px;
+    overflow: auto;
+    li {
+        height: 40px;
+        line-height: 40px;
+        padding: 0 30px;
+        cursor: pointer;
+    }
+    :global {
+        .el-tag {
+            margin-right: 10px;
+            margin-bottom: 10px;
+            background-color: transparent;
         }
     }
 }

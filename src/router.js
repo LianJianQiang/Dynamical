@@ -20,6 +20,8 @@ const YKGTemp = resolve => require(['pages/ArgConfig/YKGTemp'], resolve);
 const Login = resolve => require(['pages/Login'], resolve);
 const App = resolve => require(['pages'], resolve);
 
+// const Viewer = resolve => require(['pages/Viewer'], resolve);
+
 
 
 // 要告诉 vue 使用 vueRouter
@@ -81,6 +83,7 @@ const routes = [
             { path: '*', component: NotFound }
         ]
     },
+    // { path: '/viewer', component: Viewer },
     { path: '*', component: NotFound }
 
 ]

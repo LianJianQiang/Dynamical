@@ -10,7 +10,7 @@
                 <div :class="$style.btnWrap">
                     <el-button class="btn-xl" @click="getModelsList">打开模型</el-button>
                     <el-button class="btn-xl" @click="newModel">新建模型</el-button>
-                    <el-button class="btn-xl" @click="saveModel">保存模型</el-button>
+                    <el-button class="btn-xl" @click="saveModelBefore">保存模型</el-button>
                     <el-button class="btn-xl" @click="saveModelAsBefore">模型另存</el-button>
                     <el-button class="btn-xl" @click="delModel">删除模型</el-button>
                 </div>
@@ -39,15 +39,24 @@
             </ul>
             <dir v-else class="noData">暂无数据</dir>
         </el-dialog>
+
+        <el-dialog :visible.sync="saveDialogVisible" width="30%">
+            <span>是否包含计算结果？</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="onClickSaveDialogCb(false)">否</el-button>
+                <el-button type="primary" @click="onClickSaveDialogCb(true)">是</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from "vuex";
-import { MODEL_TREE_TYPE } from "common/constants";
+import { MODEL_TREE_TYPE, GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
 
 import { model } from "api";
 import { getUserIdAndType } from "utils/util";
+import msgCenter from "utils/msgCenter";
 
 import Tree from "./Tree";
 
@@ -61,7 +70,9 @@ export default {
     data() {
         return {
             dialogVisible: false,
-            modelsList: []
+            modelsList: [],
+
+            saveDialogVisible: false
         };
     },
     components: {
@@ -183,58 +194,92 @@ export default {
             // 是否包含计算结果，后端暂不支持
             // let { includeCalculate } = params;
             const { userId } = getUserIdAndType();
-            this.$prompt("请输入模型名称", {
-                confirmButtonText: "确定",
-                cancelButtonText: "取消",
-                inputValidator: this.validatorModelname
-            })
-                .then(({ value }) => {
-                    model
-                        .saveModelAs({
-                            userId,
-                            name: value,
-                            id: this.curModelId
-                        })
-                        .then(res => {
-                            if (!res) return;
-                            this.getModelTreeData(res.data.id);
-                            this.$message("操作成功");
-                        });
+            setTimeout(() => {
+                this.$prompt("请输入模型名称", {
+                    confirmButtonText: "确定",
+                    cancelButtonText: "取消",
+                    inputValidator: this.validatorModelname
                 })
-                .catch(e => {});
+                    .then(({ value }) => {
+                        model
+                            .saveModelAs({
+                                userId,
+                                name: value,
+                                id: this.curModelId
+                            })
+                            .then(res => {
+                                if (!res) return;
+                                this.getModelTreeData(res.data.id);
+                                this.$message("操作成功");
+                            });
+                    })
+                    .catch(e => {});
+            }, 300);
+        },
+
+        onClickSaveDialogCb(bool) {
+            this.saveDialogVisible = false;
+            if (this.saveType === 1) {
+                // 保存
+                return this.saveModel({ includeCalculate: bool });
+            } else if (this.saveType === 2) {
+                // 另存为
+                return this.saveModelAs({ includeCalculate: bool });
+            }
         },
 
         // 模型另存为
         saveModelAsBefore() {
             if (!this.curModelId) return this.$message("请先选择模型");
-            this.$confirm("是否包含计算结果？", "模型另存为", {
-                confirmButtonText: "是",
-                cancelButtonText: "否",
-                type: "info"
-            })
-                .then(() => {
-                    // this.$message("模型另存为，含计算结果");
-                    this.saveModelAs({ includeCalculate: true });
-                })
-                .catch(() => {
-                    // this.$message("模型另存为，不含计算结果");
-                    this.saveModelAs({ includeCalculate: false });
-                });
+            // this.$confirm("是否包含计算结果？", "模型另存为", {
+            //     confirmButtonText: "是",
+            //     cancelButtonText: "否",
+            //     type: "info"
+            // })
+            //     .then(() => {
+            //         // this.$message("模型另存为，含计算结果");
+            //         this.saveModelAs({ includeCalculate: true });
+            //     })
+            //     .catch(() => {
+            //         // this.$message("模型另存为，不含计算结果");
+            //         this.saveModelAs({ includeCalculate: false });
+            //     });
+            this.saveDialogVisible = true;
+            this.saveType = 2;
         },
 
         // 保存当前模型
-        saveModel() {
-            this.$confirm("是否包含计算结果？", "保存当前模型", {
-                confirmButtonText: "是",
-                cancelButtonText: "否",
-                type: "info"
-            })
-                .then(() => {
-                    this.$message("保存当前模型，含计算结果");
-                })
-                .catch(() => {
-                    this.$message("保存当前模型，不含计算结果");
-                });
+        saveModelBefore() {
+            if (!this.curModelId) {
+                return this.$message("没有打开任何模型");
+            }
+            // this.$confirm("是否包含计算结果？", "保存当前模型", {
+            //     confirmButtonText: "是",
+            //     cancelButtonText: "否",
+            //     type: "info"
+            // })
+            //     .then(() => {
+            //         // this.$message("保存当前模型，含计算结果");
+            //         cb();
+            //     })
+            //     .catch(action => {
+            //         // this.$message("保存当前模型，不含计算结果");
+            //         console.log(action);
+            //         cb();
+            //     });
+            this.saveDialogVisible = true;
+            this.saveType = 1;
+        },
+
+        saveModel(bool) {
+            // this.saveModelBefore(() => {
+            msgCenter.publish(GLOBAL_MSG_CENTER_TOKEN.page_jump, {
+                success: () => {},
+                error: () => {
+                    // this.$message("数据保存失败");
+                }
+            });
+            // });
         },
 
         // 删除当前模型

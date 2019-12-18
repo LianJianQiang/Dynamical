@@ -13,10 +13,23 @@ const getCalculateResults = (params) => request(`${config.baseUrl}/resultrecord/
 // 获取计算结果详情
 const getResultInfo = (params) => request(`${config.baseUrl}/resultrecord/getResultInfo`, { ...params });
 
+// 保存计算结果
+const saveResultRecord = (params) => request(`${config.baseUrl}/resultRecord/saveResultRecord`, { ...params });
+
+// 获取记录列表
+const getRecordList = (params) => request(`${config.baseUrl}/resultRecord/getRecordList`, { ...params });
+
+// 获取记录详情
+const getRecordInfo = (params) => request(`${config.baseUrl}/resultRecord/getRecordInfo`, { ...params });
+
 
 export default {
     getArgsList,
     getCaListBYCode,
     getCalculateResults,
-    getResultInfo
+    getResultInfo,
+
+    saveResultRecord,
+    getRecordList,
+    getRecordInfo
 }

@@ -305,13 +305,15 @@ export default {
         },
 
         async saveDataToServe(params = {}) {
-            const childSaveResult = await this.saveChildCompData();
-            if (
-                childSaveResult[0].code !== "200" ||
-                childSaveResult[1].code !== "200"
-            ) {
-                return;
-            }
+            // const childSaveResult = await this.saveChildCompData();
+            // if (
+            //     childSaveResult[0].code !== "200" ||
+            //     childSaveResult[1].code !== "200"
+            // ) {
+            //     return;
+            // }
+
+            await this.saveChildCompData();
 
             model
                 .vehicleBasicEdit({

@@ -284,7 +284,7 @@ export default {
                 //     return resolve(false);
                 // }
 
-                const params = this.getSaveParams();
+                const { params } = this.getSaveParams();
                 this.setHaveDataStatus(params.vtrInfo);
 
                 resolve(true);
@@ -303,6 +303,9 @@ export default {
         },
 
         getSaveParams() {
+            let isNeedSave = false;
+
+            if (JSON.stringify(this.datas) !== "{}") isNeedSave = true;
             let params = {
                 type: this.type,
                 vtrInfo: {
@@ -313,17 +316,20 @@ export default {
 
             if (this.characteristics) {
                 params.vtrInfo.characteristics = this.characteristics;
+                isNeedSave = true;
             }
 
             this.tcsdId &&
                 (params.tcsdId = this.tcsdId) &&
-                (params.vtrInfo.tcsdId = this.tcsdId);
+                (params.vtrInfo.tcsdId = this.tcsdId) &&
+                (isNeedSave = true);
 
-            return params;
+            return { params, isNeedSave };
         },
 
         saveDataToServe() {
-            const params = this.getSaveParams();
+            const { params, isNeedSave } = this.getSaveParams();
+            if (!isNeedSave) return;
             return model.tractionSave(params);
         }
     }
