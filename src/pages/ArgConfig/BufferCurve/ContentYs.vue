@@ -68,8 +68,8 @@ import LineCharts from "components/Charts";
 
 let chartsOptions = {
     xAxis: {
-        type: "category",
-        data: []
+        type: "category"
+        // data: []
     },
     yAxis: {
         type: "value"
@@ -146,14 +146,21 @@ export default {
     },
     methods: {
         charTableChange(data) {
-            let xAxisData = [];
-            let yAxisData = [];
+            // let xAxisData = [];
+            // let yAxisData = [];
+            // data.map(item => {
+            // if (!isNil(item.x)) xAxisData.push(item.x);
+            // if (!isNil(item.f)) yAxisData.push(item.f);
+            // });
+            // this.chartsOptions.xAxis.data = arrSortAndUnique(xAxisData);
+
+            let seriesData = [];
             data.map(item => {
-                if (!isNil(item.x)) xAxisData.push(item.x);
-                if (!isNil(item.f)) yAxisData.push(item.f);
+                if (!isNil(item.x) && !isNil(item.f)) {
+                    seriesData.push([item.x, item.f]);
+                }
             });
-            this.chartsOptions.xAxis.data = xAxisData;
-            this.chartsOptions.series[0].data = yAxisData;
+            this.chartsOptions.series[0].data = seriesData;
 
             this.pointData = [...data];
         },

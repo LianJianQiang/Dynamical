@@ -86,7 +86,7 @@
                                 </el-form-item>
                             </span>
                             <span>
-                                F.v²(N.(m/s)²)
+                                F∙v(N∙(m/s))
                                 <el-form-item>
                                     <el-input-number
                                         :disabled="characteristics!==1"
@@ -119,7 +119,7 @@
                                 </el-form-item>
                             </span>
                             <span>
-                                F.v
+                                F∙v² (N∙(m/s)²)
                                 <el-form-item>
                                     <el-input-number
                                         :disabled="characteristics!==1"
@@ -145,6 +145,8 @@
                     <EditTable
                         ref="editTable"
                         :type="4"
+                        xUnit="km/h"
+                        fxUnit="N"
                         :disabled="characteristics!==2"
                         :showCharts="true"
                         :onSaveCb="onSaveCb"
@@ -342,10 +344,10 @@ export default {
     height: 100%;
 
     .speedbox {
-        width: 50px;
+        width: 80px;
         input {
-            padding-left: 5px !important;
-            padding-right: 5px !important;
+            padding-left: 2px !important;
+            padding-right: 2px !important;
         }
     }
 

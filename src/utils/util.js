@@ -185,6 +185,12 @@ export const randomString = (id, len = 5) => {
     return `${id}${pwd}`;
 }
 
+export const arrSortAndUnique = (arr = []) => {
+    arr = Array.from(new Set([...arr]));
+    arr.sort((a, b) => a - b)
+    return [...arr];
+}
+
 export default {
     isNumber,
     isNumZhEn,
@@ -200,7 +206,8 @@ export default {
     getObjFromStr,
     filterJson,
     randomString,
-    getMenuList
+    getMenuList,
+    arrSortAndUnique
 }
 
 

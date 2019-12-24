@@ -138,8 +138,7 @@ const typeList = [{ id: "line", name: "Line" }];
 
 let chartsOptions = {
     xAxis: {
-        type: "category",
-        data: []
+        type: "category"
     },
     yAxis: {
         type: "value"
@@ -147,8 +146,8 @@ let chartsOptions = {
     series: [
         {
             data: [],
-            type: "line",
-            smooth: true
+            type: "line"
+            // smooth: true
         }
     ]
 };
@@ -245,14 +244,18 @@ export default {
         // 逐点定义 图表联动
         charTableChange() {
             let data = this.pointTableData;
-            let xAxisData = [];
-            let yAxisData = [];
+            // let xAxisData = [];
+            // let yAxisData = [];
+            let seriesData = [];
             data.map(item => {
-                if (!isNil(item.x)) xAxisData.push(item.x);
-                if (!isNil(item.y)) yAxisData.push(item.y);
+                if (!isNil(item.x) && !isNil(item.y)) {
+                    seriesData.push([item.x, item.y]);
+                }
+                // if (!isNil(item.x)) xAxisData.push(item.x);
+                // if (!isNil(item.y)) yAxisData.push(item.y);
             });
-            this.chartsOptions.xAxis.data = xAxisData;
-            this.chartsOptions.series[0].data = yAxisData;
+            // this.chartsOptions.xAxis.data = arrSortAndUnique(xAxisData);
+            this.chartsOptions.series[0].data = seriesData;
         },
 
         // 保存常规定义数据

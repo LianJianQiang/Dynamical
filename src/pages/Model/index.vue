@@ -253,33 +253,21 @@ export default {
             if (!this.curModelId) {
                 return this.$message("没有打开任何模型");
             }
-            // this.$confirm("是否包含计算结果？", "保存当前模型", {
-            //     confirmButtonText: "是",
-            //     cancelButtonText: "否",
-            //     type: "info"
-            // })
-            //     .then(() => {
-            //         // this.$message("保存当前模型，含计算结果");
-            //         cb();
-            //     })
-            //     .catch(action => {
-            //         // this.$message("保存当前模型，不含计算结果");
-            //         console.log(action);
-            //         cb();
-            //     });
-            this.saveDialogVisible = true;
-            this.saveType = 1;
+
+            // 保存模型 无需询问“是否包含计算结果？”
+            // this.saveDialogVisible = true;
+            // this.saveType = 1;
+
+            this.saveModel();
         },
 
         saveModel(bool) {
-            // this.saveModelBefore(() => {
             msgCenter.publish(GLOBAL_MSG_CENTER_TOKEN.page_jump, {
                 success: () => {},
                 error: () => {
                     // this.$message("数据保存失败");
                 }
             });
-            // });
         },
 
         // 删除当前模型

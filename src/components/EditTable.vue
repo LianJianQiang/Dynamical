@@ -117,8 +117,8 @@ import LineCharts from "components/Charts";
 
 let chartsOptions = {
     xAxis: {
-        type: "category",
-        data: []
+        type: "category"
+        // data: []
     },
     yAxis: {
         type: "value"
@@ -126,8 +126,8 @@ let chartsOptions = {
     series: [
         {
             data: [],
-            type: "line",
-            smooth: true
+            type: "line"
+            // smooth: true
         }
     ]
 };
@@ -225,10 +225,10 @@ export default {
     },
     computed: {
         xLabel() {
-            return `x (${this.xUnit || "km/h"})`;
+            return this.xUnit ? `x (${this.xUnit})` : "x";
         },
         fxLabel() {
-            return `f(x) (${this.fxUnit || "N"})`;
+            return this.fxUnit ? `f(x) (${this.fxUnit})` : "f(x)";
         }
     },
     watch: {
@@ -444,14 +444,14 @@ export default {
         // 图表联动
         charTableChange() {
             let data = this.tableData;
-            let xAxisData = [];
-            let yAxisData = [];
+            let seriesData = [];
             data.map(item => {
-                if (!isNil(item.x)) xAxisData.push(item.x);
-                if (!isNil(item.f)) yAxisData.push(item.f);
+                if (!isNil(item.x) && !isNil(item.f)) {
+                    seriesData.push([item.x, item.f]);
+                }
             });
-            this.chartsOptions.xAxis.data = xAxisData;
-            this.chartsOptions.series[0].data = yAxisData;
+
+            this.chartsOptions.series[0].data = seriesData;
         }
     },
     mounted() {

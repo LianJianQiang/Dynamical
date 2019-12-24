@@ -269,6 +269,31 @@ export default {
                 this.onSaveData();
                 resolve(true);
             });
+        },
+
+        tableDataChange(data) {
+            let curX,
+                isPass = true;
+
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                if (curX !== 0 && !curX) {
+                    curX = item.x;
+                    continue;
+                }
+                if (curX >= item.x) {
+                    isPass = false;
+                }
+                curX = item.x;
+            }
+
+            if (!isPass) this.$message.error("数据必须从小到大排列");
+
+            this.tableData = data;
+
+            // 数据编辑以后，将id清空，后续提示用户保存数据
+            this.curveId = "";
+            this.isSaved = false;
         }
     },
     mounted() {

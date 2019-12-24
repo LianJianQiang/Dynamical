@@ -84,8 +84,8 @@ const initChartsOptions = params => {
             {
                 name: name,
                 type: "line",
-                data: series,
-                smooth: true
+                data: series
+                // smooth: true
             }
         ]
     };

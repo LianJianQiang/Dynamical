@@ -25,7 +25,9 @@
                         </el-col>
                         <el-col :span="10">
                             <el-form-item label="单位起动基本阻力:" prop="qdf">
-                                <el-input-number :controls="false" v-model="no1.qdf" clearable></el-input-number>
+                                <input-number-wrap suffix="N/k/N">
+                                    <el-input-number :controls="false" v-model="no1.qdf" clearable></el-input-number>
+                                </input-number-wrap>
                             </el-form-item>
                         </el-col>
                         <el-col :span="10" :offset="2">
@@ -34,7 +36,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
-                            <el-form-item label="起动基本作用的速度:" prop="vlimit">
+                            <el-form-item label="起动基本阻力的作用速度:" prop="vlimit">
                                 <input-number-wrap suffix="km/h">
                                     <el-input-number
                                         :controls="false"
@@ -113,7 +115,13 @@
                             </el-col>
                             <el-col :span="10">
                                 <el-form-item label="单位起动基本阻力:" prop="qdf">
-                                    <el-input-number :controls="false" v-model="no2.qdf" clearable></el-input-number>
+                                    <input-number-wrap suffix="N/k/N">
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no2.qdf"
+                                            clearable
+                                        ></el-input-number>
+                                    </input-number-wrap>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10" :offset="2">
@@ -122,7 +130,7 @@
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
-                                <el-form-item label="起动基本作用的速度:" prop="vlimit">
+                                <el-form-item label="起动基本阻力的作用速度:" prop="vlimit">
                                     <input-number-wrap suffix="km/h">
                                         <el-input-number
                                             :controls="false"
