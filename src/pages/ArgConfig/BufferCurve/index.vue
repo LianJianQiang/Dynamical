@@ -81,19 +81,24 @@ export default {
             symmetryTypeList,
             isSymmetry: symmetryTypeList[0].type,
 
-            nameDialogVisible: false
+            nameDialogVisible: false,
+
+            curBufferTemp: {}
         };
     },
     props: {},
-    computed: {
-        curBufferTemp() {
-            let { curTempId, bufferList } = this;
-            return bufferList.find(item => item.id === curTempId) || {};
-        }
-    },
+    // computed: {
+    //     curBufferTemp() {
+    //         let { curTempId, bufferList } = this;
+    //         return bufferList.find(item => item.id === curTempId) || {};
+    //     }
+    // },
     watch: {
-        curTempId() {
-            let { isSymmetry } = this;
+        curTempId(newId) {
+            let { isSymmetry, bufferList } = this;
+            this.curBufferTemp =
+                bufferList.find(item => item.id === newId) || {};
+
             let dataSource = this.curBufferTemp;
 
             this.isSymmetry = dataSource.isSymmetry || isSymmetry;

@@ -71,6 +71,39 @@
                     :dataSource="diyDataSource"
                 />
             </el-row>
+            <el-row class="listWrap" :class="$style.wgWrap">
+                <el-checkbox
+                    class="radioWrap"
+                    :value="formData.brakedef===3"
+                    :label="3"
+                    @change="()=>onCheckboxChange(3)"
+                >制动控制力定义</el-checkbox>
+                <div :class="$style.curveInfo">
+                    <el-form
+                        class="clearfix"
+                        :class="$style.form"
+                        ref="form"
+                        label-position="left"
+                        :model="formData"
+                        label-width="120px"
+                    >
+                        <el-form-item label>
+                            <el-select
+                                v-model="formData.wg"
+                                placeholder="请选择"
+                                :disabled="formData.brakedef!==3"
+                            >
+                                <el-option
+                                    v-for="item in WGList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-row>
         </div>
     </DropDown>
 </template>
@@ -85,13 +118,22 @@ import Diy from "./Diy";
 
 const FIELD_LIST = ["brakedef", "brakef", "delayTime", "loadTime", "tcsdId"];
 
+const WGList = [
+    { id: 1, name: "制动控制程序1" },
+    { id: 2, name: "制动控制程序2" },
+    { id: 3, name: "制动控制程序3" },
+    { id: 4, name: "制动控制程序4" },
+    { id: 5, name: "制动控制程序5" }
+];
+
 export default {
     name: "VehicleBrakes",
     data() {
         return {
             formData: {},
             diyDataSource: {},
-            isHaveData: false
+            isHaveData: false,
+            WGList
         };
     },
     components: {
@@ -228,6 +270,15 @@ export default {
 
     .form {
         margin-left: 22px;
+    }
+
+    .wgWrap {
+        :global {
+            .el-form-item,
+            .el-select {
+                width: 100%;
+            }
+        }
     }
 }
 

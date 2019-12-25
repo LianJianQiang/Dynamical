@@ -277,38 +277,51 @@ export default {
         ...mapActions("uiState", ["saveDefinedConnect"]),
 
         // 获取页面数据
-        initData(carNameStr, cb) {
+        async initData(carNameStr, cb) {
             carNameStr = carNameStr || this.carNameStr;
             if (!carNameStr) return;
 
-            model
-                .getAllCoupTypeByModelId({
-                    modelId: this.curModelId,
-                    carNum: carNameStr
-                })
-                .then(res => {
-                    if (!res) return;
+            const res = await this.getCarData(carNameStr);
 
-                    let { data = [] } = res;
-                    let front = data.find(item => item.faceType === "1") || {};
-                    let back = data.find(item => item.faceType === "2") || {};
+            let { data = [] } = res;
+            let front = data.find(item => item.faceType === "1") || {};
+            let back = data.find(item => item.faceType === "2") || {};
 
-                    this.frontData = {
-                        ...front,
-                        diy1: { xType: front.diy1X, tcsdId: front.diy1TcsdId },
-                        diy2: { xType: front.diy2X, tcsdId: front.diy2TcsdId }
-                    };
-                    this.backData = {
-                        ...back,
-                        diy1: { xType: back.diy1X, tcsdId: back.diy1TcsdId },
-                        diy2: { xType: back.diy2X, tcsdId: back.diy2TcsdId }
-                    };
+            this.frontData = {
+                ...front,
+                diy1: { xType: front.diy1X, tcsdId: front.diy1TcsdId },
+                diy2: { xType: front.diy2X, tcsdId: front.diy2TcsdId }
+            };
+            this.backData = {
+                ...back,
+                diy1: { xType: back.diy1X, tcsdId: back.diy1TcsdId },
+                diy2: { xType: back.diy2X, tcsdId: back.diy2TcsdId }
+            };
 
-                    this.cacheFrontData = { ...front };
-                    this.cacheBackData = { ...back };
+            this.cacheFrontData = { ...front };
+            this.cacheBackData = { ...back };
 
-                    typeof cb === "function" && cb();
-                });
+            typeof cb === "function" && cb();
+
+            // model
+            //     .getAllCoupTypeByModelId({
+            //         modelId: this.curModelId,
+            //         carNum: carNameStr
+            //     })
+            //     .then(res => {
+            //         if (!res) return;
+            //     });
+        },
+
+        getCarData(carNameStr, cb) {
+            return model.getAllCoupTypeByModelId({
+                modelId: this.curModelId,
+                carNum: carNameStr
+            });
+            // .then(res => {
+            //     if (!res) return;
+            //     cb(res);
+            // });
         },
 
         // 复制端
@@ -334,7 +347,7 @@ export default {
         },
 
         // 复制 其他车辆
-        copyCar() {
+        async copyCar() {
             if (!this.copySource) {
                 this.$message("请先选择车辆");
                 return;
@@ -344,6 +357,11 @@ export default {
 
             let { row, cal } = sourceInfo;
             if (!row || !cal) return null;
+
+            // this.submitForm({
+            //     saveCb:()=>{
+            //     }
+            // })
 
             this.submitForm({
                 carNum: `${row}-${cal}`,
@@ -406,7 +424,7 @@ export default {
          * 保存模型数据
          * 复制时，传入carNum和cb
          */
-        submitForm(args = {}) {
+        async submitForm(args = {}) {
             let { carNum, saveCb, success } = args;
 
             let frontData = { ...this.frontData };
@@ -434,11 +452,22 @@ export default {
 
             // TODO 复制
             if (carNum) {
-                frontData = { ...frontData, carNum };
-                backData = { ...backData, carNum };
+                const res = await this.getCarData(carNum);
+                let { data = [] } = res;
+                let targetFront =
+                    data.find(item => item.faceType === "1") || {};
+                let targetBack = data.find(item => item.faceType === "2") || {};
 
-                delete frontData.id;
-                delete backData.id;
+                frontData = {
+                    ...frontData,
+                    carNum,
+                    id: targetFront.id || ""
+                };
+                backData = {
+                    ...backData,
+                    carNum,
+                    id: targetBack.id || ""
+                };
             }
 
             let params = {

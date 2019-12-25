@@ -156,6 +156,38 @@
                     />
                 </div>
             </el-row>
+            <el-row class="listWrap" :class="$style.tcuWrap">
+                <el-checkbox
+                    class="radioWrap"
+                    :value="characteristics===3"
+                    :label="3"
+                    @change="()=>onCheckboxChange(3)"
+                >整列车牵引TCU控制</el-checkbox>
+                <div :class="$style.curveInfo">
+                    <el-form
+                        class="clearfix"
+                        ref="form"
+                        label-position="left"
+                        :model="datas"
+                        label-width="160px"
+                    >
+                        <el-form-item label>
+                            <el-select
+                                v-model="datas.couMdfId"
+                                placeholder="请选择"
+                                :disabled="characteristics!==3"
+                            >
+                                <el-option
+                                    v-for="item in TCUList"
+                                    :key="item.id"
+                                    :label="item.name"
+                                    :value="item.id"
+                                ></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-row>
         </div>
     </DropDown>
 </template>
@@ -168,6 +200,14 @@ import EditTable from "components/EditTable";
 import { getObjFromStr } from "utils/util";
 
 import { model } from "api";
+
+const TCUList = [
+    { id: 1, name: "TCU控制程序1" },
+    { id: 2, name: "TCU控制程序2" },
+    { id: 3, name: "TCU控制程序3" },
+    { id: 4, name: "TCU控制程序4" },
+    { id: 5, name: "TCU控制程序5" }
+];
 
 export default {
     name: "Traction",
@@ -184,7 +224,8 @@ export default {
             // 牵引力曲线列表
             tractionList: [],
 
-            isHaveData: false
+            isHaveData: false,
+            TCUList
         };
     },
     components: {
@@ -332,7 +373,12 @@ export default {
         saveDataToServe() {
             const { params, isNeedSave } = this.getSaveParams();
             if (!isNeedSave) return;
-            return model.tractionSave(params);
+            return model.tractionSave(params).then(res => {
+                if (res && res.code === 200) {
+                    !this.datas.id && (this.datas.id = res.data.id);
+                }
+                return res;
+            });
         }
     }
 };
@@ -364,6 +410,15 @@ export default {
         :global {
             .el-form-item {
                 display: inline-block;
+            }
+        }
+    }
+
+    .tcuWrap {
+        :global {
+            .el-form-item,
+            .el-select {
+                width: 100%;
             }
         }
     }

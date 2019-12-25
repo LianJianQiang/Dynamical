@@ -92,6 +92,7 @@ const defaultPointData = [
     { name: "开始卸载", value: "", key: "beforeDestory" },
     { name: "卸载", value: "", key: "destory" }
 ];
+let defaultInterId = interList[0].id;
 
 export default {
     name: "BufferCurve",
@@ -100,7 +101,6 @@ export default {
         EditTable
     },
     data() {
-        let defaultInterId = interList[0].id;
         let { dataSource } = this;
         const {
             pointAllotDataYs,
@@ -112,7 +112,7 @@ export default {
 
         return {
             // 曲线分段table
-            pointAllotData: pointAllotDataYs || defaultPointData,
+            pointAllotData: pointAllotDataYs || [...defaultPointData],
 
             pointData: pointDataYs || [],
 
@@ -142,6 +142,28 @@ export default {
         dataSource: {
             type: Object,
             default: () => ({})
+        }
+    },
+    watch: {
+        dataSource(newData) {
+            const {
+                pointAllotDataYs,
+                pointDataYs,
+                xProportionYs,
+                fxProportionYs,
+                interpolationMethodYs
+            } = newData;
+
+            this.pointAllotData = pointAllotDataYs || defaultPointData;
+
+            this.pointData = pointDataYs || [];
+
+            // 比例
+            this.xProportion = xProportionYs || 1;
+            this.fxProportion = fxProportionYs || 1;
+
+            this.interpolationMethod = interpolationMethodYs || defaultInterId;
+            this.charTableChange(this.pointData);
         }
     },
     methods: {

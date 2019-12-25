@@ -326,10 +326,12 @@ export default {
             model
                 .vehicleBasicEdit({
                     ve1Info: {
+                        num: 0,
                         ...this.no1,
                         modelId: this.curModelId
                     },
                     ve2Info: {
+                        num: 0,
                         ...this.no2,
                         modelId: this.curModelId
                     }
