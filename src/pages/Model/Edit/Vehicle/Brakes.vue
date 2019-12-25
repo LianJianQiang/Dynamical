@@ -89,7 +89,7 @@
                     >
                         <el-form-item label>
                             <el-select
-                                v-model="formData.wg"
+                                v-model="formData.definition"
                                 placeholder="请选择"
                                 :disabled="formData.brakedef!==3"
                             >
@@ -119,11 +119,16 @@ import Diy from "./Diy";
 const FIELD_LIST = ["brakedef", "brakef", "delayTime", "loadTime", "tcsdId"];
 
 const WGList = [
-    { id: 1, name: "制动控制程序1" },
-    { id: 2, name: "制动控制程序2" },
-    { id: 3, name: "制动控制程序3" },
-    { id: 4, name: "制动控制程序4" },
-    { id: 5, name: "制动控制程序5" }
+    { id: "1", name: "制动控制程序1" },
+    { id: "2", name: "制动控制程序2" },
+    { id: "3", name: "制动控制程序3" },
+    { id: "4", name: "制动控制程序4" },
+    { id: "5", name: "制动控制程序5" },
+    { id: "6", name: "制动控制程序6" },
+    { id: "7", name: "制动控制程序7" },
+    { id: "8", name: "制动控制程序8" },
+    { id: "9", name: "制动控制程序9" },
+    { id: "10", name: "制动控制程序10" }
 ];
 
 export default {

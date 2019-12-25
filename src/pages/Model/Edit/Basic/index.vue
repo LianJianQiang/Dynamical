@@ -184,12 +184,12 @@
             </div>
             <el-row>
                 <el-col :span="20" :class="$style.btnWrap">
-                    <el-button
+                    <!-- <el-button
                         :class="$style.subBtn"
                         class="btn-xl"
                         type="primary"
                         @click="submitForm"
-                    >保存</el-button>
+                    >保存</el-button>-->
                     <el-button class="btn-xl" @click="resetForm">清空</el-button>
                 </el-col>
             </el-row>

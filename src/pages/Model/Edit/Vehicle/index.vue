@@ -93,12 +93,12 @@
                 </el-select>
                 <el-button class="btn-xl" :class="$style.copyBtn" @click="copyCar">复制</el-button>
 
-                <el-button
+                <!-- <el-button
                     :class="$style.subBtn"
                     class="btn-xl"
                     type="primary"
                     @click="submitForm"
-                >保存</el-button>
+                >保存</el-button>-->
                 <el-button class="btn-xl" @click="clearData">清空</el-button>
             </el-col>
         </el-row>

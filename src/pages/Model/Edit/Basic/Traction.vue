@@ -173,7 +173,7 @@
                     >
                         <el-form-item label>
                             <el-select
-                                v-model="datas.couMdfId"
+                                v-model="datas.tcu"
                                 placeholder="请选择"
                                 :disabled="characteristics!==3"
                             >
@@ -202,11 +202,16 @@ import { getObjFromStr } from "utils/util";
 import { model } from "api";
 
 const TCUList = [
-    { id: 1, name: "TCU控制程序1" },
-    { id: 2, name: "TCU控制程序2" },
-    { id: 3, name: "TCU控制程序3" },
-    { id: 4, name: "TCU控制程序4" },
-    { id: 5, name: "TCU控制程序5" }
+    { id: "1", name: "TCU控制程序1" },
+    { id: "2", name: "TCU控制程序2" },
+    { id: "3", name: "TCU控制程序3" },
+    { id: "4", name: "TCU控制程序4" },
+    { id: "5", name: "TCU控制程序5" },
+    { id: "6", name: "TCU控制程序6" },
+    { id: "7", name: "TCU控制程序7" },
+    { id: "8", name: "TCU控制程序8" },
+    { id: "9", name: "TCU控制程序9" },
+    { id: "10", name: "TCU控制程序10" }
 ];
 
 export default {

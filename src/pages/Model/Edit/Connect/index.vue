@@ -195,12 +195,12 @@
                     ></el-option>
                 </el-select>
                 <el-button class="btn-xl" :class="$style.copyBtn" @click="copyCar">复制</el-button>
-                <el-button
+                <!-- <el-button
                     :class="$style.subBtn"
                     class="btn-xl"
                     type="primary"
                     @click="submitForm()"
-                >保存</el-button>
+                >保存</el-button>-->
                 <el-button class="btn-xl" @click="clearData">清空</el-button>
             </el-col>
         </el-row>
@@ -427,8 +427,10 @@ export default {
         async submitForm(args = {}) {
             let { carNum, saveCb, success } = args;
 
-            let frontData = { ...this.frontData };
-            let backData = { ...this.backData };
+            let { front: nullF, back: nullB } = this.getNullData();
+
+            let frontData = { id: "", ...nullF, ...this.frontData };
+            let backData = { id: "", ...nullB, ...this.backData };
 
             if (!this.carNameStr) {
                 this.$message({
@@ -494,21 +496,36 @@ export default {
             });
         },
 
+        getNullData() {
+            let front = {};
+            let back = {};
+
+            for (let i in CONNECT_ELE_FIELD_DICT) {
+                CONNECT_ELE_FIELD_DICT[i].map(item => {
+                    front[item] = "";
+                    back[item] = "";
+                });
+            }
+            return { front, back };
+        },
+
         /**
          * 取消输入
          */
         clearData: function() {
             const { frontData, backData } = this;
 
-            let newF = {};
-            let newB = {};
+            let { front: newF, back: newB } = this.getNullData();
 
-            for (let i in CONNECT_ELE_FIELD_DICT) {
-                CONNECT_ELE_FIELD_DICT[i].map(item => {
-                    newF[item] = "";
-                    newB[item] = "";
-                });
-            }
+            // let newF = {};
+            // let newB = {};
+
+            // for (let i in CONNECT_ELE_FIELD_DICT) {
+            //     CONNECT_ELE_FIELD_DICT[i].map(item => {
+            //         newF[item] = "";
+            //         newB[item] = "";
+            //     });
+            // }
 
             this.frontData = {
                 id: frontData.id,
