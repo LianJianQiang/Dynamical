@@ -1,113 +1,28 @@
 <template>
-    <div :class="$style.root">
-        <div :class="$style.title">列车基本参数</div>
-        <div :class="$style.formWrap">
-            <div>
-                <h4>第一列</h4>
-                <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no1Form" :model="no1" label-width="170px">
-                        <el-col :span="10">
-                            <el-form-item label="车辆数量:" prop="num">
-                                <el-input-number :controls="false" v-model="no1.num" clearable></el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <!-- <el-col :span="10" :offset="2">
-                            <el-form-item label="车辆长度:" prop="length">
-                                <el-input v-model="no1.length" clearable></el-input>
-                            </el-form-item>
-                        </el-col>-->
-                        <el-col :span="10" :offset="2">
-                            <el-form-item label="速度:" prop="v">
-                                <input-number-wrap suffix="km/h">
-                                    <el-input-number :controls="false" v-model="no1.v" clearable></el-input-number>
-                                </input-number-wrap>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10">
-                            <el-form-item label="单位起动基本阻力:" prop="qdf">
-                                <input-number-wrap suffix="N/k/N">
-                                    <el-input-number :controls="false" v-model="no1.qdf" clearable></el-input-number>
-                                </input-number-wrap>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="2">
-                            <el-form-item label="停放制动系数(u):" prop="mu">
-                                <el-input-number :controls="false" v-model="no1.mu" clearable></el-input-number>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10">
-                            <el-form-item label="起动基本阻力的作用速度:" prop="vlimit">
-                                <input-number-wrap suffix="km/h">
-                                    <el-input-number
-                                        :controls="false"
-                                        v-model="no1.vlimit"
-                                        clearable
-                                    ></el-input-number>
-                                </input-number-wrap>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10" :offset="2">
-                            <el-form-item label="牵引力特征曲线:">
-                                <Traction
-                                    ref="tractionNo1"
-                                    parentField="no1"
-                                    :saveData="saveTractionData"
-                                    type="1"
-                                />
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="10">
-                            <el-form-item label="单位基本运行阻力(N/kN):">
-                                <el-col :span="7" :offset="1" :class="$style.basicReLabel">
-                                    <el-form-item label="A:">
-                                        <el-input-number
-                                            :controls="false"
-                                            v-model="no1.basicresisA"
-                                        />
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="7" :offset="1" :class="$style.basicReLabel">
-                                    <el-form-item label="B:">
-                                        <el-input-number
-                                            :controls="false"
-                                            v-model="no1.basicresisB"
-                                        />
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="7" :offset="1" :class="$style.basicReLabel">
-                                    <el-form-item label="C:">
-                                        <el-input-number
-                                            :controls="false"
-                                            v-model="no1.basicresisC"
-                                        />
-                                    </el-form-item>
-                                </el-col>
-                            </el-form-item>
-                        </el-col>
-                    </el-form>
-                </div>
-            </div>
-            <div>
-                <h4>第二列</h4>
-                <div :class="$style.cont" class="clearfix">
-                    <el-form ref="no2Form" :model="no2" label-width="170px">
-                        <el-row>
+    <div>
+        <div :class="$style.root">
+            <div :class="$style.title">列车基本参数</div>
+            <div :class="$style.formWrap">
+                <div>
+                    <h4>第一列</h4>
+                    <div :class="$style.cont" class="clearfix">
+                        <el-form ref="no1Form" :model="no1" label-width="170px">
                             <el-col :span="10">
                                 <el-form-item label="车辆数量:" prop="num">
-                                    <el-input-number :controls="false" v-model="no2.num" clearable></el-input-number>
+                                    <el-input-number :controls="false" v-model="no1.num" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <!-- <el-col :span="10" :offset="2">
-                                <el-form-item label="车辆长度:" prop="length">
-                                    <el-input v-model="no2.length" clearable></el-input>
-                                </el-form-item>
+                            <el-form-item label="车辆长度:" prop="length">
+                                <el-input v-model="no1.length" clearable></el-input>
+                            </el-form-item>
                             </el-col>-->
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="速度:" prop="v">
                                     <input-number-wrap suffix="km/h">
                                         <el-input-number
                                             :controls="false"
-                                            v-model="no2.v"
+                                            v-model="no1.v"
                                             clearable
                                         ></el-input-number>
                                     </input-number-wrap>
@@ -118,7 +33,7 @@
                                     <input-number-wrap suffix="N/k/N">
                                         <el-input-number
                                             :controls="false"
-                                            v-model="no2.qdf"
+                                            v-model="no1.qdf"
                                             clearable
                                         ></el-input-number>
                                     </input-number-wrap>
@@ -126,7 +41,7 @@
                             </el-col>
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="停放制动系数(u):" prop="mu">
-                                    <el-input-number :controls="false" v-model="no2.mu" clearable></el-input-number>
+                                    <el-input-number :controls="false" v-model="no1.mu" clearable></el-input-number>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="10">
@@ -134,7 +49,7 @@
                                     <input-number-wrap suffix="km/h">
                                         <el-input-number
                                             :controls="false"
-                                            v-model="no2.vlimit"
+                                            v-model="no1.vlimit"
                                             clearable
                                         ></el-input-number>
                                     </input-number-wrap>
@@ -143,10 +58,10 @@
                             <el-col :span="10" :offset="2">
                                 <el-form-item label="牵引力特征曲线:">
                                     <Traction
-                                        ref="tractionNo2"
-                                        parentField="no2"
+                                        ref="tractionNo1"
+                                        parentField="no1"
                                         :saveData="saveTractionData"
-                                        type="2"
+                                        type="1"
                                     />
                                 </el-form-item>
                             </el-col>
@@ -156,7 +71,7 @@
                                         <el-form-item label="A:">
                                             <el-input-number
                                                 :controls="false"
-                                                v-model="no2.basicresisA"
+                                                v-model="no1.basicresisA"
                                             />
                                         </el-form-item>
                                     </el-col>
@@ -164,7 +79,7 @@
                                         <el-form-item label="B:">
                                             <el-input-number
                                                 :controls="false"
-                                                v-model="no2.basicresisB"
+                                                v-model="no1.basicresisB"
                                             />
                                         </el-form-item>
                                     </el-col>
@@ -172,27 +87,133 @@
                                         <el-form-item label="C:">
                                             <el-input-number
                                                 :controls="false"
-                                                v-model="no2.basicresisC"
+                                                v-model="no1.basicresisC"
                                             />
                                         </el-form-item>
                                     </el-col>
                                 </el-form-item>
                             </el-col>
-                        </el-row>
-                    </el-form>
+                        </el-form>
+                    </div>
                 </div>
+                <div>
+                    <h4>第二列</h4>
+                    <div :class="$style.cont" class="clearfix">
+                        <el-form ref="no2Form" :model="no2" label-width="170px">
+                            <el-row>
+                                <el-col :span="10">
+                                    <el-form-item label="车辆数量:" prop="num">
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no2.num"
+                                            clearable
+                                        ></el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <!-- <el-col :span="10" :offset="2">
+                                <el-form-item label="车辆长度:" prop="length">
+                                    <el-input v-model="no2.length" clearable></el-input>
+                                </el-form-item>
+                                </el-col>-->
+                                <el-col :span="10" :offset="2">
+                                    <el-form-item label="速度:" prop="v">
+                                        <input-number-wrap suffix="km/h">
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.v"
+                                                clearable
+                                            ></el-input-number>
+                                        </input-number-wrap>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-form-item label="单位起动基本阻力:" prop="qdf">
+                                        <input-number-wrap suffix="N/k/N">
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.qdf"
+                                                clearable
+                                            ></el-input-number>
+                                        </input-number-wrap>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10" :offset="2">
+                                    <el-form-item label="停放制动系数(u):" prop="mu">
+                                        <el-input-number
+                                            :controls="false"
+                                            v-model="no2.mu"
+                                            clearable
+                                        ></el-input-number>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-form-item label="起动基本阻力的作用速度:" prop="vlimit">
+                                        <input-number-wrap suffix="km/h">
+                                            <el-input-number
+                                                :controls="false"
+                                                v-model="no2.vlimit"
+                                                clearable
+                                            ></el-input-number>
+                                        </input-number-wrap>
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10" :offset="2">
+                                    <el-form-item label="牵引力特征曲线:">
+                                        <Traction
+                                            ref="tractionNo2"
+                                            parentField="no2"
+                                            :saveData="saveTractionData"
+                                            type="2"
+                                        />
+                                    </el-form-item>
+                                </el-col>
+                                <el-col :span="10">
+                                    <el-form-item label="单位基本运行阻力(N/kN):">
+                                        <el-col :span="7" :offset="1" :class="$style.basicReLabel">
+                                            <el-form-item label="A:">
+                                                <el-input-number
+                                                    :controls="false"
+                                                    v-model="no2.basicresisA"
+                                                />
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="7" :offset="1" :class="$style.basicReLabel">
+                                            <el-form-item label="B:">
+                                                <el-input-number
+                                                    :controls="false"
+                                                    v-model="no2.basicresisB"
+                                                />
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="7" :offset="1" :class="$style.basicReLabel">
+                                            <el-form-item label="C:">
+                                                <el-input-number
+                                                    :controls="false"
+                                                    v-model="no2.basicresisC"
+                                                />
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </el-form>
+                    </div>
+                </div>
+                <el-row>
+                    <el-col :span="20" :class="$style.btnWrap">
+                        <el-button
+                            :class="$style.subBtn"
+                            class="btn-xl"
+                            type="primary"
+                            @click="submitForm"
+                        >保存</el-button>
+                        <el-button class="btn-xl" @click="resetForm">清空</el-button>
+                    </el-col>
+                </el-row>
             </div>
-            <el-row>
-                <el-col :span="20" :class="$style.btnWrap">
-                    <!-- <el-button
-                        :class="$style.subBtn"
-                        class="btn-xl"
-                        type="primary"
-                        @click="submitForm"
-                    >保存</el-button>-->
-                    <el-button class="btn-xl" @click="resetForm">清空</el-button>
-                </el-col>
-            </el-row>
+        </div>
+        <div :class="$style.sketchWrap" v-if="showSketch">
+            <CarList />
         </div>
     </div>
 </template>
@@ -207,6 +228,8 @@ import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
 import { model } from "api";
 
 import Traction from "./Traction";
+
+import CarList from "../../Open/CarList";
 
 // 自定义验证规则
 // const rules = {
@@ -229,7 +252,8 @@ import Traction from "./Traction";
 export default {
     name: "BasicInfo",
     components: {
-        Traction
+        Traction,
+        CarList
     },
     data() {
         /**
@@ -237,7 +261,9 @@ export default {
          */
         return {
             no1: {},
-            no2: {}
+            no2: {},
+
+            showSketch: false
 
             // rules: {
             //     num: [{ validator: validateField, trigger: "blur" }],
@@ -279,6 +305,8 @@ export default {
         initDataCb(data = {}) {
             const no1 = data.ve1 || {};
             const no2 = data.ve2 || {};
+
+            this.showSketch = no1.num || no2.num;
 
             this.no1 = no1;
             this.no2 = no2;
@@ -342,6 +370,8 @@ export default {
 
                     this.no1 = { ...this.no1, id: data.v1Id };
                     this.no2 = { ...this.no2, id: data.v2Id };
+
+                    this.showSketch = this.no1.num || this.no2.num;
 
                     // 基本参数变更以后，更新treeData
                     this.getModelData(this.curModelId);
@@ -424,5 +454,11 @@ export default {
             }
         }
     }
+}
+
+.sketchWrap {
+    background: #fff;
+    margin-top: 20px;
+    padding: 30px 20px;
 }
 </style>

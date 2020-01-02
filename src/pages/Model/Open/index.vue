@@ -16,10 +16,14 @@
 <script>
 import { mapGetters, mapActions, mapState } from "vuex";
 
+import msgCenter from "utils/msgCenter";
+import { GLOBAL_MSG_CENTER_TOKEN } from "common/constants";
+
 import Img from "assets/icon";
 import CarList from "./CarList";
 
 import CarBodyDetail from "./CarBodyDetail";
+
 
 export default {
     name: "Open",
@@ -45,9 +49,18 @@ export default {
         ...mapGetters("uiState", ["isOpenCarDetail"]),
         ...mapState("uiState", ["carDetail"])
     },
+
     mounted() {
-        console.log('init open page')
         this.setCurTreeNodeId("");
+        this.subToken = msgCenter.subscribe(
+            GLOBAL_MSG_CENTER_TOKEN.page_jump,
+            (topic, data) => {
+                data.success();
+            }
+        );
+    },
+    beforeDestroy() {
+        msgCenter.unsubscribe(this.subToken);
     }
 };
 </script>
