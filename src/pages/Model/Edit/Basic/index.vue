@@ -213,7 +213,7 @@
             </div>
         </div>
         <div :class="$style.sketchWrap" v-if="showSketch">
-            <CarList />
+            <Legend />
         </div>
     </div>
 </template>
@@ -229,7 +229,7 @@ import { model } from "api";
 
 import Traction from "./Traction";
 
-import CarList from "../../Open/CarList";
+import Legend from "../../Open/Legend";
 
 // 自定义验证规则
 // const rules = {
@@ -253,7 +253,7 @@ export default {
     name: "BasicInfo",
     components: {
         Traction,
-        CarList
+        Legend
     },
     data() {
         /**

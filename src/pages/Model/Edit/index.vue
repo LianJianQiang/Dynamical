@@ -5,7 +5,7 @@
                 :class="$style.close"
                 class="cursor-p"
                 @click="onClickClose"
-                v-if="curTreeNodeType !== modelTreetype.args && curTreeNodeType !== modelTreetype.circuit"
+                v-if="showClose"
             >
                 <img :src="closeIcon" alt />
             </div>
@@ -68,6 +68,15 @@ export default {
 
         curTreeNodeType() {
             return this.curTreeNodeInfo.type;
+        },
+
+        showClose() {
+            const { curTreeNodeType, modelTreetype } = this;
+            return (
+                curTreeNodeType !== modelTreetype.args &&
+                curTreeNodeType !== modelTreetype.circuit &&
+                curTreeNodeType !== modelTreetype.basic
+            );
         }
     },
     mounted() {}
